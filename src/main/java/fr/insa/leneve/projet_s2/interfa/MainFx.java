@@ -19,13 +19,13 @@ public class MainFx extends Application {
 
     @Override  
     public void start(Stage primaryStage) throws Exception {
-        Groupe test = Groupe.groupeAlea(10, 5);
+        Groupe test = Groupe.groupeAlea(5, 2);
 //        Groupe test = new Groupe();
         System.out.println("taille " + test.getContient().size());
         MainPanel main = new MainPanel(test);
         Scene s = new Scene(main);
         primaryStage.setScene(s);
-        primaryStage.setTitle("Dessin 2D");
+        primaryStage.setTitle("Treillis simulator");
         primaryStage.show();
     }
 

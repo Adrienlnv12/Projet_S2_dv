@@ -11,14 +11,29 @@ import javafx.scene.paint.Color;
  *
  * @author adrie
  */
-public class NoeudSimple extends Noeud {
-    public NoeudSimple(double px, double py,Color c) {
+public class NoeudSimple extends Noeud{
+    
+    // Voici les constructeurs --> comment initialiser un point 
+    public NoeudSimple(double px,double py,Color c, Numeroteur<Noeud> N){ // constructeur général qui contient tous les attributs
         super(px,py,c);
+        super(N);
     }
     
     @Override
-    public String toString() {
-        return "Noeud{" + "px=" + getPx() + ", py=" + getPy() + ", couleur=" + getCouleur() + '}';
+    public String toString() { // on peut prendre autre méthode toString déf comme les autres sinon
+        return "("+ "Px : "+ super(px) +",Py : " + super(py) +","+"Id : "+id+ ')';
     }
+    public static void main(String[]args){
+        // une nouvelle méthode de test avec un affichage amélioré 
+        Numeroteur<Noeud> numNoeud = new Numeroteur();
+        NoeudSimple noeud1 = new NoeudSimple(4,6,Color.BLACK, numNoeud);
+        numNoeud.associe(noeud1.getIdNoeud(), noeud1);
+        NoeudSimple noeud2 = new NoeudSimple(7,8,Color.BLACK,numNoeud);
+        numNoeud.associe(noeud2.getIdNoeud(), noeud2);
+        System.out.println(noeud1);
+        System.out.println(noeud2);
+        
+    }
+    
     
 }

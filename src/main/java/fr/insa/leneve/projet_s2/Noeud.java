@@ -14,9 +14,39 @@ import javafx.scene.shape.Ellipse;
  */
 public class Noeud extends FigureSimple {
     
-    private double px;
-    private double py;
+    public static final double TAILLE_POINT = 5;
     
+    double px;
+    double py;
+    public  int id; // identificateur pour repérer le n° du noeud 
+    
+    public Noeud(Numeroteur<Noeud> N){ // constructeur de la super classe pour initialiser id 
+        id = N.genererIdLibre();
+    }   
+    
+    public String toString() {
+        return "Noeud{" + "id=" + id + '}';
+    }
+    
+      public class Poids {
+        double px;
+        double py;
+        
+        public Poids(){
+            this.px = 0;
+            this.py = 0;
+        }
+    }
+     
+     public Poids Poids(barre B){
+        Poids poids  = new Poids();
+        double angle = B.getAngleBarre(B);
+        if(B.noeud1 instanceof NoeudSimple){
+            
+        }
+        return(poids);
+    }
+     
     public Noeud(double px, double py, Color c) {
         super(c);
         this.px = px;
@@ -71,7 +101,7 @@ public class Noeud extends FigureSimple {
         switch (Rep) {
             case 0 -> {
                 System.out.println("Le type de noeud est un noeud simple");
-                return new NoeudSimple(Px,Py,Color.BLACK);
+                return new NoeudSimple(Px,Py,Color.BLACK,N);
             }
             case 1 -> {
                 System.out.println("Le type de noeud est un appui simple");
@@ -92,11 +122,22 @@ public class Noeud extends FigureSimple {
     }*/
     
       public Group dessine() {
-        Ellipse res = new Ellipse(this.px, this.py);
+        Ellipse res = new Ellipse(this.px, this.py,TAILLE_POINT, TAILLE_POINT);
         res.setStroke(this.getCouleur());
         res.setFill(this.getCouleur());
         Group g = new Group(res);
         return g;
     }
-
+    public static void main(String[]args){
+     
+       Numeroteur<Noeud> num = new Numeroteur();
+       Noeud N = new Noeud(num);
+       String type_objet;
+       type_objet = N.getClass().getSimpleName();
+       System.out.println("ceci est le type de cet objet "+type_objet);
+       System.out.println("saisir une valeur de a ");
+       
+      
+   }
+ 
 }
