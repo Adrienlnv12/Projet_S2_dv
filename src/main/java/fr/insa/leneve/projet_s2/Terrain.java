@@ -17,7 +17,7 @@ public class Terrain { //
     private double xmax;
     private double ymin;
     private double ymax;
-    //private List<TriangleTerrain> Triangles_Terrain; // terrain défini par un ensemble de triangles de terrain
+    private List<TriangleTerrain> Triangles_Terrain; // terrain défini par un ensemble de triangles de terrain
     
   // Ceci est le constructeur de la classe
     public Terrain (double xmax,double xmin,double y,double ymin,Numeroteur<Terrain> numT){
@@ -26,7 +26,7 @@ public class Terrain { //
         this.xmin=xmin;
         this.ymax=y;
         this.ymin=ymin;
-       // this.Triangles_Terrain = new ArrayList<>();
+        this.Triangles_Terrain = new ArrayList<>();
     }
     
     // Voici les méthodes get/set de la classe 
@@ -46,9 +46,9 @@ public class Terrain { //
         return(this.ymax);  
     }
     
-   /* public List<TriangleTerrain> getTriangles_Terrain() {
+    public List<TriangleTerrain> getTriangles_Terrain() {
         return this.Triangles_Terrain ;
-    } */
+    } 
     
     public void setxmax(double a){
         this.xmax=a;
@@ -66,9 +66,9 @@ public class Terrain { //
         this.ymin=a;
     }
     
-    /*public void setTriangles_Terrain(List<TriangleTerrain> Triangleterrain){
+    public void setTriangles_Terrain(List<TriangleTerrain> Triangleterrain){
         this.Triangles_Terrain=Triangleterrain;
-    }*/
+    }
 
     @Override
     public String toString() {

@@ -66,7 +66,7 @@ public class Segment_terrain {
     }
         //Méthode permettant de calculer l'angle entre la normale du segment de terrain et l'horizontale 
 
-    /*public double angle_beta(Numeroteur<TriangleTerrain> num, Numeroteur<Noeud> n){
+    public double angle_beta(Numeroteur<TriangleTerrain> num, Numeroteur<Noeud> n){
         double angle = 0;
         TriangleTerrain TT = new TriangleTerrain(num);
         NoeudAppui N1a = new NoeudAppui(TT,n);
@@ -75,7 +75,7 @@ public class Segment_terrain {
          
         
         return(angle);
-    }*/
+    }
     
     
     

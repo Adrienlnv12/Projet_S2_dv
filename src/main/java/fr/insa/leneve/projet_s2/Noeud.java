@@ -13,16 +13,11 @@ import javafx.scene.shape.Ellipse;
  * @author adrie
  */
 public class Noeud {
-    
-    public static final double TAILLE_POINT = 5;
-    
+        
     double px;
     double py;
-    private Color couleur;
     public  int id; // identificateur pour repérer le n° du noeud 
-    
-
-    
+     
       public class Poids {
         double px;
         double py;
@@ -33,17 +28,17 @@ public class Noeud {
         }
     }
      
-    /*public Poids Poids(Barre B){
+    public Poids Poids(Barre B){
         Poids poids  = new Poids();
         double angle = B.getAngleBarre(B);
         if(B.Noeud1 instanceof NoeudSimple){
             
         }
         return(poids);
-    }*/
+    }
      
-    public Noeud(double px, double py, Color couleur, Numeroteur<Noeud> N) {
-        this.couleur = couleur;
+    public Noeud(double px, double py, Numeroteur<Noeud> N) {
+   
         id = N.genererIdLibre();// constructeur de la super classe pour initialiser id 
         this.px = px;
         this.py = py;
@@ -55,11 +50,7 @@ public class Noeud {
      public int getIdNoeud(){
         return(this.id);
     }
-     
-    public Noeud(double px, double py,Numeroteur<Noeud> N) {
-        this(px,py,Color.BLACK,N);
-        
-    }
+
     public Noeud(Numeroteur<Noeud> N) {
         this(0,0,N);
     }
@@ -80,13 +71,6 @@ public class Noeud {
         this.py = py;
     }
     
-    public Color getCouleur() {
-        return couleur;
-    }
-
-    public void setCouleur(Color couleur) {
-        this.couleur = couleur;
-    }
     
     /*public Noeud entreeNoeud(){
         int Rep=3;
@@ -129,11 +113,6 @@ public class Noeud {
         return couleur;
     }*/
     
-      public Group dessine() {
-        Ellipse res = new Ellipse(this.px, this.py,TAILLE_POINT, TAILLE_POINT);
-        Group g = new Group(res);
-        return g;
-    }
     public static void main(String[]args){
      
        Numeroteur<Noeud> num = new Numeroteur();
