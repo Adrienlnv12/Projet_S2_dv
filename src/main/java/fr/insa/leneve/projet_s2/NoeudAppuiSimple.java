@@ -11,11 +11,13 @@ import javafx.scene.paint.Color;
  * @author adrie
  */
 public class NoeudAppuiSimple extends NoeudAppui {
-    public NoeudAppuiSimple(double px, double py,Color c, Numeroteur<Noeud> N) {
-        super(px,py,c,N);
+    Segment_terrain segment_terrain;
+    
+    
+    public NoeudAppuiSimple(TriangleTerrain triangleterrain, Numeroteur<Noeud> num){
+        super(triangleterrain, num);
     }
-    @Override
-    public String toString() {
-        return "Noeud{" + "px=" + getPx() + ", py=" + getPy() + ", couleur=" + getCouleur() + '}';
+    public NoeudAppuiSimple(TriangleTerrain TT,int j,double alpha, Numeroteur<Noeud> num, Numeroteur numTT){
+        super(TT,j,alpha,numTT);       
     }
 }
