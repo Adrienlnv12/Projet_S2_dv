@@ -11,7 +11,7 @@ import java.util.TreeMap; // relation d'association entre clé et objet, c'est o
 
 /**
  *
- * @author Cap
+ * @author adrie
  */
 public class Numeroteur<TO> { 
 

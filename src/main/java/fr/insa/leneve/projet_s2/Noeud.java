@@ -12,21 +12,16 @@ import javafx.scene.shape.Ellipse;
  *
  * @author adrie
  */
-public class Noeud extends FigureSimple {
+public class Noeud {
     
     public static final double TAILLE_POINT = 5;
     
     double px;
     double py;
+    private Color couleur;
     public  int id; // identificateur pour repérer le n° du noeud 
     
-    public Noeud(Numeroteur<Noeud> N){ // constructeur de la super classe pour initialiser id 
-        id = N.genererIdLibre();
-    }   
-    
-    public String toString() {
-        return "Noeud{" + "id=" + id + '}';
-    }
+
     
       public class Poids {
         double px;
@@ -38,26 +33,35 @@ public class Noeud extends FigureSimple {
         }
     }
      
-     public Poids Poids(barre B){
+    /*public Poids Poids(Barre B){
         Poids poids  = new Poids();
         double angle = B.getAngleBarre(B);
-        if(B.noeud1 instanceof NoeudSimple){
+        if(B.Noeud1 instanceof NoeudSimple){
             
         }
         return(poids);
-    }
+    }*/
      
-    public Noeud(double px, double py, Color c) {
-        super(c);
+    public Noeud(double px, double py, Color couleur, Numeroteur<Noeud> N) {
+        this.couleur = couleur;
+        id = N.genererIdLibre();// constructeur de la super classe pour initialiser id 
         this.px = px;
         this.py = py;
     }
-    public Noeud(double px, double py) {
-        this(px,py,Color.BLACK);
+    
+    public String toString() {
+        return "Noeud{" + "id=" + id + '}';
+    }
+     public int getIdNoeud(){
+        return(this.id);
+    }
+     
+    public Noeud(double px, double py,Numeroteur<Noeud> N) {
+        this(px,py,Color.BLACK,N);
         
     }
-    public Noeud() {
-        this(0,0);
+    public Noeud(Numeroteur<Noeud> N) {
+        this(0,0,N);
     }
 
     public double getPx() {
@@ -76,17 +80,21 @@ public class Noeud extends FigureSimple {
         this.py = py;
     }
     
-    @Override
-    public double maxX() {
-        return this.px;
+    public Color getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(Color couleur) {
+        this.couleur = couleur;
     }
     
-    public static Noeud entreeNoeud(){
+    /*public Noeud entreeNoeud(){
         int Rep=3;
         System.out.println("Donnez l'abscisse de votre noeud");
         double Px=Lire.d();
         System.out.println("Donnez l'ordonnée de votre noeud");
         double Py=Lire.d();
+        System.out.println("Donnez l'identifiant de votre noeud");
         while (Rep==3){
             System.out.println("Donnez son type");
             System.out.println("Tapez 0 pour un noeud simple");
@@ -101,7 +109,7 @@ public class Noeud extends FigureSimple {
         switch (Rep) {
             case 0 -> {
                 System.out.println("Le type de noeud est un noeud simple");
-                return new NoeudSimple(Px,Py,Color.BLACK,N);
+                return new NoeudSimple(Px,Py,Color.BLACK);
             }
             case 1 -> {
                 System.out.println("Le type de noeud est un appui simple");
@@ -115,7 +123,7 @@ public class Noeud extends FigureSimple {
             }
         }
         return null;    
-    }
+    }*/
    /* public int nbrInconnues(){
         
         return couleur;
@@ -123,8 +131,6 @@ public class Noeud extends FigureSimple {
     
       public Group dessine() {
         Ellipse res = new Ellipse(this.px, this.py,TAILLE_POINT, TAILLE_POINT);
-        res.setStroke(this.getCouleur());
-        res.setFill(this.getCouleur());
         Group g = new Group(res);
         return g;
     }

@@ -44,21 +44,21 @@ public class Barre {
     //Il s'agit des méthodes get pour accéder aux valeurs des coordonnées des noeuds, c'est compliqué car les noeuds peuvent être des noeuds appuis 
     // ou des noeuds simples du coup on peut pas directement récuperer l'attribut d'un attribut sachant que c'est la classe abstraite Noeud.
 
-    /*public double getPxnoeud1(){
+    public double getPxnoeud1(){ //a refaire
     /** méthode associe pour l'instant seulement dans cette méthode,
      * vérifier le fonctionnement de ces méthodes, il est surement possible de les optimiser
-     
+     */
         Numeroteur ntt = new Numeroteur<TriangleTerrain>();
         Numeroteur n = new Numeroteur<Noeud>();
         TriangleTerrain TT = new TriangleTerrain(ntt);
         ntt.associe(TT.getIdTT(), TT);
-        Noeudsimple N1 = new Noeudsimple(n);
+        NoeudSimple N1 = new NoeudSimple(n);
         n.associe(N1.getIdNoeud(), N1);
-        Noeudappuis N1a = new Noeudappuis(TT, ntt);
+        NoeudAppui N1a = new NoeudAppui(TT, ntt);
         n.associe(N1a.getIdNoeud(), N1a);
         double Px = 0;
-       if(this.noeud1 instanceof Noeudsimple){
-           N1=(Noeudsimple)this.noeud1;
+       if(this.Noeud1 instanceof NoeudSimple){
+           N1=(NoeudSimple)this.Noeud1;
            Px = N1.getPx();
        }
        if(this.noeud1 instanceof Noeudappuis){
@@ -117,7 +117,7 @@ public class Barre {
             Py = N2a.getNy();
         }
         return(Py);
-    }   */
+    }
    
     public void settypebarre(TypedeBarre T){
         this.typebarre=T;
@@ -164,7 +164,7 @@ public class Barre {
     */
     public double AngleBarre(Barre B){
             double angle = 0;            
-            angle= Math.acos(Math.abs(B.getPxnoeud2()-B.getPxnoeud1())/Longueur_barre(B));
+            //angle= Math.acos(Math.abs(B.getPxnoeud2()-B.getPxnoeud1())/Longueur_barre(B));
             return(angle);  
         /* cette partie commentaire va expliquer la méthode angle 
              cette méthode permet de recupérer en théorie l'angle entre une barre et l'axe des abscisses

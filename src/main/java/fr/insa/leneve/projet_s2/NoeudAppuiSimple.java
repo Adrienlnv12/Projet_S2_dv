@@ -6,14 +6,13 @@ package fr.insa.leneve.projet_s2;
 
 import javafx.scene.paint.Color;
 
-
 /**
  *
  * @author adrie
  */
 public class NoeudAppuiSimple extends NoeudAppui {
-    public NoeudAppuiSimple(double px, double py,Color c) {
-        super(px,py,c);
+    public NoeudAppuiSimple(double px, double py,Color c, Numeroteur<Noeud> N) {
+        super(px,py,c,N);
     }
     @Override
     public String toString() {

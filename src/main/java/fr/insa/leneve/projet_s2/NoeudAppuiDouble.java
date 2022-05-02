@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
  * @author adrie
  */
 public class NoeudAppuiDouble extends NoeudAppui {
-      public NoeudAppuiDouble(double px, double py,Color c) {
-        super(px,py,c);
+      public NoeudAppuiDouble(double px, double py,Color c, Numeroteur<Noeud> N) {
+        super(px,py,c,N);
     }
     @Override
     public String toString() {

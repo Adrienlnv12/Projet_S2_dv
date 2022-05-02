@@ -15,13 +15,13 @@ public class NoeudSimple extends Noeud{
     
     // Voici les constructeurs --> comment initialiser un point 
     public NoeudSimple(double px,double py,Color c, Numeroteur<Noeud> N){ // constructeur général qui contient tous les attributs
-        super(px,py,c);
-        super(N);
+        super(px,py,c,N);
+        
     }
     
     @Override
     public String toString() { // on peut prendre autre méthode toString déf comme les autres sinon
-        return "("+ "Px : "+ super(px) +",Py : " + super(py) +","+"Id : "+id+ ')';
+        return "("+ "Px : "+ px +",Py : " + py +","+"Id : "+id+ ')';
     }
     public static void main(String[]args){
         // une nouvelle méthode de test avec un affichage amélioré 
