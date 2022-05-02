@@ -61,8 +61,8 @@ public class Barre {
            N1=(NoeudSimple)this.Noeud1;
            Px = N1.getPx();
        }
-       if(this.noeud1 instanceof Noeudappuis){
-           N1a = (Noeudappuis)this.noeud1;
+       if(this.noeud1 instanceof NoeudAppui){
+           N1a = (NoeudAppui)this.noeud1;
            Px = N1a.getNx();
        }
        return(Px);
@@ -71,15 +71,15 @@ public class Barre {
         Numeroteur ntt = new Numeroteur<TriangleTerrain>(); 
         Numeroteur n = new Numeroteur<Noeud>();
         TriangleTerrain TT = new TriangleTerrain(ntt);
-        Noeudsimple N1 = new Noeudsimple(n);
-        Noeudappuis N1a = new Noeudappuis(TT,n);
+        NoeudSimple N1 = new NoeudSimple(n);
+        NoeudAppui N1a = new NoeudAppui(TT,n);
         double Py = 0;
-        if(this.noeud1 instanceof Noeudsimple){
-            N1=(Noeudsimple)this.noeud1;
+        if(this.noeud1 instanceof NoeudSimple){
+            N1=(NoeudSimple)this.noeud1;
             Py = N1.getPy();
         }
-        if(this.noeud1 instanceof Noeudappuis){
-            N1a = (Noeudappuis)this.noeud1;
+        if(this.noeud1 instanceof NoeudAppui){
+            N1a = (NoeudAppui)this.noeud1;
             Py = N1a.getNy();
         }
         return(Py);
@@ -88,15 +88,15 @@ public class Barre {
         Numeroteur ntt = new Numeroteur<TriangleTerrain>();
         Numeroteur n = new Numeroteur<Noeud>();
         TriangleTerrain TT = new TriangleTerrain(ntt);
-        Noeudsimple N2 = new Noeudsimple(n);
-        Noeudappuis N2a = new Noeudappuis(TT, n);
+        NoeudSimple N2 = new NoeudSimple(n);
+        NoeudAppui N2a = new NoeudAppui(TT, n);
         double Px = 0;
-        if(this.noeud2 instanceof Noeudsimple){
-            N2=(Noeudsimple)this.noeud2;
+        if(this.noeud2 instanceof NoeudSimple){
+            N2=(NoeudSimple)this.noeud2;
             Px = N2.getPx();
         }
-        if(this.noeud2 instanceof Noeudappuis){
-            N2a = (Noeudappuis)this.noeud2;
+        if(this.noeud2 instanceof NoeudAppui){
+            N2a = (NoeudAppui)this.noeud2;
             Px = N2a.getNx();
         }
         return(Px);
@@ -105,15 +105,15 @@ public class Barre {
         Numeroteur ntt = new Numeroteur<TriangleTerrain>();
         Numeroteur n = new Numeroteur<Noeud>();
         TriangleTerrain TT = new TriangleTerrain(ntt);
-        Noeudsimple N2 = new Noeudsimple(n);
-        Noeudappuis N2a = new Noeudappuis(TT, n);
+        NoeudSimple N2 = new NoeudSimple(n);
+        NoeudAppui N2a = new NoeudAppui(TT, n);
         double Py = 0;
-        if(this.noeud2 instanceof Noeudsimple){
-            N2=(Noeudsimple)this.noeud2;
+        if(this.noeud2 instanceof NoeudSimple){
+            N2=(NoeudSimple)this.noeud2;
             Py = N2.getPy();
         }
-        if(this.noeud2 instanceof Noeudappuis){
-            N2a = (Noeudappuis)this.noeud2;
+        if(this.noeud2 instanceof NoeudAppui){
+            N2a = (NoeudAppui)this.noeud2;
             Py = N2a.getNy();
         }
         return(Py);
