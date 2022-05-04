@@ -18,10 +18,11 @@ import javafx.stage.Stage;
 public class MainFx extends Application {
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         Scene sc = new Scene(new MainPanel(),800,600);
         stage.setScene(sc);
-          stage.show();
+        stage.setTitle("Modélisateur de Treillis");
+        stage.show();
           
     }
 

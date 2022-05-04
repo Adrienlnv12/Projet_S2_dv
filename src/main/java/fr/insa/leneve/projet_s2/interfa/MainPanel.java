@@ -42,9 +42,7 @@ public class MainPanel extends BorderPane {
     private DessinCanvas1 cDessin;
     private Label information;
     
-    final ToggleGroup groupG = new ToggleGroup(); // permet de ne sélectionner qu'un seul bouton à la fois faisant parti du groupe de gauche
-    private List<ToggleButton> lB = new ArrayList<>(); // permet de parcourir tous les ToggleButton présent dans la liste
-    //pour ensuite les mettre à la même taille
+    
     
     private Color couleur;
     
@@ -63,13 +61,7 @@ public class MainPanel extends BorderPane {
         });
         tbBarre.setTooltip(new Tooltip ("Veuillez choisir le type de barre à droite avant de créer des barres."));
         
-        this.tbNoeudS = new ToggleButton("Noeud simple"); //crée le toggle bouton 
-        tbNoeudS.setToggleGroup(groupG); //le met dans le ToggleGroup
-        lB.add(tbNoeudS); // le met dans lB
-        this.tbNoeudS.setOnAction((t) -> {
-            System.out.println("bouton NS cliqué");
-            controleur.changeEtat(20);
-        });
+       
         
         this.tbNoeudAS = new ToggleButton("Noeud appui simple"); //crée le toggle bouton
         tbNoeudAS.setToggleGroup(groupG); //le met dans le ToggleGroup
@@ -266,7 +258,9 @@ public class MainPanel extends BorderPane {
     public Label getInformation() {
         return information;
     }
-
+    public Controleur getControl() {
+        return controleur;
+    }
     
 
     
