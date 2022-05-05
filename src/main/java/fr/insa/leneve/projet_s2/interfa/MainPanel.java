@@ -6,22 +6,49 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 
+import java.io.File;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;
-import static javafx.scene.paint.Color.BLACK;
-
+import javafx.stage.Stage;
+import fr.insa.leneve.projet_s2.Groupe;
 /**
  *
  * @author adrie
  */
 public class MainPanel extends BorderPane {
     
+    private static double MULT_POUR_FIT_ALL = 1.1;
+    private Groupe model;
     private Controleur controleur;
+
+    private Stage inStage;
+    private File curFile;
+
+    private RadioButton rbSelect;
+    private RadioButton rbPoints;
+    private RadioButton rbSegments;
+
+    private Button bGrouper;
+    private Button bSupprimer;
+    private ColorPicker cpCouleur;
+
+    private BoutonIcone bZoomDouble;
+    private BoutonIcone bZoomDemi;
+    private BoutonIcone bZoomFitAll;
+    
+    private BoutonIcone bTranslateGauche;
+    private BoutonIcone bTranslateDroite;
+    private BoutonIcone bTranslateHaut;
+    private BoutonIcone bTranslateBas;
+    
+    private Button bCreePointDialog;
+ 
+    private DessinCanvas1 cDessin;
+    private RectangleHV zoneModelVue;
+
+    private MainMenu menu;
+    
     
     private ToggleButton tbNoeudS;
     private ToggleButton tbNoeudAS;
@@ -40,23 +67,25 @@ public class MainPanel extends BorderPane {
     private ChoiceBox cbTypeBarre;
     private Button bSave;
     
-    private DessinCanvas1 cDessin;
     private Label information;
     
     private Color couleur;
-    private ColorPicker cpCouleur;
+   
+    public MainPanel(Stage inStage) {
+        this(inStage, new Groupe());
+    }
+
+    public MainPanel(Stage inStage, Groupe model) {
+        this(inStage, null, model);
+    }
     
     
-    
-    public MainPanel(){  
+    public MainPanel(Stage inStage, File fromFile, Groupe model){  
         
         this.outilsTop = new OutilsTop();
         this.outilsLeft = new OutilsLeft(this);
         this.controleur = new Controleur(this);
-        
-
-        //à gauche
-        
+             
         this.setTop(this.outilsTop);
         this.setLeft(this.outilsLeft);
         
@@ -78,15 +107,7 @@ public class MainPanel extends BorderPane {
         });
         this.setRight(this.cpCouleur);
         //en bas a droite
-        
-        
-       
-        
-        
-        
-        
       
-        
         this.cDessin = new DessinCanvas1(this);// zone de dessin
         this.setCenter(this.cDessin);
         
@@ -206,7 +227,136 @@ public class MainPanel extends BorderPane {
     public Controleur getControl() {
         return controleur;
     }
-    
+        public void fitAll() {
+        this.zoneModelVue = new RectangleHV(this.model.minX(),
+                this.model.maxX(), this.model.minY(), this.model.maxY());
+        this.zoneModelVue = this.zoneModelVue.scale(MULT_POUR_FIT_ALL);
+    }
+
+    public void redrawAll() {
+        this.cDessin.redrawAll();
+    }
+
+    /**
+     * @return the model
+     */
+    public Groupe getModel() {
+        return model;
+    }
+
+    /**
+     * @return the controleur
+     */
+
+    /**
+     * @return the rbSelect
+     */
+    public RadioButton getRbSelect() {
+        return rbSelect;
+    }
+
+    /**
+     * @return the rbPoints
+     */
+    public RadioButton getRbPoints() {
+        return rbPoints;
+    }
+
+    /**
+     * @return the rbSegments
+     */
+    public RadioButton getRbSegments() {
+        return rbSegments;
+    }
+
+    /**
+     * @return the bGrouper
+     */
+    public Button getbGrouper() {
+        return bGrouper;
+    }
+
+    /**
+     * @return the cpCouleur
+     */
+    public ColorPicker getCpCouleur() {
+        return cpCouleur;
+    }
+
+ 
+    public Stage getInStage() {
+        return inStage;
+    }
+
+    /**
+     * @return the curFile
+     */
+    public File getCurFile() {
+        return curFile;
+    }
+
+    /**
+     * @param curFile the curFile to set
+     */
+    public void setCurFile(File curFile) {
+        this.curFile = curFile;
+    }
+
+    /**
+     * @return the MULT_POUR_FIT_ALL
+     */
+    public static double getMULT_POUR_FIT_ALL() {
+        return MULT_POUR_FIT_ALL;
+    }
+
+    /**
+     * @return the bZoomDouble
+     */
+    public Button getbZoomDouble() {
+        return bZoomDouble;
+    }
+
+    /**
+     * @return the bZoomDemi
+     */
+    public Button getbZoomDemi() {
+        return bZoomDemi;
+    }
+
+    /**
+     * @return the bZoomFitAll
+     */
+    public Button getbZoomFitAll() {
+        return bZoomFitAll;
+    }
+
+    /**
+     * @return the zoneModelVue
+     */
+    public RectangleHV getZoneModelVue() {
+        return zoneModelVue;
+    }
+
+    /**
+     * @return the menu
+     */
+    public MainMenu getMenu() {
+        return menu;
+    }
+
+    /**
+     * @param zoneModelVue the zoneModelVue to set
+     */
+    public void setZoneModelVue(RectangleHV zoneModelVue) {
+        this.zoneModelVue = zoneModelVue;
+    }
+
+    /**
+     * @return the bSupprimer
+     */
+    public Button getbSupprimer() {
+        return bSupprimer;
+    }
 
     
 }

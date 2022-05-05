@@ -12,12 +12,24 @@ import fr.insa.leneve.projet_s2.NoeudAppuiSimple;
 import fr.insa.leneve.projet_s2.NoeudSimple;
 import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.TriangleTerrain;
-import fr.insa.leneve.projet_s2.interfa.OutilsTop;
+import fr.insa.leneve.projet_s2.Figure;
+import fr.insa.leneve.projet_s2.Groupe;
+import fr.insa.leneve.projet_s2.Segment;
+import fr.insa.leneve.projet_s2.Point;
 import static java.lang.Math.hypot;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.NonInvertibleTransformException;
+import javafx.scene.transform.Transform;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -31,12 +43,16 @@ public class Controleur {
     private Numeroteur<TriangleTerrain> NTT;
     private Numeroteur<Barre> NB;
     
+    private Segment segmentEnCoursDeCreation = null;
+    
     private double P1x,P1y,P2x,P2y,P3x,P3y;
     private TriangleTerrain TriTerrain;
     
     final int Rayon=5;
     final double a = 0.5; // alpha compris entre 0 et 1 (pour la forme du noeud appui simple)
     final double cote = 5;
+    
+    private List<Figure> selection;
     
     public Controleur(MainPanel vue){
         this.vue = vue;
@@ -282,6 +298,145 @@ public class Controleur {
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().strokeRect(t.getX(), t.getY(), cote, cote);
     }
     
+    public List<Figure> getSelection() {
+        return selection;
+    }
     
+    void mouseMovedDansZoneDessin(MouseEvent t) {
+        if (this.etat == 41) {
+            // attente deuxieme point segment
+            this.segmentEnCoursDeCreation.setFin(this.posInModel(t.getX(), t.getY()));
+            this.vue.redrawAll();
+        }
+    }
+    public Segment getSegmentEnCoursDeCreation() {
+        return segmentEnCoursDeCreation;
+    }
+    
+    public void zoomDouble() {
+        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
+        this.vue.redrawAll();
+    }
+    
+    public void zoomDemi() {
+        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(2));
+        this.vue.redrawAll();
+    }
+
+    public void zoomFitAll() {
+        this.vue.fitAll();
+        this.vue.redrawAll();
+    }
+    
+    public void translateGauche() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateGauche(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateDroite() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateDroite(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateHaut() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateHaut(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateBas() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
+        this.vue.redrawAll();
+   }
+    
+    private void realSave(File f) {
+        try {
+            this.vue.getModel().sauvegarde(f);
+            this.vue.setCurFile(f);
+            this.vue.getInStage().setTitle(f.getName());
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Problème durant la sauvegarde");
+            alert.setContentText(ex.getLocalizedMessage());
+
+            alert.showAndWait();
+        } finally {
+            this.changeEtat(20);
+        }
+    }
+    
+    public void menuSave(ActionEvent t) {
+        if (this.vue.getCurFile() == null) {
+            this.menuSaveAs(t);
+        } else {
+            this.realSave(this.vue.getCurFile());
+        }
+    }
+    
+    public void menuSaveAs(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showSaveDialog(this.vue.getInStage());
+        if (f != null) {
+            this.realSave(f);
+        }
+    }
+
+    public void menuOpen(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(this.vue.getInStage());
+        if (f != null) {
+            try {
+                Figure lue = Figure.lecture(f);
+                Groupe glu = (Groupe) lue;
+                Stage nouveau = new Stage();
+                nouveau.setTitle(f.getName());
+                Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
+                nouveau.setScene(sc);
+                nouveau.show();
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Problème durant la sauvegarde");
+                alert.setContentText(ex.getLocalizedMessage());
+
+                alert.showAndWait();
+            } finally {
+                this.changeEtat(20);
+            }
+        }
+    }
+//    }
+    public Point posInModel(double xVue, double yVue) {
+           Transform modelVersVue = this.vue.getcDessin().getTransform();
+           Point2D ptrans;
+           try {
+               ptrans = modelVersVue.inverseTransform(xVue, yVue);
+           } catch (NonInvertibleTransformException ex) {
+               throw new Error(ex);
+           }
+           Point pclic = new Point(ptrans.getX(), ptrans.getY());
+           pclic.setCouleur(this.vue.getCpCouleur().getValue());
+           return pclic;
+    }
+        
+    public void menuNouveau(ActionEvent t) {
+        Stage nouveau = new Stage();
+        nouveau.setTitle("Nouveau");
+        Scene sc = new Scene(new MainPanel(nouveau), 800, 600);
+        nouveau.setScene(sc);
+        nouveau.show();
+    }
+
+    public void menuApropos(ActionEvent t) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("A propos");
+        alert.setHeaderText(null);
+        alert.setContentText("Trop super ce micro-logiciel de dessin vectoriel 2D\n"
+                + "réalisé par François de Bertrand de Beuvron\n"
+                + "comme tutoriel pour un cours de POO\n"
+                + "à l'INSA de Strasbourg");
+
+        alert.showAndWait();
+    }
     
 }

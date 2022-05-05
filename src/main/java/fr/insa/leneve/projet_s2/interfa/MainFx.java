@@ -10,6 +10,7 @@ import static javafx.application.Application.launch;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import fr.insa.leneve.projet_s2.Groupe;
 
 /**
  *
@@ -19,7 +20,7 @@ public class MainFx extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene sc = new Scene(new MainPanel(),800,600);
+        Scene sc = new Scene(new MainPanel(stage,Groupe.groupeTest()),800,600);
         stage.setScene(sc);
         stage.setTitle("Modélisateur de Treillis");
         stage.show();
