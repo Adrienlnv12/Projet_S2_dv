@@ -12,6 +12,7 @@ import fr.insa.leneve.projet_s2.NoeudAppuiSimple;
 import fr.insa.leneve.projet_s2.NoeudSimple;
 import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.TriangleTerrain;
+import fr.insa.leneve.projet_s2.interfa.OutilsTop;
 import static java.lang.Math.hypot;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -171,8 +172,8 @@ public class Controleur {
         System.out.println("nouveau TT");
         TriangleTerrain Tt = new TriangleTerrain(P1x, P1y, P2x, P2y, t.getX(), t.getY(), NTT); // creer le tt
         NTT.associe(Tt.getIdTT(), Tt); // on met le TT dans le numeroteur de triangle terrain  NTT pour la sauvegarde
-        vue.getcDessin().getRealCanvas().getGraphicsContext2D().setFill(YELLOWGREEN); // couleur de l'interieur du TT
-        vue.getcDessin().getRealCanvas().getGraphicsContext2D().setStroke(DARKOLIVEGREEN); // couleur du bord
+        vue.getcDessin().getRealCanvas().getGraphicsContext2D().setFill(vue.getCouleur()); // couleur de l'interieur du TT
+        vue.getcDessin().getRealCanvas().getGraphicsContext2D().setStroke(BLACK); // couleur du bord
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().fillPolygon(new double[]{this.P1x, this.P2x, t.getX()},
         new double[]{this.P1y, this.P2y, t.getY()}, 3); // dessine la surface, qui est celle d'un polygône à trois sommet
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().strokePolygon(new double[]{this.P1x, this.P2x, t.getX()},
