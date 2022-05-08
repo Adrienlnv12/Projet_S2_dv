@@ -19,10 +19,6 @@ public class Barre extends FigureSimple {
     public int id;
     public Noeud debut;
     public Noeud fin;
-
-    /*private double traction;
-    private double compression;
-    private double prix;
     
     /**
      * @param debut the debut to set
@@ -37,20 +33,24 @@ public class Barre extends FigureSimple {
     public void setFin(Noeud fin) {
         this.fin = fin;
     }
-
-    public Barre(/*TypedeBarre Tb*/ Noeud debut, Noeud fin,Color couleur) {
+    private Barre() {
+        this(null, null);
+    }
+    
+    public Barre(Noeud debut, Noeud fin,Color couleur) {
        /* this.typebarre = Tb;*/
-        this.debut = debut;
-        this.fin = fin;
+       super(couleur);
+       this.debut = debut;
+       this.fin = fin;
     }
     
-    public Barre(/*TypedeBarre Tb*/Noeud debut, Noeud fin) {
-        this(/*Tb*/debut, fin, Color.BLUE);
+    public Barre(Noeud debut, Noeud fin) {
+        this(debut, fin, Color.BLUE);
     }
     
-    public TypedeBarre gettypebarre(){
+    /*public TypedeBarre gettypebarre(){
         return(this.typebarre);
-    }
+    }*/
     
     public Noeud getDebut() {
         return debut;
