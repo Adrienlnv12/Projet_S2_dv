@@ -4,23 +4,25 @@
  */
 package fr.insa.leneve.projet_s2;
 
+
 import fr.insa.leneve.projet_s2.recup.Lire;
+import java.io.IOException;
+import java.io.Writer;
 import javafx.scene.paint.Color;
-import javafx.scene.Group;
-import javafx.scene.shape.Ellipse;
+import javafx.scene.canvas.GraphicsContext;
+
 /**
  *
  * @author adrie
  */
-public class Noeud {
-        
+public class Noeud extends FigureSimple {
+    
+    public static double RAYON_IN_DRAW = 5;
     double px;
     double py;
     public  int id; // identificateur pour repérer le n° du noeud 
      
-      public class Poids {
-        double px;
-        double py;
+    /*public class Poids {
         
         public Poids(){
             this.px = 0;
@@ -35,25 +37,38 @@ public class Noeud {
             
         }
         return(poids);
-    }
+    }*/
      
-    public Noeud(double px, double py, Numeroteur<Noeud> N) {
-   
-        id = N.genererIdLibre();// constructeur de la super classe pour initialiser id 
+    public Noeud(double px, double py, Color couleur) {
+        super(couleur);
         this.px = px;
         this.py = py;
     }
     
-    public String toString() {
-        return "Noeud{" + "id=" + id + '}';
-    }
-     public int getIdNoeud(){
-        return(this.id);
+    public Noeud(double px, double py) {
+        this(px, py, Color.BLACK);
     }
 
-    public Noeud(Numeroteur<Noeud> N) {
-        this(0,0,N);
+    public Noeud() {
+        this(0, 0);
     }
+
+    /**
+     * initialise comme une copie du point
+     * @param modele
+     */
+    public Noeud(Noeud modele) {
+        this(modele.px,modele.px,modele.getCouleur());
+    }
+    
+    public static Noeud demandeNoeud() {
+        System.out.println("abscisse : ");
+        double px = Lire.d();
+        System.out.println("ordonnée : ");
+        double py = Lire.d();
+        return new Noeud(px, py);
+    }
+
 
     public double getPx() {
         return px;
@@ -71,58 +86,54 @@ public class Noeud {
         this.py = py;
     }
     
+     @Override
+    public double maxX() {
+        return this.px;
+    }
+
+    @Override
+    public double minX() {
+        return this.px;
+    }
+
+    @Override
+    public double maxY() {
+        return this.py;
+    }
+
+    @Override
+    public double minY() {
+        return this.py;
+    }
     
-    /*public Noeud entreeNoeud(){
-        int Rep=3;
-        System.out.println("Donnez l'abscisse de votre noeud");
-        double Px=Lire.d();
-        System.out.println("Donnez l'ordonnée de votre noeud");
-        double Py=Lire.d();
-        System.out.println("Donnez l'identifiant de votre noeud");
-        while (Rep==3){
-            System.out.println("Donnez son type");
-            System.out.println("Tapez 0 pour un noeud simple");
-            System.out.println("Tapez 1 pour un appui simple");
-            System.out.println("Tapez 2 pour un appui double");
-            Rep=Lire.i();
-            if((Rep!=1)&&(Rep!=2)&&(Rep!=0)){
-                System.out.println("Donnez un nombre compris entre 0 et 2");
-                Rep=3;
-            }
-        }
-        switch (Rep) {
-            case 0 -> {
-                System.out.println("Le type de noeud est un noeud simple");
-                return new NoeudSimple(Px,Py,Color.BLACK);
-            }
-            case 1 -> {
-                System.out.println("Le type de noeud est un appui simple");
-                return new NoeudAppuiSimple(Px,Py,Color.BLACK);
-            }
-            case 2 -> {
-                System.out.println("Le type de noeud est un appui double");
-                return new NoeudAppuiDouble(Px,Py,Color.BLACK);
-            }
-            default -> {
-            }
-        }
-        return null;    
-    }*/
-   /* public int nbrInconnues(){
-        
-        return couleur;
-    }*/
     
-    public static void main(String[]args){
-     
-       Numeroteur<Noeud> num = new Numeroteur();
-       Noeud N = new Noeud(num);
-       String type_objet;
-       type_objet = N.getClass().getSimpleName();
-       System.out.println("ceci est le type de cet objet "+type_objet);
-       System.out.println("saisir une valeur de a ");
-       
-      
-   }
+    @Override
+    public double distanceNoeud(Noeud p) {
+        double dx = this.px - p.px;
+        double dy = this.py - p.py;
+        return Math.sqrt(dx*dx+dy*dy);
+
+    }
+    
+    @Override
+    public void dessine(GraphicsContext context) {
+        context.setFill(this.getCouleur());
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+    }
+    
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setFill(Figure.COULEUR_SELECTION);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+    }
+    
+    @Override
+     public void save(Writer w, Numeroteur<Figure> num) throws IOException {
+        if(! num.objExist(this)) {
+            id = num.creeID(this);
+            w.append("Noeud;"+id+";"+this.px+";"+this.py+
+                    ";" + FigureSimple.saveColor(this.getCouleur()) + "\n");
+        }
+    }
  
 }

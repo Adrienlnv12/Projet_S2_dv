@@ -7,6 +7,7 @@ package fr.insa.leneve.projet_s2;
 
 
 import Ressyslin.utils.Console;
+import fr.insa.leneve.projet_s2.recup.Lire;
 
 /**
  *
@@ -51,6 +52,22 @@ public class TypedeBarre {
         this.Rcmax = 700;
         this.Rtmax = 400;
     }
+    
+    /*public static TypedeBarre demandeTypedeBarre() {
+        
+        System.out.println("1) barre en acier");
+        System.out.println("2) barre en bois");
+        int Tdb = Lire.i();
+        switch(Tdb){
+            case 1 -> {
+                TypedeBarre Tb = new barre_acier();   
+            }
+            case 2 -> {
+                TypedeBarre Tb = new barre_bois();   
+            }
+        }
+        return  TypedeBarre(Tb);
+    }*/
     /* Voici quelques types de poutres IPN : 
     -Acier :
     Masse linéique = 18.30 Kg/m

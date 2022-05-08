@@ -57,7 +57,7 @@ public abstract class Figure {
 
     public abstract double minY();
 
-    public abstract double distancePoint(Point p);
+    public abstract double distanceNoeud(Noeud p);
 
     public abstract void dessine(GraphicsContext context);
 
@@ -68,47 +68,52 @@ public abstract class Figure {
     public abstract void save(Writer w, Numeroteur<Figure> num) throws IOException;
 
     public void sauvegarde(File fout) throws IOException {
-        Numeroteur<Figure> num = new Numeroteur<Figure>();
+        Numeroteur<Figure> num = new Numeroteur<>();
         try (BufferedWriter bout = new BufferedWriter(new FileWriter(fout))) {
             this.save(bout, num);
         }
     }
 
     public static Figure lecture(File fin) throws IOException {
-        Numeroteur<Figure> num = new Numeroteur<Figure>();
+        Numeroteur<Figure> num = new Numeroteur<>();
         Figure derniere = null;
         try (BufferedReader bin = new BufferedReader(new FileReader(fin))) {
             String line;
             while ((line = bin.readLine()) != null && line.length() != 0) {
                 String[] bouts = line.split(";");
-                if (bouts[0].equals("Point")) {
-                    int id = Integer.parseInt(bouts[1]);
-                    double px = Double.parseDouble(bouts[2]);
-                    double py = Double.parseDouble(bouts[3]);
-                    Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
-                    Point np = new Point(px, py, col);
-                    num.associe(id, np);
-                    derniere = np;
-                } else if (bouts[0].equals("Segment")) {
-                    int id = Integer.parseInt(bouts[1]);
-                    int idP1 = Integer.parseInt(bouts[2]);
-                    int idP2 = Integer.parseInt(bouts[3]);
-                    Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
-                    Point p1 = (Point) num.getObjet(idP1);
-                    Point p2 = (Point) num.getObjet(idP2);
-                    Segment ns = new Segment(p1, p2, col);
-                    num.associe(id, ns);
-                    derniere = ns;
-                } else if (bouts[0].equals("Groupe")) {
-                    int id = Integer.parseInt(bouts[1]);
-                    Groupe ng = new Groupe();
-                    num.associe(id, ng);
-                    for (int i = 2; i < bouts.length; i++) {
-                        int idSous = Integer.parseInt(bouts[i]);
-                        Figure fig = num.getObjet(idSous);
-                        ng.add(fig);
+                switch (bouts[0]) {
+                    case "Noeud" ->                         {
+                            int id = Integer.parseInt(bouts[1]);
+                            double px = Double.parseDouble(bouts[2]);
+                            double py = Double.parseDouble(bouts[3]);
+                            Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
+                            Noeud np = new Noeud(px, py, col);
+                            num.associe(id, np);
+                            derniere = np;
+                        }
+                    case "Barre" ->                         {
+                            int id = Integer.parseInt(bouts[1]);
+                            int idP1 = Integer.parseInt(bouts[2]);
+                            int idP2 = Integer.parseInt(bouts[3]);
+                            Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
+                            Noeud p1 = (Noeud) num.getObjet(idP1);
+                            Noeud p2 = (Noeud) num.getObjet(idP2);
+                            Barre ns = new Barre(p1, p2, col);
+                            num.associe(id, ns);
+                            derniere = ns;
+                        }
+                    case "Groupe" ->                         {
+                            int id = Integer.parseInt(bouts[1]);
+                            Groupe ng = new Groupe();
+                            num.associe(id, ng);
+                            for (int i = 2; i < bouts.length; i++) {
+                                int idSous = Integer.parseInt(bouts[i]);
+                                Figure fig = num.getObjet(idSous);
+                                ng.add(fig);
+                            }       derniere = ng;
+                        }
+                    default -> {
                     }
-                    derniere = ng;
                 }
             }
 

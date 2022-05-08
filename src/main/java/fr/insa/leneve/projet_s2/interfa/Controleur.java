@@ -14,18 +14,20 @@ import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.TriangleTerrain;
 import fr.insa.leneve.projet_s2.Figure;
 import fr.insa.leneve.projet_s2.Groupe;
-import fr.insa.leneve.projet_s2.Segment;
-import fr.insa.leneve.projet_s2.Point;
 import static java.lang.Math.hypot;
 import static javafx.scene.paint.Color.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
@@ -39,11 +41,13 @@ public class Controleur {
     
     private MainPanel vue;
     private int etat;
+    private Noeud noeud1DansModel;
+    private Numeroteur<TriangleTerrain> NTT;//a modifier
+    private Numeroteur<Barre> NB;//a modifier
     private Numeroteur<Noeud> NNoeud;
-    private Numeroteur<TriangleTerrain> NTT;
-    private Numeroteur<Barre> NB;
+    private List<Figure> selection;
     
-    private Segment segmentEnCoursDeCreation = null;
+    private Barre barreEnCoursDeCreation = null;
     
     private double P1x,P1y,P2x,P2y,P3x,P3y;
     private TriangleTerrain TriTerrain;
@@ -52,11 +56,11 @@ public class Controleur {
     final double a = 0.5; // alpha compris entre 0 et 1 (pour la forme du noeud appui simple)
     final double cote = 5;
     
-    private List<Figure> selection;
     
     public Controleur(MainPanel vue){
         this.vue = vue;
-        this.changeEtat(0);  
+        this.selection = new ArrayList<>();
+ 
         this.NNoeud = new Numeroteur<>();
         this.NTT = new Numeroteur<>();
         
@@ -74,6 +78,28 @@ public class Controleur {
     
     public void changeEtat(int nouvelEtat){ 
         switch (nouvelEtat) {
+            case 20 :
+                this.vue.getRbSelect().setSelected(true);
+                this.selection.clear();
+                this.barreEnCoursDeCreation = null;
+                this.vue.redrawAll();
+            case 30 :
+                // creation de points
+                this.vue.getRbPoints().setSelected(true); //a modifier
+                this.selection.clear();
+                this.barreEnCoursDeCreation = null;
+                this.vue.getbGrouper().setDisable(true);
+                this.vue.redrawAll();
+            case 40 : 
+                // creation de segments étape 1
+                this.vue.getRbSegments().setSelected(true);
+                this.selection.clear();
+                this.barreEnCoursDeCreation = null;
+                this.vue.getbGrouper().setDisable(true);
+                this.vue.redrawAll();
+            case 41 : 
+                // creation de segments étape 2
+            
             //le comportement des boutons les uns par rapport aux autres n'a que très peu été défini pour l'instant
             case 03 : 
             // ce cas sélectionne automatiquement le bouton TT si un noeud appui n'a pu être créé
@@ -84,19 +110,289 @@ public class Controleur {
             default:
                 break;
         }
-        etat = nouvelEtat;
+        this.etat = nouvelEtat;
+        this.activeBoutonsSuivantSelection();
+
     }
     
-    public int getEtat(){
-        return etat;
+     /**
+     * transforme les coordonnées (xVue,yVue) dans le repère de la vue, en un
+     * point du modele en tenant compte de la transformation actuelle appliquée
+     * à la vue.
+     *
+     * @param xVue pos x dans la vue
+     * @param yVue pos y dans la vue
+     * @return un Point apprès application de la transformation vue --> model
+     */
+    public Noeud posInModel(double xVue, double yVue) {
+        Transform modelVersVue = this.vue.getcDessin().getTransform();
+        Point2D ptrans;
+        try {
+            ptrans = modelVersVue.inverseTransform(xVue, yVue);
+        } catch (NonInvertibleTransformException ex) {
+            throw new Error(ex);
+        }
+        Noeud pclic = new Noeud(ptrans.getX(), ptrans.getY());
+        pclic.setCouleur(this.vue.getCpCouleur().getValue());
+        return pclic;
+    }
+    
+    public void clicDansZoneDessin(MouseEvent t) {
+        switch(this.etat){
+            case 20 -> {
+            // selection
+            Noeud pclic = this.posInModel(t.getX(), t.getY());
+            // pas de limite de distance entre le clic et l'objet selectionné
+            Figure proche = this.vue.getModel().plusProche(pclic, Double.MAX_VALUE);
+            // il faut tout de même prévoir le cas ou le groupe est vide
+            // donc pas de plus proche
+            if (proche != null) {
+                if (t.isShiftDown()) {
+                    this.selection.add(proche);
+                } else if (t.isControlDown()) {
+                    if (this.selection.contains(proche)) {
+                        this.selection.remove(proche);
+                    } else {
+                        this.selection.add(proche);
+                    }
+                } else {
+                    this.selection.clear();
+                    this.selection.add(proche);
+                }
+                this.activeBoutonsSuivantSelection();
+                this.vue.redrawAll();
+            }
+            }
+            case 30 -> {
+            // creation points
+            Noeud pclic = this.posInModel(t.getX(), t.getY());
+            Groupe model = this.vue.getModel();
+            model.add(pclic);
+            this.vue.redrawAll();
+            }
+            case 40 -> {
+            // creation segment premier point
+            this.noeud1DansModel = this.posInModel(t.getX(), t.getY());
+            this.barreEnCoursDeCreation = new Barre(this.noeud1DansModel,
+                    new Noeud(this.noeud1DansModel),
+                    this.vue.getCpCouleur().getValue());
+            this.changeEtat(41);
+            }
+            case 41 -> {
+            // creation de segment deuxieme point
+            Noeud pclic = this.posInModel(t.getX(), t.getY());
+            Barre ns = new Barre(this.noeud1DansModel, pclic,
+                    this.vue.getCpCouleur().getValue());
+            this.vue.getModel().add(ns);
+            this.barreEnCoursDeCreation = null;
+            this.vue.redrawAll();
+            this.changeEtat(40);
+            }
+        }
+    }
+    
+    public void boutonSelect(ActionEvent t) {
+        this.changeEtat(20);
+    }
+
+    public void boutonNoeud(ActionEvent t) {
+        this.changeEtat(30);
+    }
+
+    public void boutonBarre(ActionEvent t) {
+        this.changeEtat(40);
+    }
+
+    private void activeBoutonsSuivantSelection() {
+        this.vue.getbGrouper().setDisable(true);
+        this.vue.getbSupprimer().setDisable(true);
+        if (this.etat == 20) {
+            if (this.selection.size() > 0) {
+                this.vue.getbSupprimer().setDisable(false);
+                if (this.selection.size() > 1) {
+                    this.vue.getbGrouper().setDisable(false);
+                }
+            }
+        }
+    }
+    
+    /**
+     * @return the selection
+     */
+    public List<Figure> getSelection() {
+        return selection;
+    }
+
+    public void boutonGrouper(ActionEvent t) {
+        if (this.etat == 20 && this.selection.size() > 1) {
+            // normalement le bouton est disabled dans le cas contraire
+            Groupe ssGroupe = this.vue.getModel().sousGroupe(selection);
+            this.selection.clear();
+            this.selection.add(ssGroupe);
+            this.activeBoutonsSuivantSelection();
+            this.vue.redrawAll();
+        }
+    }
+
+    public void boutonSupprimer(ActionEvent t) {
+        if (this.etat == 20 && this.selection.size() > 0) {
+            // normalement le bouton est disabled dans le cas contraire
+            this.vue.getModel().removeAll(this.selection);
+            this.selection.clear();
+            this.activeBoutonsSuivantSelection();
+            this.vue.redrawAll();
+        }
+    }
+
+    public void changeColor(Color value) {
+        if (this.etat == 20 && this.selection.size() > 0) {
+            for (Figure f : this.selection) {
+                f.changeCouleur(value);
+            }
+            this.vue.redrawAll();
+        } else if (this.etat == 41 && this.barreEnCoursDeCreation != null) {
+            this.barreEnCoursDeCreation.changeCouleur(value);
+        }
+    }
+
+    private void realSave(File f) {
+        try {
+            this.vue.getModel().sauvegarde(f);
+            this.vue.setCurFile(f);
+            this.vue.getInStage().setTitle(f.getName());
+        } catch (IOException ex) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Problème durant la sauvegarde");
+            alert.setContentText(ex.getLocalizedMessage());
+
+            alert.showAndWait();
+        } finally {
+            this.changeEtat(20);
+        }
+    }
+
+    public void menuSave(ActionEvent t) {
+        if (this.vue.getCurFile() == null) {
+            this.menuSaveAs(t);
+        } else {
+            this.realSave(this.vue.getCurFile());
+        }
+    }
+
+    public void menuSaveAs(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showSaveDialog(this.vue.getInStage());
+        if (f != null) {
+            this.realSave(f);
+        }
+    }
+
+    public void menuOpen(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(this.vue.getInStage());
+        if (f != null) {
+            try {
+                Figure lue = Figure.lecture(f);
+                Groupe glu = (Groupe) lue;
+                Stage nouveau = new Stage();
+                nouveau.setTitle(f.getName());
+                Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
+                nouveau.setScene(sc);
+                nouveau.show();
+            } catch (IOException ex) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Problème durant la sauvegarde");
+                alert.setContentText(ex.getLocalizedMessage());
+
+                alert.showAndWait();
+            } finally {
+                this.changeEtat(20);
+            }
+        }
+    }
+//    }
+
+    public void menuNouveau(ActionEvent t) {
+        Stage nouveau = new Stage();
+        nouveau.setTitle("Nouveau");
+        Scene sc = new Scene(new MainPanel(nouveau), 800, 600);
+        nouveau.setScene(sc);
+        nouveau.show();
+    }
+
+    public void menuApropos(ActionEvent t) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("A propos");
+        alert.setHeaderText(null);
+        alert.setContentText("Trop super ce micro-logiciel de dessin vectoriel 2D\n"
+                + "réalisé par François de Bertrand de Beuvron\n"
+                + "comme tutoriel pour un cours de POO\n"
+                + "à l'INSA de Strasbourg");
+
+        alert.showAndWait();
+    }
+
+    public void zoomDouble() {
+        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
+        this.vue.redrawAll();
+    }
+
+    public void zoomDemi() {
+        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(2));
+        this.vue.redrawAll();
+    }
+
+    public void zoomFitAll() {
+        this.vue.fitAll();
+        this.vue.redrawAll();
+    }
+
+    public void translateGauche() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateGauche(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateDroite() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateDroite(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateHaut() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateHaut(0.8));
+        this.vue.redrawAll();
+   }
+
+    public void translateBas() {
+         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
+        this.vue.redrawAll();
+   }
+
+    void mouseMovedDansZoneDessin(MouseEvent t) {
+        if (this.etat == 41) {
+            // attente deuxieme point segment
+            this.barreEnCoursDeCreation.setFin(this.posInModel(t.getX(), t.getY()));
+            this.vue.redrawAll();
+        }
     }
 
     /**
-     * appelle des méthodes selon l'état 
-     * après detection d'un clic dans a zone dessin de l'interface
-     * @param t 
+     * @return the segmentEnCoursDeCreation
      */
-    void clicDansZoneDessin(MouseEvent t) {
+    public Barre getBarreEnCoursDeCreation() {
+        return barreEnCoursDeCreation;
+    }
+
+    void creeNoeudParDialog() {
+        Optional<Noeud> p = EnterNoeudDialog.demandeNoeud();
+        if (p.isPresent()) {
+            this.vue.getModel().add(p.get());
+            this.vue.redrawAll();
+        }
+    }
+    
+    /*void clicDansZoneDessin(MouseEvent t) {
         System.out.println("clac");
         switch (etat) {
             case 0: // les états commençant par 0 sont les différentes étapes de création d'un triangle terrain
@@ -168,12 +464,12 @@ public class Controleur {
      * ce qui est utile pour la sauvegarde
      * @param t 
      */
-    public void creeNoeudS(MouseEvent t){
+    /*public void creeNoeudS(MouseEvent t){
        NoeudSimple NS = new NoeudSimple(t.getX(),t.getY(), NNoeud); // création du noeud simple
        NNoeud.associe(NS.getIdNoeud(), NS); // on le met dans le numeroteur 
        vue.getcDessin().getRealCanvas().getGraphicsContext2D().setFill(vue.getCouleur());
        vue.getcDessin().getRealCanvas().getGraphicsContext2D().fillOval(NS.getPx()-Rayon, NS.getPy()-Rayon, 2*Rayon, 2*Rayon);
-    }
+    }*/
     
     /**
      * créer un triangle terrain en utilisant les coordonnées de trois clics
@@ -206,7 +502,7 @@ public class Controleur {
      * @param t
      * @return 
      */
-    public boolean clicSurTT(MouseEvent t){
+   /* public boolean clicSurTT(MouseEvent t){
         System.out.println("TT?");
         int compteur=0;
         for(int i=0; i<NTT.getProchainID(); i++){
@@ -276,13 +572,13 @@ public class Controleur {
      * @param t
      * @param tt 
      */
-    public void creeNoeudAS(MouseEvent t, TriangleTerrain tt){
+    /*public void creeNoeudAS(MouseEvent t, TriangleTerrain tt){
         System.out.println("cnas");
         NoeudAppuiSimple NAS = new NoeudAppuiSimple(tt, NNoeud); 
         NNoeud.associe(NAS.getIdNoeud(), NAS);
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().setStroke(vue.getCouleur());
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().strokeRoundRect(t.getX(), t.getY(), cote, cote, a, a);
-    }
+    }*/
      
     /**
      * créer un noeud appui double sur un triangle terrain
@@ -290,153 +586,12 @@ public class Controleur {
      * @param t
      * @param tt 
      */
-    public void creeNoeudAD(MouseEvent t, TriangleTerrain tt ){
+    /*public void creeNoeudAD(MouseEvent t, TriangleTerrain tt ){
         System.out.println("cnad");
         NoeudAppuiDouble NAD = new NoeudAppuiDouble(tt, NNoeud); 
         NNoeud.associe(NAD.getIdNoeud(), NAD);
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().setStroke(vue.getCouleur());
         vue.getcDessin().getRealCanvas().getGraphicsContext2D().strokeRect(t.getX(), t.getY(), cote, cote);
-    }
-    
-    public List<Figure> getSelection() {
-        return selection;
-    }
-    
-    void mouseMovedDansZoneDessin(MouseEvent t) {
-        if (this.etat == 41) {
-            // attente deuxieme point segment
-            this.segmentEnCoursDeCreation.setFin(this.posInModel(t.getX(), t.getY()));
-            this.vue.redrawAll();
-        }
-    }
-    public Segment getSegmentEnCoursDeCreation() {
-        return segmentEnCoursDeCreation;
-    }
-    
-    public void zoomDouble() {
-        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
-        this.vue.redrawAll();
-    }
-    
-    public void zoomDemi() {
-        this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(2));
-        this.vue.redrawAll();
-    }
+    }*/
 
-    public void zoomFitAll() {
-        this.vue.fitAll();
-        this.vue.redrawAll();
-    }
-    
-    public void translateGauche() {
-         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateGauche(0.8));
-        this.vue.redrawAll();
-   }
-
-    public void translateDroite() {
-         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateDroite(0.8));
-        this.vue.redrawAll();
-   }
-
-    public void translateHaut() {
-         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateHaut(0.8));
-        this.vue.redrawAll();
-   }
-
-    public void translateBas() {
-         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
-        this.vue.redrawAll();
-   }
-    
-    private void realSave(File f) {
-        try {
-            this.vue.getModel().sauvegarde(f);
-            this.vue.setCurFile(f);
-            this.vue.getInStage().setTitle(f.getName());
-        } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Problème durant la sauvegarde");
-            alert.setContentText(ex.getLocalizedMessage());
-
-            alert.showAndWait();
-        } finally {
-            this.changeEtat(20);
-        }
-    }
-    
-    public void menuSave(ActionEvent t) {
-        if (this.vue.getCurFile() == null) {
-            this.menuSaveAs(t);
-        } else {
-            this.realSave(this.vue.getCurFile());
-        }
-    }
-    
-    public void menuSaveAs(ActionEvent t) {
-        FileChooser chooser = new FileChooser();
-        File f = chooser.showSaveDialog(this.vue.getInStage());
-        if (f != null) {
-            this.realSave(f);
-        }
-    }
-
-    public void menuOpen(ActionEvent t) {
-        FileChooser chooser = new FileChooser();
-        File f = chooser.showOpenDialog(this.vue.getInStage());
-        if (f != null) {
-            try {
-                Figure lue = Figure.lecture(f);
-                Groupe glu = (Groupe) lue;
-                Stage nouveau = new Stage();
-                nouveau.setTitle(f.getName());
-                Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
-                nouveau.setScene(sc);
-                nouveau.show();
-            } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText("Problème durant la sauvegarde");
-                alert.setContentText(ex.getLocalizedMessage());
-
-                alert.showAndWait();
-            } finally {
-                this.changeEtat(20);
-            }
-        }
-    }
-//    }
-    public Point posInModel(double xVue, double yVue) {
-           Transform modelVersVue = this.vue.getcDessin().getTransform();
-           Point2D ptrans;
-           try {
-               ptrans = modelVersVue.inverseTransform(xVue, yVue);
-           } catch (NonInvertibleTransformException ex) {
-               throw new Error(ex);
-           }
-           Point pclic = new Point(ptrans.getX(), ptrans.getY());
-           pclic.setCouleur(this.vue.getCpCouleur().getValue());
-           return pclic;
-    }
-        
-    public void menuNouveau(ActionEvent t) {
-        Stage nouveau = new Stage();
-        nouveau.setTitle("Nouveau");
-        Scene sc = new Scene(new MainPanel(nouveau), 800, 600);
-        nouveau.setScene(sc);
-        nouveau.show();
-    }
-
-    public void menuApropos(ActionEvent t) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("A propos");
-        alert.setHeaderText(null);
-        alert.setContentText("Trop super ce micro-logiciel de dessin vectoriel 2D\n"
-                + "réalisé par François de Bertrand de Beuvron\n"
-                + "comme tutoriel pour un cours de POO\n"
-                + "à l'INSA de Strasbourg");
-
-        alert.showAndWait();
-    }
-    
 }

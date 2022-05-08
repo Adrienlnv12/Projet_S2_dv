@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 public class NoeudAppuiDouble extends NoeudAppui {
     
     public NoeudAppuiDouble(TriangleTerrain TT,Numeroteur num){
-         super(TT,num);
+         super(TT/*,num*/);
     }
     
 

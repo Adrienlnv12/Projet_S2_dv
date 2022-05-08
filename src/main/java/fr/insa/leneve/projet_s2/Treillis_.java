@@ -213,7 +213,7 @@ public class Treillis_ { // composé 1 terrain, plusieurs noeuds, plusiseurs bar
             // coefficient devant l'effort inconnu de la barre
                 for(int k=0;k<this.barres.size();k++){
                     // permet de trouver une barre k concourante au noeud j, un noeud peut avoir plusieurs barres concourantes 
-                    if(this.noeuds.get(j)==this.barres.get(k).Noeud1||this.noeuds.get(j)==this.barres.get(k).Noeud2){ 
+                    if(this.noeuds.get(j)==this.barres.get(k).debut||this.noeuds.get(j)==this.barres.get(k).fin){ 
                         // Equations sur la composante x :
                         double angle_alpha = this.barres.get(k).getAngleBarre(this.barres.get(k));
                         Matrice_coeffs.set(i,this.barres.get(k).id,Math.cos(angle_alpha));
@@ -229,7 +229,7 @@ public class Treillis_ { // composé 1 terrain, plusieurs noeuds, plusiseurs bar
                 if(this.noeuds.get(j) instanceof NoeudAppuiDouble){
                     for(int n = 0;n<this.barres.size();n++){
                         // dans un premier temps on s'intéresse aux coefficients devant les efforts 
-                        if(this.noeuds.get(j)==this.barres.get(n).Noeud1||this.noeuds.get(j)==this.barres.get(n).Noeud2){
+                        if(this.noeuds.get(j)==this.barres.get(n).debut||this.noeuds.get(j)==this.barres.get(n).fin){
                         double angle_alpha = this.barres.get(n).getAngleBarre(this.barres.get(n));
                          // Equations sur la composante x :
                         Matrice_coeffs.set(i,this.barres.get(n).id,Math.cos(angle_alpha));
@@ -253,7 +253,7 @@ public class Treillis_ { // composé 1 terrain, plusieurs noeuds, plusiseurs bar
     
                 if(this.noeuds.get(j) instanceof NoeudAppuiSimple){
                     for(int m=0;m<this.barres.size();m++){
-                        if(this.noeuds.get(j)==this.barres.get(m).Noeud1||this.noeuds.get(j)==this.barres.get(m).Noeud2){
+                        if(this.noeuds.get(j)==this.barres.get(m).debut||this.noeuds.get(j)==this.barres.get(m).fin){
                             //remplissage des coefficents devant les efforts des barres 
                             double angle_alpha = this.barres.get(m).getAngleBarre(this.barres.get(m));
                             // Equations sur la composante x :

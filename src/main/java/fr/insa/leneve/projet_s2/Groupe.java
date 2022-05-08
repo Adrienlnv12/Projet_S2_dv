@@ -81,16 +81,17 @@ public class Groupe extends Figure {
      * retourne la figure contenue dans le groupe la plus proche du point et au
      * maximum à distMax du point; retourne null si aucune figure n'est à une
      * distance plus faible que distMax;
+     * @param p
      */
-    public Figure plusProche(Point p, double distMax) {
+    public Figure plusProche(Noeud p, double distMax) {
         if (this.contient.isEmpty()) {
             return null;
         } else {
             Figure fmin = this.contient.get(0);
-            double min = fmin.distancePoint(p);
+            double min = fmin.distanceNoeud(p);
             for (int i = 1; i < this.contient.size(); i++) {
                 Figure fcur = this.contient.get(i);
-                double cur = fcur.distancePoint(p);
+                double cur = fcur.distanceNoeud(p);
                 if (cur < min) {
                     min = cur;
                     fmin = fcur;
@@ -145,16 +146,16 @@ public class Groupe extends Figure {
     }
 
     public static Groupe groupeTest() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(100, 10);
-        Point p3 = new Point(100, 100);
-        Point p4 = new Point(10, 100);
-        Point p5 = new Point(50, 50);
-        Point p6 = new Point(500, 500, Color.AQUAMARINE);
-        Segment s1 = new Segment(p1, p2);
-        Segment s2 = new Segment(p2, p3);
-        Segment s3 = new Segment(p3, p1);
-        Segment s4 = new Segment(p1, p4);
+        Noeud p1 = new Noeud(10, 10);
+        Noeud p2 = new Noeud(100, 10);
+        Noeud p3 = new Noeud(100, 100);
+        Noeud p4 = new Noeud(10, 100);
+        Noeud p5 = new Noeud(50, 50);
+        Noeud p6 = new Noeud(500, 500, Color.AQUAMARINE);
+        Barre s1 = new Barre(p1, p2);
+        Barre s2 = new Barre(p2, p3);
+        Barre s3 = new Barre(p3, p1);
+        Barre s4 = new Barre(p1, p4);
         Groupe triangle = new Groupe();
         triangle.add(s1);
         triangle.add(s2);
@@ -165,26 +166,26 @@ public class Groupe extends Figure {
         res.add(s4);
         res.add(triangle);
         for (int i = 0; i < 10; i++) {
-            res.add(new Point(Math.random() * 500, Math.random() * 500,
+            res.add(new Noeud(Math.random() * 500, Math.random() * 500,
                     Color.color(Math.random(), Math.random(), Math.random())));
         }
         for (int i = 0; i < 5; i++) {
-            res.add(new Segment(new Point(Math.random() * 500, Math.random() * 500),
-                    new Point(Math.random() * 500, Math.random() * 500),
+            res.add(new Barre(new Noeud(Math.random() * 500, Math.random() * 500),
+                    new Noeud(Math.random() * 500, Math.random() * 500),
                     Color.color(Math.random(), Math.random(), Math.random())));
         }
         return res;
     }
 
-    public Point choisiPoint() {
-        List<Point> lp = new ArrayList<>();
+    public Noeud choisiNoeud() {
+        List<Noeud> lp = new ArrayList<>();
         System.out.println("liste des points disponibles : ");
         int nbr = 0;
         for (int i = 0; i < this.contient.size(); i++) {
             Figure f = this.contient.get(i);
-            if (f instanceof Point) {
+            if (f instanceof Noeud) {
                 nbr++;
-                lp.add((Point) f);
+                lp.add((Noeud) f);
                 System.out.println(nbr + ") " + f);
             }
         }
@@ -248,18 +249,18 @@ public class Groupe extends Figure {
             if (rep == 1) {
                 System.out.println(this);
             } else if (rep == 2) {
-                Point np = Point.demandePoint();
+                Noeud np = Noeud.demandeNoeud();
                 this.add(np);
             } else if (rep == 3) {
-                Segment ns = Segment.demandeSegment();
+                Barre ns = Barre.demandeBarre();
                 this.add(ns);
             } else if (rep == 4) {
                 System.out.println("choisissez le début du segment");
-                Point deb = this.choisiPoint();
+                Noeud deb = this.choisiNoeud();
                 if (deb != null) {
                     System.out.println("choisissez la fin du segment");
-                    Point fin = this.choisiPoint();
-                    Segment ns = new Segment(deb, fin);
+                    Noeud fin = this.choisiNoeud();
+                    Barre ns = new Barre(deb, fin);
                     this.add(ns);
                 }
             } else if (rep == 5) {
@@ -272,8 +273,8 @@ public class Groupe extends Figure {
                         + "minY = " + this.minY() + "\n");
             } else if (rep == 7) {
                 System.out.println("entrez un point :");
-                Point p = Point.demandePoint();
-                System.out.println("distance : " + this.distancePoint(p));
+                Noeud p = Noeud.demandeNoeud();
+                System.out.println("distance : " + this.distanceNoeud(p));
             } else if (rep == 8) {
                 List<Figure> select = this.choisiFigures();
                 this.removeAll(select);
@@ -306,20 +307,20 @@ public class Groupe extends Figure {
     }
 
     public static void exempleProblemeSauvegarde() {
-        Point p11 = new Point(1, 1);
-        Point p12 = new Point(2, 2);
-        Point p13 = new Point(2, 2);
-        Point p14 = new Point(3, 3);
-        Segment s11 = new Segment(p11, p12);
-        Segment s12 = new Segment(p13, p14);
+        Noeud p11 = new Noeud(1, 1);
+        Noeud p12 = new Noeud(2, 2);
+        Noeud p13 = new Noeud(2, 2);
+        Noeud p14 = new Noeud(3, 3);
+        Barre s11 = new Barre(p11, p12);
+        Barre s12 = new Barre(p13, p14);
         Groupe gr1 = new Groupe();
         gr1.add(s11);
         gr1.add(s12);
-        Point p21 = new Point(1, 1);
-        Point p22 = new Point(2, 2);
-        Point p24 = new Point(3, 3);
-        Segment s21 = new Segment(p21, p22);
-        Segment s22 = new Segment(p22, p24);
+        Noeud p21 = new Noeud(1, 1);
+        Noeud p22 = new Noeud(2, 2);
+        Noeud p24 = new Noeud(3, 3);
+        Barre s21 = new Barre(p21, p22);
+        Barre s22 = new Barre(p22, p24);
         Groupe gr2 = new Groupe();
         gr2.add(s21);
         gr2.add(s22);
@@ -425,15 +426,15 @@ public class Groupe extends Figure {
             return min;
         }
     }
-
+    
     @Override
-    public double distancePoint(Point p) {
+    public double distanceNoeud(Noeud p) {
         if (this.contient.isEmpty()) {
-            return new Point(0, 0).distancePoint(p);
+            return new Noeud(0, 0).distanceNoeud(p);
         } else {
-            double dist = this.contient.get(0).distancePoint(p);
+            double dist = this.contient.get(0).distanceNoeud(p);
             for (int i = 1; i < this.contient.size(); i++) {
-                double cur = this.contient.get(i).distancePoint(p);
+                double cur = this.contient.get(i).distanceNoeud(p);
                 if (cur < dist) {
                     dist = cur;
                 }

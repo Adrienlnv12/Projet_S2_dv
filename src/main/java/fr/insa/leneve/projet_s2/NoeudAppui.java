@@ -9,20 +9,20 @@ package fr.insa.leneve.projet_s2;
  * @author adrie
  */
 public class NoeudAppui extends Noeud {
-     private TriangleTerrain triangleterrain;
+    private TriangleTerrain triangleterrain;
     private double Nx;
     private double Ny;
 
-    public NoeudAppui(TriangleTerrain triangleterrain, Numeroteur<Noeud> N) {  
-        super(N);
+    public NoeudAppui(TriangleTerrain triangleterrain/*, Numeroteur<Noeud> N*/) {  
+        //super(N);
         this.triangleterrain = triangleterrain;
         this.Nx = 0;
         this.Ny = 0;
        
     }
     
-    public NoeudAppui(TriangleTerrain t, int j,double alpha, Numeroteur<Noeud> N){
-        super(N); // appeler constructeur de la super classe en premier 
+    public NoeudAppui(TriangleTerrain t, int j,double alpha/*, Numeroteur<Noeud> N*/){
+        //super(N); // appeler constructeur de la super classe en premier 
         this.triangleterrain = t;
         if(0<=alpha && alpha<=1){
         Nx=1;
@@ -99,21 +99,21 @@ public class NoeudAppui extends Noeud {
         TriangleTerrain TT1 = new TriangleTerrain(4,5,8,4,5,1,numTT); 
         System.out.println(TT1.getPT1x());
         numTT.associe(TT1.getIdTT(), TT1);
-        NoeudAppui Noeud1 = new NoeudAppui(TT,2,alpha, numNA); //initialisation d'un noeud appui 
-        numNA.associe(Noeud1.getIdNoeud(),Noeud1);// association entre l'id d'lobjet noeud appui et le numéroteur
-        NoeudAppui Noeud2 = new NoeudAppui(TT,2,alpha, numNA);
-        numNA.associe(Noeud2.getIdNoeud(),Noeud2);
+        NoeudAppui Noeud1 = new NoeudAppui(TT,2,alpha/*, numNA*/); //initialisation d'un noeud appui 
+        //numNA.associe(Noeud1.getIdNoeud(),Noeud1);// association entre l'id d'lobjet noeud appui et le numéroteur
+        NoeudAppui Noeud2 = new NoeudAppui(TT,2,alpha/*, numNA*/);
+        //numNA.associe(Noeud2.getIdNoeud(),Noeud2);
 
         //Affichage 
         System.out.println("l'id de ce triangle de terrain est "+TT.getIdTT());
         System.out.println("l'id de ce triangle de terrain est "+TT1.getIdTT());
-        System.out.println("l'id de ce noeud est "+Noeud1.getIdNoeud());
-        System.out.println("l'id de ce noeud est"+Noeud2.getIdNoeud());
+        //System.out.println("l'id de ce noeud est "+Noeud1.getIdNoeud());
+        //System.out.println("l'id de ce noeud est"+Noeud2.getIdNoeud());
 
 
 
         Numeroteur<Noeud> num = new Numeroteur();
-        NoeudAppui N = new NoeudAppui(TT1,2,0.2, num);
+        NoeudAppui N = new NoeudAppui(TT1,2,0.2/*, num*/);
         double Px = N.getNx();
         System.out.println("la veleur de Nx est "+Px);
 

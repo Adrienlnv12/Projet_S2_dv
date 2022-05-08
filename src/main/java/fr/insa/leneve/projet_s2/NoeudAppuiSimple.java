@@ -15,9 +15,9 @@ public class NoeudAppuiSimple extends NoeudAppui {
     
     
     public NoeudAppuiSimple(TriangleTerrain triangleterrain, Numeroteur<Noeud> num){
-        super(triangleterrain, num);
+        super(triangleterrain/*, num*/);
     }
     public NoeudAppuiSimple(TriangleTerrain TT,int j,double alpha, Numeroteur<Noeud> num, Numeroteur numTT){
-        super(TT,j,alpha,numTT);       
+        super(TT,j,alpha/*,numTT*/);       
     }
 }

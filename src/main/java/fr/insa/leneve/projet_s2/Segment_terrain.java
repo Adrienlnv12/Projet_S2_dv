@@ -69,8 +69,8 @@ public class Segment_terrain {
     public double angle_beta(Numeroteur<TriangleTerrain> num, Numeroteur<Noeud> n){
         double angle = 0;
         TriangleTerrain TT = new TriangleTerrain(num);
-        NoeudAppui N1a = new NoeudAppui(TT,n);
-        NoeudAppui N2a = new NoeudAppui(TT,n);
+        NoeudAppui N1a = new NoeudAppui(TT/*,n*/);
+        NoeudAppui N2a = new NoeudAppui(TT/*,n*/);
         angle = atan(Math.abs(this.S2y-this.S1y)/Math.abs(this.S2x-this.S1x));
          
         

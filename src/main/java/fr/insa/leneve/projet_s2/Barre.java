@@ -4,28 +4,61 @@
  */
 package fr.insa.leneve.projet_s2;
 
+import java.io.IOException;
+import java.io.Writer;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 /**
  *
  * @author adrie
  */
-public class Barre {
+public class Barre extends FigureSimple {
         
     public TypedeBarre typebarre; // chaque barre a un type 
     public int id;
-    public Noeud Noeud1,Noeud2; // une barre a 2 noeuds à ses extrémités
-    private double traction;
+    public Noeud debut;
+    public Noeud fin;
+
+    /*private double traction;
     private double compression;
     private double prix;
     
-    public Barre(TypedeBarre Tb, Noeud N1, Noeud N2) {
-        this.typebarre = Tb;
-        this.Noeud1 = N1;
-        this.Noeud2 = N2;
+    /**
+     * @param debut the debut to set
+     */
+    public void setDebut(Noeud debut) {
+        this.debut = debut;
     }
+
+    /**
+     * @param fin the fin to set
+     */
+    public void setFin(Noeud fin) {
+        this.fin = fin;
+    }
+
+    public Barre(/*TypedeBarre Tb*/ Noeud debut, Noeud fin,Color couleur) {
+       /* this.typebarre = Tb;*/
+        this.debut = debut;
+        this.fin = fin;
+    }
+    
+    public Barre(/*TypedeBarre Tb*/Noeud debut, Noeud fin) {
+        this(/*Tb*/debut, fin, Color.BLUE);
+    }
+    
     public TypedeBarre gettypebarre(){
         return(this.typebarre);
     }
+    
+    public Noeud getDebut() {
+        return debut;
+    }
 
+    public Noeud getFin() {
+        return fin;
+    }
     public void setIdBarre(int id) {
         this.id = id;
     }
@@ -33,172 +66,116 @@ public class Barre {
     public int getIdBarre() {
         return (this.id);
     }
-
-    public Noeud getNoeud1() {
-        return (this.Noeud1);
-    }
-
-    public Noeud getNoeud2() {
-        return (this.Noeud2);
-    }
-    //Il s'agit des méthodes get pour accéder aux valeurs des coordonnées des noeuds, c'est compliqué car les noeuds peuvent être des noeuds appuis 
-    // ou des noeuds simples du coup on peut pas directement récuperer l'attribut d'un attribut sachant que c'est la classe abstraite Noeud.
-
-    public double getPxnoeud1(){ //a refaire
-    /** méthode associe pour l'instant seulement dans cette méthode,
-     * vérifier le fonctionnement de ces méthodes, il est surement possible de les optimiser
-     */
-        Numeroteur ntt = new Numeroteur<TriangleTerrain>();
-        Numeroteur n = new Numeroteur<Noeud>();
-        TriangleTerrain TT = new TriangleTerrain(ntt);
-        ntt.associe(TT.getIdTT(), TT);
-        NoeudSimple N1 = new NoeudSimple(n);
-        n.associe(N1.getIdNoeud(), N1);
-        NoeudAppui N1a = new NoeudAppui(TT, ntt);
-        n.associe(N1a.getIdNoeud(), N1a);
-        double Px = 0;
-       if(this.Noeud1 instanceof NoeudSimple){
-           N1=(NoeudSimple)this.Noeud1;
-           Px = N1.getPx();
-       }
-       if(this.Noeud1 instanceof NoeudAppui){
-           N1a = (NoeudAppui)this.Noeud1;
-           Px = N1a.getNx();
-       }
-       return(Px);
-    }
-    public double getPynoeud1(){
-        Numeroteur ntt = new Numeroteur<TriangleTerrain>(); 
-        Numeroteur n = new Numeroteur<Noeud>();
-        TriangleTerrain TT = new TriangleTerrain(ntt);
-        NoeudSimple N1 = new NoeudSimple(n);
-        NoeudAppui N1a = new NoeudAppui(TT,n);
-        double Py = 0;
-        if(this.Noeud1 instanceof NoeudSimple){
-            N1=(NoeudSimple)this.Noeud1;
-            Py = N1.getPy();
-        }
-        if(this.Noeud1 instanceof NoeudAppui){
-            N1a = (NoeudAppui)this.Noeud1;
-            Py = N1a.getNy();
-        }
-        return(Py);
-    }
-    public double getPxnoeud2(){
-        Numeroteur ntt = new Numeroteur<TriangleTerrain>();
-        Numeroteur n = new Numeroteur<Noeud>();
-        TriangleTerrain TT = new TriangleTerrain(ntt);
-        NoeudSimple N2 = new NoeudSimple(n);
-        NoeudAppui N2a = new NoeudAppui(TT, n);
-        double Px = 0;
-        if(this.Noeud2 instanceof NoeudSimple){
-            N2=(NoeudSimple)this.Noeud2;
-            Px = N2.getPx();
-        }
-        if(this.Noeud2 instanceof NoeudAppui){
-            N2a = (NoeudAppui)this.Noeud2;
-            Px = N2a.getNx();
-        }
-        return(Px);
-    }
-    public double getPynoeud2(){
-        Numeroteur ntt = new Numeroteur<TriangleTerrain>();
-        Numeroteur n = new Numeroteur<Noeud>();
-        TriangleTerrain TT = new TriangleTerrain(ntt);
-        NoeudSimple N2 = new NoeudSimple(n);
-        NoeudAppui N2a = new NoeudAppui(TT, n);
-        double Py = 0;
-        if(this.Noeud2 instanceof NoeudSimple){
-            N2=(NoeudSimple)this.Noeud2;
-            Py = N2.getPy();
-        }
-        if(this.Noeud2 instanceof NoeudAppui){
-            N2a = (NoeudAppui)this.Noeud2;
-            Py = N2a.getNy();
-        }
-        return(Py);
-    }
+    
    
     public void settypebarre(TypedeBarre T){
         this.typebarre=T;
     }
     
-    public void setNoeud1(Noeud N){
-        this.Noeud1=N;
-    }
-    
-    public void setNoeud2(Noeud N){
-        this.Noeud2=N;
+    public static Barre demandeBarre() {
+        /*System.out.println("Donnez le type de la barre");
+        TypedeBarre Tb = TypedeBarre.demandeTypedeBarre();*/
+        System.out.println("point début : ");
+        Noeud deb = Noeud.demandeNoeud();
+        System.out.println("point fin : ");
+        Noeud fin = Noeud.demandeNoeud();
+        return new Barre(/*Tb*/deb, fin);
     }
     
     @Override
     public String toString() {
-        return "barre{" + "typebarre=" + typebarre + ", id=" + id + ", noeud1=" + Noeud1 + ", noeud2=" + Noeud2 + '}';
+        return "barre{" + "typebarre=" + typebarre + ", id=" + id + ", noeud1=" + debut + ", noeud2=" + fin + '}';
     }
     
-     /* public double Longueur_barre(barre B){
-      double longueur_barre = 0;
+    public double Longueur_barre(Barre B){
+        double longueur_barre;
       
-      Numeroteur ntt = new Numeroteur<TriangleTerrain>();
-      Numeroteur n = new Numeroteur<Noeud>();
-      TriangleTerrain TT = new TriangleTerrain(ntt);
-      NoeudSimple N1 = new NoeudSimple(n);
-      NoeudSimple N2 = new NoeudSimple(n);
-      NoeudAppui N1a = new NoeudAppui(TT,ntt);
-      NoeudAppui N2a = new NoeudAppui(TT,ntt);
-      // on va utiliser la formule mathématique de la norme 
-      // nous devons tester le type de chaque noeud pour pouvoir retouver le bon attribut, une belle galère !!
-      /* Sachant que l'attribut est un Noeud, pour accéder à ses coordonnées on doit déjà savoir si il s'agit d'un 
-      noeud simple ou double. Une fois qu'on a cette info J'ai utilisé la formule qu'on a vu en première je crois avec la racine pour calculer 
-      la longueur de la barre. Je pense que la longueur de la barre ça devrait nous aider a calculer l'angle entre la barre et l'axe des abscisses. 
+        // on va utiliser la formule mathématique de la norme 
       
+        longueur_barre = Math.sqrt(Math.pow(B.fin.getPx()-B.debut.getPx(),2)+Math.pow(B.fin.getPy()-B.debut.getPy(),2));
       
-       longueur_barre = Math.sqrt(Math.pow(B.getPxnoeud2()-B.getPxnoeud1(),2)+Math.pow(B.getPynoeud2()-B.getPynoeud1(),2));
-          
-      
-        
-      return(longueur_barre);
+        return(longueur_barre);
     }
-    /*cette méthode devrait permettre de recup l'angle entre la barre et Ox
+    //cette méthode devrait permettre de recup l'angle entre la barre et Ox
     
-    */
     public double AngleBarre(Barre B){
             double angle = 0;            
-            //angle= Math.acos(Math.abs(B.getPxnoeud2()-B.getPxnoeud1())/Longueur_barre(B));
+            angle= Math.acos(Math.abs(B.fin.getPx()-B.debut.getPx())/Longueur_barre(B));
             return(angle);  
-        /* cette partie commentaire va expliquer la méthode angle 
-             cette méthode permet de recupérer en théorie l'angle entre une barre et l'axe des abscisses
-            J'ai fait la même manip que précdemment pour connaitre la classe exacte du noeud afin de récuperer la coordonnée sur x 
-           Cet angle est utilisé dans les équations d'équilibre statique. Une fois que l'on a l'angle, dans les cas d'un sytème isostasique 
-            on peut résoudre le système. 
-            Donc une condition de résolution du système un treillis isostasique 
-            */
+        /*cette partie commentaire va expliquer la méthode angle 
+        cette méthode permet de recupérer en théorie l'angle entre une barre et l'axe des abscisses
+        Cet angle est utilisé dans les équations d'équilibre statique. Une fois que l'on a l'angle, dans les cas d'un sytème isostasique 
+        on peut résoudre le système. 
+        Donc une condition de résolution du système un treillis isostasique */
+            
     }
     
     public double getAngleBarre(Barre B){
         return(AngleBarre(B));
     }
     
-    /*public static void main(String[]args){
-        Numeroteur TdB = new Numeroteur<TypedeBarre>();
-        Numeroteur TTerr = new Numeroteur<TriangleTerrain>();
-        Numeroteur N = new Numeroteur<Noeud>();
-        TypedeBarre TB = new TypedeBarre(41,478,56,87,14,TdB);
-        TdB.associe(TB.getIdTB(), TB);
-        TriangleTerrain TT = new TriangleTerrain(4,12,54,78,11,23, TTerr);
-        TTerr.associe(TT.getIdTT(), TT);
-        Noeudappuis N1 = new Noeudappuis(TT,2,0.2, N);
-        N.associe(N1.getIdNoeud(), N);
-        System.out.println(N1.getNx());
-        System.out.println(N1.getNy());        
-        Noeudsimple N2 = new Noeudsimple(4,8, N);
-        N.associe(N2.getIdNoeud(), N);
-        barre B = new barre(TB,N1,N2);
-        double Px = B.getPxnoeud1();
-        System.out.println(Px);
-        System.out.println(B.getPynoeud1());
-        System.out.println(B.id+" " +N1.id);
-        
-        
-    }*/
+    @Override
+    public double maxX() {
+        return Math.max(this.debut.maxX(), this.fin.maxX());
+    }
+
+    @Override
+    public double minX() {
+        return Math.min(this.debut.minX(), this.fin.minX());
+    }
+
+    @Override
+    public double maxY() {
+        return Math.max(this.debut.maxY(), this.fin.maxY());
+    }
+
+    @Override
+    public double minY() {
+        return Math.min(this.debut.minY(), this.fin.minY());
+    }
+    
+    @Override
+    public double distanceNoeud(Noeud p) {
+        double x1 = this.debut.getPx();
+        double y1 = this.debut.getPy();
+        double x2 = this.fin.getPx();
+        double y2 = this.fin.getPy();
+        double x3 = p.getPx();
+        double y3 = p.getPy();
+        double up = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1))
+                / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        if (up < 0) {
+            return this.debut.distanceNoeud(p);
+        } else if (up > 1) {
+            return this.fin.distanceNoeud(p);
+        } else {
+            Noeud p4 = new Noeud(x1 + up * (x2 - x1),
+                    y1 + up * (y2 - y1));
+            return p4.distanceNoeud(p);
+        }
+    }
+    
+    @Override
+    public void dessine(GraphicsContext context) {
+        context.setStroke(this.getCouleur());
+        context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
+    }
+
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setStroke(Figure.COULEUR_SELECTION);
+        context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
+    }
+
+    @Override
+    public void save(Writer w, Numeroteur<Figure> num) throws IOException {
+        if (!num.objExist(this)) {
+            id = num.creeID(this);
+            this.debut.save(w, num);
+            this.fin.save(w, num);
+            w.append("Barre;" + id + ";" +
+                    num.getID(this.debut) + ";" + num.getID(this.fin) +
+                    ";" + FigureSimple.saveColor(this.getCouleur())+"\n");
+        }
+    }
 }

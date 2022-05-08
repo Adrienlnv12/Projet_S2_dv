@@ -12,7 +12,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Transform;
 import fr.insa.leneve.projet_s2.Figure;
 import fr.insa.leneve.projet_s2.Groupe;
-import fr.insa.leneve.projet_s2.Segment;
+import fr.insa.leneve.projet_s2.Barre;
 /**
  *
  * @author cheraita
@@ -83,7 +83,7 @@ public class DessinCanvas1 extends Pane {
                 f.dessineSelection(context);
             }
         }
-        Segment enCOurs = this.main.getControleur().getSegmentEnCoursDeCreation();
+        Barre enCOurs = this.main.getControleur().getBarreEnCoursDeCreation();
         if (enCOurs != null) {
             context.setLineDashes(1, 1);
             enCOurs.dessine(context);
