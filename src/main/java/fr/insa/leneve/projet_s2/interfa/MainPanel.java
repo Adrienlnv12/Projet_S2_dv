@@ -6,7 +6,14 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 
+import javafx.scene.control.*;
+import fr.insa.leneve.projet_s2.Groupe;
+import javafx.collections.FXCollections;
 import java.io.File;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
@@ -15,16 +22,14 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import fr.insa.leneve.projet_s2.Groupe;
-import javafx.collections.FXCollections;
 /**
  *
  * @author adrie
  */
-public class MainPanel extends BorderPane {
+public final class MainPanel extends BorderPane {
     /**
      * multiplicateur pour l'espace de départ : pour ne pas que les bords de la
      * figure soit confondus avec les bords de la fenêtre, on considère que l'on
@@ -42,8 +47,6 @@ public class MainPanel extends BorderPane {
     private File curFile;
     
     private RadioButton rbSelect;
-    private RadioButton rbPoints;
-    private RadioButton rbSegments;
 
     private Button bGrouper;
     private ColorPicker cpCouleur;
@@ -65,17 +68,16 @@ public class MainPanel extends BorderPane {
     private MainMenu menu;
     
     
-    private RadioButton RbNoeudS;
+    private RadioButton RbNoeud;
     private RadioButton RbNoeudAS;
     private RadioButton RbNoeudAD;
     private RadioButton RbBarre;
-    private RadioButton RbTriTerrain;
+
     private Button bRes;
     
    
     
     private Button bSupObj;
-    private Button bSelect;
 
     
     private ChoiceBox cbTypeBarre;
@@ -110,40 +112,23 @@ public class MainPanel extends BorderPane {
             this.controleur.boutonSelect(t);
         });
         
-        this.RbNoeudS = new RadioButton("Noeud simple");
-        this.RbNoeudS.setOnAction((t) -> {
-            this.controleur.boutonNoeudS(t);
+        this.RbNoeud = new RadioButton("Noeud simple");
+        this.RbNoeud.setOnAction((t) -> {
+            this.controleur.boutonNoeud(t);
         });
-        
-        this.RbNoeudAS = new RadioButton("Noeud appui simple");
-        this.RbNoeudAS.setOnAction((t) -> {
-            this.controleur.boutonNoeudAS(t);
-        });
-        
-        this.RbNoeudAD = new RadioButton("Noeud appui double");
-        this.RbNoeudAD.setOnAction((t) -> {
-            this.controleur.boutonNoeudAD(t);
-        });
-        
+                
         this.RbBarre = new RadioButton("Barre");
         this.RbBarre.setOnAction((t) -> {
             this.controleur.boutonBarre(t);
         });
-        this.RbTriTerrain = new RadioButton("Triangle terrain");
-        this.RbTriTerrain.setOnAction((t) -> {
-            this.controleur.boutonTriTerrain(t);
-        });
         
         ToggleGroup bgEtat = new ToggleGroup();
         this.rbSelect.setToggleGroup(bgEtat);
-        this.RbNoeudS.setToggleGroup(bgEtat);
-        this.RbNoeudAS.setToggleGroup(bgEtat);
-        this.RbNoeudAD.setToggleGroup(bgEtat);
+        this.RbNoeud.setToggleGroup(bgEtat);
         this.RbBarre.setToggleGroup(bgEtat);
-        this.RbTriTerrain.setToggleGroup(bgEtat);
-        this.RbNoeudS.setSelected(true);
+        this.RbNoeud.setSelected(true);
         
-        VBox vbGauche = new VBox(this.rbSelect, this.RbNoeudS, this.RbNoeudAS, this.RbNoeudAD, this.RbTriTerrain);
+        VBox vbGauche = new VBox(this.rbSelect, this.RbNoeud, this.RbBarre);
         this.setLeft(vbGauche);
         
         this.bGrouper = new Button("Grouper");
@@ -265,8 +250,8 @@ public class MainPanel extends BorderPane {
     }
     
    
-    public RadioButton getRbNoeudS() {
-        return RbNoeudS;
+    public RadioButton getRbNoeud() {
+        return RbNoeud;
     }
     
     public RadioButton getRbNoeudAS() {
@@ -281,9 +266,7 @@ public class MainPanel extends BorderPane {
         return RbBarre;
     }
     
-    public RadioButton getRbTriTerrain() {
-        return RbTriTerrain;
-    }
+
     
     /**
      * @return the bRes
@@ -418,7 +401,5 @@ public class MainPanel extends BorderPane {
     public void setZoneModelVue(RectangleHV zoneModelVue) {
         this.zoneModelVue = zoneModelVue;
     }
-
-
     
 }

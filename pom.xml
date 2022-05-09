@@ -39,6 +39,18 @@
             </plugin>
         </plugins>
     
+        <resources>
+                <resource>
+                    <directory>src/main/java</directory>
+                    <filtering>false</filtering>
+                    <includes>
+                        <include>**/*.png</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                </resource>
+            </resources>
     
     </build>
 </project>
