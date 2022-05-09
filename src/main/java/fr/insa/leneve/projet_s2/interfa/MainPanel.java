@@ -174,7 +174,7 @@ public class MainPanel extends BorderPane {
         });   
         
         
-        this.bZoomDouble = new BoutonIcone("fr.insa.leneve.projet_s2.icones/zoomPlus.png",32,32);
+        this.bZoomDouble = new BoutonIcone("icones/zoomPlus.png",32,32);
         this.bZoomDouble.setOnAction((t) -> {
             this.controleur.zoomDouble();
         });
