@@ -25,20 +25,27 @@ import javafx.collections.FXCollections;
  * @author adrie
  */
 public class MainPanel extends BorderPane {
-    
+    /**
+     * multiplicateur pour l'espace de départ : pour ne pas que les bords de la
+     * figure soit confondus avec les bords de la fenêtre, on considère que l'on
+     * veut que la fenêtre puisse contenir une figure MULT_POUR_FIT_ALL fois
+     * plus grande que la figure réelle. Par exemple, si MULT_POUR_FIT_ALL = 2,
+     * la figure complète n'occupera en fait qu'environ la moitié de la fenetre
+     * graphique.
+     */
     private static double MULT_POUR_FIT_ALL = 1.1;
+    
     private Groupe model;
     private Controleur controleur;
 
     private Stage inStage;
     private File curFile;
-
+    
     private RadioButton rbSelect;
     private RadioButton rbPoints;
     private RadioButton rbSegments;
 
     private Button bGrouper;
-    private Button bSupprimer;
     private ColorPicker cpCouleur;
 
     private BoutonIcone bZoomDouble;
@@ -58,15 +65,14 @@ public class MainPanel extends BorderPane {
     private MainMenu menu;
     
     
-    private ToggleButton tbNoeudS;
-    private ToggleButton tbNoeudAS;
-    private ToggleButton tbNoeudAD;
-    private ToggleButton tbBarre;
-    private ToggleButton tbTriTerrain;
+    private RadioButton RbNoeudS;
+    private RadioButton RbNoeudAS;
+    private RadioButton RbNoeudAD;
+    private RadioButton RbBarre;
+    private RadioButton RbTriTerrain;
     private Button bRes;
     
-    
-    private OutilsLeft outilsLeft; 
+   
     
     private Button bSupObj;
     private Button bSelect;
@@ -93,42 +99,82 @@ public class MainPanel extends BorderPane {
         this.curFile = fromFile;
         this.model = model;
         this.fitAll(); 
-        
-        this.outilsLeft = new OutilsLeft(this);
         this.controleur = new Controleur(this);
-             
-        this.setLeft(this.outilsLeft);
        
         this.information = new Label(" Informations :");
 // label à mettre à côté d'un TextArea pour donner des informations à l'utilisateur
         this.setBottom(information);
         
-        
-        this.cpCouleur = new ColorPicker(Color.BLACK);
-        this.cpCouleur.setOnAction((t) -> {
-            this.controleur.changeColor(this.cpCouleur.getValue());
+        this.rbSelect = new RadioButton("Select");
+        this.rbSelect.setOnAction((t) -> {
+            this.controleur.boutonSelect(t);
         });
-           
+        
+        this.RbNoeudS = new RadioButton("Noeud simple");
+        this.RbNoeudS.setOnAction((t) -> {
+            this.controleur.boutonNoeudS(t);
+        });
+        
+        this.RbNoeudAS = new RadioButton("Noeud appui simple");
+        this.RbNoeudAS.setOnAction((t) -> {
+            this.controleur.boutonNoeudAS(t);
+        });
+        
+        this.RbNoeudAD = new RadioButton("Noeud appui double");
+        this.RbNoeudAD.setOnAction((t) -> {
+            this.controleur.boutonNoeudAD(t);
+        });
+        
+        this.RbBarre = new RadioButton("Barre");
+        this.RbBarre.setOnAction((t) -> {
+            this.controleur.boutonBarre(t);
+        });
+        this.RbTriTerrain = new RadioButton("Triangle terrain");
+        this.RbTriTerrain.setOnAction((t) -> {
+            this.controleur.boutonTriTerrain(t);
+        });
+        
+        ToggleGroup bgEtat = new ToggleGroup();
+        this.rbSelect.setToggleGroup(bgEtat);
+        this.RbNoeudS.setToggleGroup(bgEtat);
+        this.RbNoeudAS.setToggleGroup(bgEtat);
+        this.RbNoeudAD.setToggleGroup(bgEtat);
+        this.RbBarre.setToggleGroup(bgEtat);
+        this.RbTriTerrain.setToggleGroup(bgEtat);
+        this.RbNoeudS.setSelected(true);
+        
+        VBox vbGauche = new VBox(this.rbSelect, this.RbNoeudS, this.RbNoeudAS, this.RbNoeudAD, this.RbTriTerrain);
+        this.setLeft(vbGauche);
+        
+        this.bGrouper = new Button("Grouper");
+        this.bGrouper.setOnAction((t) -> {
+            this.controleur.boutonGrouper(t);
+        });
+        
+        this.bGrouper.setOnMouseEntered((t) -> {
+            System.out.println("entre dans bgroupe");
+        });
+        
         this.bSupObj = new Button("Supprimer");
         this.bSupObj.setOnAction((t) -> {
             this.controleur.boutonSupprimer(t);
         });
-        bSupObj.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-
+        this.cpCouleur = new ColorPicker(Color.BLACK);
+        this.cpCouleur.setOnAction((t) -> {
+            this.controleur.changeColor(this.cpCouleur.getValue());
+        });
         this.cbTypeBarre = new ChoiceBox(FXCollections.observableArrayList(
                "A", "B", "C"));// mettre les différents type de barres
         cbTypeBarre.setTooltip(new Tooltip("Séléctionner le type de barre"));//permet d'indiquer la fonction du bouton
-        cbTypeBarre.setMaxSize(bSupObj.getMaxWidth(), bSupObj.getMaxHeight());
+        cbTypeBarre.setMaxSize(cbTypeBarre.getMaxWidth(), cbTypeBarre.getMaxHeight());
         
-        this.bSelect = new Button("Select"); //crée le bouton select
-        bSelect.setMaxSize(bSupObj.getMaxWidth(), bSupObj.getMaxHeight());
-        this.bSelect.setOnAction((t)->{
-            this.controleur.boutonSelect(t);
-        });
-           
+        this.bRes = new Button("Résolution"); //crée le toggle bouton 
+        this.bRes.setOnAction((t) -> {
+            this.controleur.boutonResolution(t);
+        });   
         
         
-        this.bZoomDouble = new BoutonIcone("icones/zoomPlus.png",32,32);
+        this.bZoomDouble = new BoutonIcone("fr.insa.leneve.projet_s2.icones/zoomPlus.png",32,32);
         this.bZoomDouble.setOnAction((t) -> {
             this.controleur.zoomDouble();
         });
@@ -175,6 +221,9 @@ public class MainPanel extends BorderPane {
             this.controleur.creeNoeudParDialog();
         });
         
+        VBox vbDroit = new VBox(this.bGrouper,this.bSupObj, this.cbTypeBarre, this.cpCouleur, vbZoom,this.bCreeNoeudDialog, this.bRes);
+        this.setRight(vbDroit);
+        
         this.cDessin = new DessinCanvas1(this);// zone de dessin
         this.setCenter(this.cDessin);
         
@@ -209,33 +258,33 @@ public class MainPanel extends BorderPane {
     }
     
     /**
-     * @return the tbNoeudS
+     * @return the rbSelect
      */
-    public ToggleButton getTbNoeudS() {
-        return tbNoeudS;
+    public RadioButton getRbSelect() {
+        return rbSelect;
+    }
+    
+   
+    public RadioButton getRbNoeudS() {
+        return RbNoeudS;
+    }
+    
+    public RadioButton getRbNoeudAS() {
+        return RbNoeudAS;
     }
 
-    /**
-     * @return the tbNoeudAS
-     */
-    public ToggleButton getTbNoeudAS() {
-        return tbNoeudAS;
+    public RadioButton getRbNoeudAD() {
+        return RbNoeudAD;
     }
 
-    /**
-     * @return the tbNoeudAD
-     */
-    public ToggleButton getTbNoeudAD() {
-        return tbNoeudAD;
+    public RadioButton getRbBarre() {
+        return RbBarre;
     }
-
-    /**
-     * @return the tbBarre
-     */
-    public ToggleButton getTbBarre() {
-        return tbBarre;
+    
+    public RadioButton getRbTriTerrain() {
+        return RbTriTerrain;
     }
-
+    
     /**
      * @return the bRes
      */
@@ -247,16 +296,9 @@ public class MainPanel extends BorderPane {
      * @return the tbSupObj
      */
     public Button getBSupObj() {
-        return getbSupObj();
+        return bSupObj;
     }
-
-    /**
-     * @return the tbSelect
-     */
-    public Button getBSelect() {
-        return getbSelect();
-    }
-
+    
     /**
      * @return the cbTypeBarre
      */
@@ -280,32 +322,11 @@ public class MainPanel extends BorderPane {
     }
 
 
-    /**
-     * @return the tbTriTerrain
-     */
-    public ToggleButton getTbTriTerrain() {
-        return tbTriTerrain;
-    }
-    
     public Color getCouleur() {
         return couleur;
     }
     
     
-    /**
-     * @return the bSupObj
-     */
-    public Button getbSupObj() {
-        return bSupObj;
-    }
-
-    /**
-     * @return the bSelect
-     */
-    public Button getbSelect() {
-        return bSelect;
-    }
-
     /**
      * @return the information
      */
@@ -316,25 +337,6 @@ public class MainPanel extends BorderPane {
         return controleur;
     }
    
-    
-    public RadioButton getRbSelect() {
-        return rbSelect;
-    }
-
-    /**
-     * @return the rbPoints
-     */
-    public RadioButton getRbPoints() {
-        return rbPoints;
-    }
-
-    /**
-     * @return the rbSegments
-     */
-    public RadioButton getRbSegments() {
-        return rbSegments;
-    }
-
     /**
      * @return the bGrouper
      */
@@ -417,12 +419,6 @@ public class MainPanel extends BorderPane {
         this.zoneModelVue = zoneModelVue;
     }
 
-    /**
-     * @return the bSupprimer
-     */
-    public Button getbSupprimer() {
-        return bSupprimer;
-    }
 
     
 }

@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Cap
+ * @author adrie
  */
 public class Controleur {
     
@@ -85,14 +85,26 @@ public class Controleur {
                 this.vue.redrawAll();
             case 30 :
                 // creation de points
-                this.vue.getRbPoints().setSelected(true); //a modifier
+                this.vue.getRbNoeudS().setSelected(true); //a modifier
+                this.selection.clear();
+                this.barreEnCoursDeCreation = null;
+                this.vue.getbGrouper().setDisable(true);
+                this.vue.redrawAll();
+            case 31 :
+                this.vue.getRbNoeudAS().setSelected(true); //a modifier
+                this.selection.clear();
+                this.barreEnCoursDeCreation = null;
+                this.vue.getbGrouper().setDisable(true);
+                this.vue.redrawAll();
+            case 32 :
+                this.vue.getRbNoeudAD().setSelected(true); //a modifier
                 this.selection.clear();
                 this.barreEnCoursDeCreation = null;
                 this.vue.getbGrouper().setDisable(true);
                 this.vue.redrawAll();
             case 40 : 
                 // creation de segments étape 1
-                this.vue.getRbSegments().setSelected(true);
+                this.vue.getRbBarre().setSelected(true);
                 this.selection.clear();
                 this.barreEnCoursDeCreation = null;
                 this.vue.getbGrouper().setDisable(true);
@@ -101,10 +113,10 @@ public class Controleur {
                 // creation de segments étape 2
             
             //le comportement des boutons les uns par rapport aux autres n'a que très peu été défini pour l'instant
-            case 03 : 
+            case 50 : 
             // ce cas sélectionne automatiquement le bouton TT si un noeud appui n'a pu être créé
                 //car il n'y avait pas de TT au coordonnées choisie 
-                vue.getTbTriTerrain().setSelected(true);
+                vue.getRbTriTerrain().setSelected(true);
                 nouvelEtat=0;
                 break;
             default:
@@ -195,20 +207,32 @@ public class Controleur {
         this.changeEtat(20);
     }
 
-    public void boutonNoeud(ActionEvent t) {
+    public void boutonNoeudS(ActionEvent t) {
         this.changeEtat(30);
     }
 
+    public void boutonNoeudAS(ActionEvent t) {
+        this.changeEtat(31);
+    }
+    
+    public void boutonNoeudAD(ActionEvent t) {
+        this.changeEtat(32);
+    }
+    
     public void boutonBarre(ActionEvent t) {
         this.changeEtat(40);
+    }
+    
+    public void boutonTriTerrain(ActionEvent t) {
+        this.changeEtat(50);
     }
 
     private void activeBoutonsSuivantSelection() {
         this.vue.getbGrouper().setDisable(true);
-        this.vue.getbSupprimer().setDisable(true);
+        this.vue.getBSupObj().setDisable(true);
         if (this.etat == 20) {
             if (this.selection.size() > 0) {
-                this.vue.getbSupprimer().setDisable(false);
+                this.vue.getBSupObj().setDisable(false);
                 if (this.selection.size() > 1) {
                     this.vue.getbGrouper().setDisable(false);
                 }
@@ -244,6 +268,10 @@ public class Controleur {
         }
     }
 
+    public void boutonResolution(ActionEvent t) {
+                
+    }
+    
     public void changeColor(Color value) {
         if (this.etat == 20 && this.selection.size() > 0) {
             for (Figure f : this.selection) {
@@ -443,20 +471,7 @@ public class Controleur {
      * utile pour le triangle terrain et les barres
      * @param t 
      */
-    public void posPoint1(MouseEvent t){
-        P1x = t.getX();
-        P1y = t.getY();
-    }
-    
-    /**
-     * récupère celles d'un autre clic
-     * @param t 
-     */
-    public void posPoint2(MouseEvent t){
-        P2x = t.getX();
-        P2y = t.getY();
-    }
-     
+         
     /**
      * créer un noeud simple dans l'interface à la position d'un clic
      * le noeud simple est rond et de la couleur sélectionnée
