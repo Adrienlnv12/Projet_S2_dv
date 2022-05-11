@@ -8,9 +8,7 @@ package fr.insa.leneve.projet_s2.interfa;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import fr.insa.leneve.projet_s2.Groupe;
 import fr.insa.leneve.projet_s2.structure.Treillis;
 
 /**
@@ -37,8 +35,8 @@ public class MainFx extends Application {
                 treillis = new Treillis();
             }
         }
-        controleur = new Controleur( treillis, , getHostServices())
-        Scene sc = new Scene(new MainPanel(stage, controleur),800,600);
+        controleur = new Controleur( treillis, , getHostServices());
+        Scene sc = new Scene(new MainPanel(600,400, controleur),800,600);
         if(Name.equals("")) Name = "~Nouveau~";
         stage.setScene(sc);
         stage.setTitle(Name);
