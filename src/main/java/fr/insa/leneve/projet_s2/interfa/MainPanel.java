@@ -203,7 +203,7 @@ public final class MainPanel extends BorderPane {
 
         this.bCreeNoeudDialog = new Button("Point par coord");
         this.bCreeNoeudDialog.setOnAction((t) -> {
-            this.controleur.creeNoeudParDialog();
+            this.controleur.creePointParDialog();
         });
         
         VBox vbDroit = new VBox(this.bGrouper,this.bSupObj, this.cbTypeBarre, this.cpCouleur, vbZoom,this.bCreeNoeudDialog, this.bRes);

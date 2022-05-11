@@ -10,9 +10,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Transform;
-import fr.insa.leneve.projet_s2.Figure;
-import fr.insa.leneve.projet_s2.Groupe;
-import fr.insa.leneve.projet_s2.Barre;
+import fr.insa.leneve.projet_s2.structure.forme.Forme;
+import fr.insa.leneve.projet_s2.structure.forme.Segment;
 /**
  *
  * @author cheraita
@@ -67,7 +66,7 @@ public class DessinCanvas1 extends Pane {
         return this.realCanvas.getGraphicsContext2D().getTransform();
     }
     
-    public void redrawAll() {
+    public void redrawAll() {//a refaire
         GraphicsContext context = this.realCanvas.getGraphicsContext2D();
         context.setTransform(new Affine());
         context.clearRect(0, 0, this.realCanvas.getWidth(), this.realCanvas.getHeight());
@@ -75,15 +74,14 @@ public class DessinCanvas1 extends Pane {
         this.asRect.setyMax(this.realCanvas.getHeight());
         Transform curTrans = this.main.getZoneModelVue().fitTransform(this.asRect);
         this.setTransform(curTrans);
-        Groupe model = this.main.getModel();
         model.dessine(context);
-        List<Figure> select = this.main.getControleur().getSelection();
-        if (!select.isEmpty()) {
-            for (Figure f : select) {
-                f.dessineSelection(context);
+        List<Forme> select = this.main.getControleur().getSelection();
+        if (!select.isEmpty()) {//a refaire
+            for (Forme f : select) {
+                f.dessine(context);
             }
         }
-        Barre enCOurs = this.main.getControleur().getBarreEnCoursDeCreation();
+        Segment enCOurs = this.main.getControleur().getBarreEnCoursDeCreation();
         if (enCOurs != null) {
             context.setLineDashes(1, 1);
             enCOurs.dessine(context);

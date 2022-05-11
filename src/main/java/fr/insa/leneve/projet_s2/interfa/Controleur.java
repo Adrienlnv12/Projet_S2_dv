@@ -18,10 +18,11 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.leneve.projet_s2.interfa;
 
-import fr.insa.leneve.projet_s2.Barre;
-import fr.insa.leneve.projet_s2.Noeud;
 import fr.insa.leneve.projet_s2.Figure;
 import fr.insa.leneve.projet_s2.Groupe;
+import fr.insa.leneve.projet_s2.structure.forme.Forme;
+import fr.insa.leneve.projet_s2.structure.forme.Point;
+import fr.insa.leneve.projet_s2.structure.forme.Segment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,11 +50,11 @@ public class Controleur {
 
     private int etat;
 
-    private Noeud noeud1DansModel;
+    private Point noeud1DansModel,noeud2DansModel;
 
-    private List<Figure> selection;
+    private List<Forme> selection;
 
-    private Barre barreEnCoursDeCreation = null;
+    private Segment barreEnCoursDeCreation = null;
 
     public Controleur(MainPanel vue) {
         this.vue = vue;
@@ -104,7 +105,7 @@ public class Controleur {
      * @param yVue pos y dans la vue
      * @return un Point apprès application de la transformation vue --> model
      */
-    public Noeud posInModel(double xVue, double yVue) {
+    public Point posInModel(double xVue, double yVue) {
         Transform modelVersVue = this.vue.getcDessin().getTransform();
         Point2D ptrans;
         try {
@@ -112,7 +113,7 @@ public class Controleur {
         } catch (NonInvertibleTransformException ex) {
             throw new Error(ex);
         }
-        Noeud pclic = new Noeud(ptrans.getX(), ptrans.getY());
+        Point pclic = new Point(ptrans.getX(), ptrans.getY());
         pclic.setCouleur(this.vue.getCpCouleur().getValue());
         return pclic;
     }
@@ -120,7 +121,7 @@ public class Controleur {
     public void clicDansZoneDessin(MouseEvent t) {
         if (this.etat == 20) {
             // selection
-            Noeud pclic = this.posInModel(t.getX(), t.getY());
+            Point pclic = this.posInModel(t.getX(), t.getY());
             // pas de limite de distance entre le clic et l'objet selectionné
             Figure proche = this.vue.getModel().plusProche(pclic, Double.MAX_VALUE);
             // il faut tout de même prévoir le cas ou le groupe est vide
@@ -143,22 +144,20 @@ public class Controleur {
             }
         } else if (this.etat == 30) {
             // creation points
-            Noeud pclic = this.posInModel(t.getX(), t.getY());
+            Point pclic = this.posInModel(t.getX(), t.getY());
             Groupe model = this.vue.getModel();
             model.add(pclic);
             this.vue.redrawAll();
         } else if (this.etat == 40) {
             // creation segment premier point
             this.noeud1DansModel = this.posInModel(t.getX(), t.getY());
-            this.barreEnCoursDeCreation = new Barre(this.noeud1DansModel,
-                    new Noeud(this.noeud1DansModel),
-                    this.vue.getCpCouleur().getValue());
+            this.noeud2DansModel = this.posInModel(t.getX(), t.getY());
+            this.barreEnCoursDeCreation = new Segment(this.noeud1DansModel,this.noeud2DansModel);
             this.changeEtat(41);
         } else if (this.etat == 41) {
             // creation de segment deuxieme point
-            Noeud pclic = this.posInModel(t.getX(), t.getY());
-            Barre ns = new Barre(this.noeud1DansModel, pclic,
-                    this.vue.getCpCouleur().getValue());
+            Point pclic = this.posInModel(t.getX(), t.getY());
+            Segment ns = new Segment(this.noeud1DansModel, pclic);
             this.vue.getModel().add(ns);
             this.barreEnCoursDeCreation = null;
             this.vue.redrawAll();
@@ -194,7 +193,7 @@ public class Controleur {
     /**
      * @return the selection
      */
-    public List<Figure> getSelection() {
+    public List<Forme> getSelection() {
         return selection;
     }
 
@@ -225,7 +224,7 @@ public class Controleur {
     
     public void changeColor(Color value) {
         if (this.etat == 20 && this.selection.size() > 0) {
-            for (Figure f : this.selection) {
+            for (Forme f : this.selection) {
                 f.changeCouleur(value);
             }
             this.vue.redrawAll();
@@ -276,7 +275,7 @@ public class Controleur {
                 Groupe glu = (Groupe) lue;
                 Stage nouveau = new Stage();
                 nouveau.setTitle(f.getName());
-                Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
+                Scene sc = new Scene(new MainPanel(nouveau, f), 800, 600);
                 nouveau.setScene(sc);
                 nouveau.show();
             } catch (IOException ex) {
@@ -305,10 +304,10 @@ public class Controleur {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("A propos");
         alert.setHeaderText(null);
-        alert.setContentText("Trop super ce micro-logiciel de dessin vectoriel 2D\n"
-                + "réalisé par François de Bertrand de Beuvron\n"
-                + "comme tutoriel pour un cours de POO\n"
-                + "à l'INSA de Strasbourg");
+        alert.setContentText("On galère ces grands mort ici\n"
+                + "bouhhh\n"
+                + "Angèle aide moi\n"
+                + "STH on souffre");
 
         alert.showAndWait();
     }
@@ -359,16 +358,17 @@ public class Controleur {
     /**
      * @return the barreEnCoursDeCreation
      */
-    public Barre getBarreEnCoursDeCreation() {
+    public Segment getBarreEnCoursDeCreation() {
         return barreEnCoursDeCreation;
     }
 
-    void creeNoeudParDialog() {
-        Optional<Noeud> p = EnterNoeudDialog.demandeNoeud();
+    void creePointParDialog() {
+        Optional<Point> p = EnterPointDialog.demandePoint();
         if (p.isPresent()) {
             this.vue.getModel().add(p.get());
             this.vue.redrawAll();
         }
     }
+    
 
 }

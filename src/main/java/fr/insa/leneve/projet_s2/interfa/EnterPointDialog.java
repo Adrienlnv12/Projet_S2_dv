@@ -18,7 +18,8 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.leneve.projet_s2.interfa;
 
-import fr.insa.leneve.projet_s2.Noeud;
+
+import fr.insa.leneve.projet_s2.structure.forme.Point;
 import java.util.Optional;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -28,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 /**
  * Creation d'un Dialog pour permettre à l'utilisateur d'entrer les coordonnées
@@ -39,13 +41,13 @@ import javafx.scene.paint.Color;
  */
 // la classe Dialog est une classe générique : le paramètre de type (ici Point)
 // indique quel est le type de l'objet éventuellement créé/retourné par le Dialog
-public class EnterNoeudDialog extends Dialog<Noeud> {
+public class EnterPointDialog extends Dialog<Point> {
 
     private TextField tfPx;
     private TextField tfPy;
     private ColorPicker cpCouleur;
 
-    public EnterNoeudDialog() {
+    public EnterPointDialog() {
         this.setTitle("entrez les coordonnées du Point :");
         this.setResizable(true);
         Label lPx = new Label("px :");
@@ -69,28 +71,28 @@ public class EnterNoeudDialog extends Dialog<Noeud> {
         this.getDialogPane().getButtonTypes().add(bOK);
         this.getDialogPane().getButtonTypes().add(bCancel);
 
-        this.setResultConverter((p) -> {
-            if (p == bOK) {
-                double px;
-                double py;
-                try {
-                    px = Double.parseDouble(this.tfPx.getText());
-                    py = Double.parseDouble(this.tfPy.getText());
-                } catch (NumberFormatException ex) {
+        this.setResultConverter(new Callback<ButtonType, Point>() {
+            @Override
+            public Point call(ButtonType p) {
+                if (p == bOK) {
+                    double px;
+                    double py;
+                    try {
+                        px = Double.parseDouble(EnterPointDialog.this.tfPx.getText());
+                        py = Double.parseDouble(EnterPointDialog.this.tfPy.getText());
+                    }catch (NumberFormatException ex) {
+                        return null;
+                    }   return new Point(px, py);
+                } else {
                     return null;
                 }
-                return new Noeud(px, py, this.cpCouleur.getValue());
-            } else {
-
-                return null;
             }
-        }
-        );
+        });
 
     }
 
-    public static Optional<Noeud> demandeNoeud() {
-        EnterNoeudDialog dialog = new EnterNoeudDialog();
+    public static Optional<Point> demandePoint() {
+        EnterPointDialog dialog = new EnterPointDialog();
         return dialog.showAndWait();
     }
 

@@ -16,11 +16,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.leneve.projet_s2;
+package fr.insa.leneve.projet_s2.structure;
 
 
 
 
+import fr.insa.leneve.projet_s2.*;
 import Ressyslin.DessinTexte;
 import Ressyslin.ListeDessinsTexte;
 import java.text.DecimalFormat;

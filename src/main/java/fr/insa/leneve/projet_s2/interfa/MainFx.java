@@ -20,7 +20,7 @@ public class MainFx extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene sc = new Scene(new MainPanel(stage,Groupe.groupeTest()),800,600);
+        Scene sc = new Scene(new MainPanel(stage,Groupe.groupeTriangeTerrainVerticalGauche(60)),800,600);
         stage.setScene(sc);
         stage.setTitle("Modélisateur de Treillis");
         stage.show();
