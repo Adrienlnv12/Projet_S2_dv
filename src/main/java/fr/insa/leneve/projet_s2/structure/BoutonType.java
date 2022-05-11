@@ -20,9 +20,9 @@ import javafx.util.Callback;
  *
  * @author adrie
  */
-public class BouttonType extends Dialog<TypedeBarre> {
+public class BoutonType extends Dialog<TypedeBarre> {
     
-    public BouttonType() {
+    public BoutonType() {
        this.setTitle("créer un type de barre");
        this.setResizable(true);
 
@@ -97,7 +97,7 @@ public class BouttonType extends Dialog<TypedeBarre> {
     }
 
     public static Optional<TypedeBarre> demandeTypedeBarre() {
-        BouttonType dialog = new BouttonType();
+        BoutonType dialog = new BoutonType();
         return dialog.showAndWait();
     }
     

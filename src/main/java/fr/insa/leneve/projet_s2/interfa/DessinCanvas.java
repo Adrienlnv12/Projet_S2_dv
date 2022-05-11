@@ -16,14 +16,14 @@ import fr.insa.leneve.projet_s2.structure.forme.Segment;
  *
  * @author cheraita
  */
-public class DessinCanvas1 extends Pane {
+public class DessinCanvas extends Pane {
     
     private MainPanel main;
     
     private Canvas realCanvas;
     private RectangleHV asRect;
     
-    public DessinCanvas1(MainPanel main){
+    public DessinCanvas(MainPanel main){
         this.main=main;
         this.realCanvas = new Canvas(this.getWidth(),this.getHeight());
         this.asRect = new RectangleHV(0, 0, this.getWidth(), this.getHeight());
