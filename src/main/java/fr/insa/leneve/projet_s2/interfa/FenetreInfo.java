@@ -1,10 +1,17 @@
 package fr.insa.leneve.projet_s2.interfa;
 
+import fr.insa.leneve.projet_s2.structure.Barre;
+import fr.insa.leneve.projet_s2.structure.Force;
+import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
+import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
+import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 
 //VBox avec les informations sur la selection en cours
@@ -12,7 +19,7 @@ public class FenetreInfo extends VBox {
 
     private final MainPanel Mainpanel;
     private final Controleur controleur;
-    private final Options optionsData = new Options();
+
 
     public FenetreInfo(MainPanel mainpanel) {
         super();
@@ -27,20 +34,20 @@ public class FenetreInfo extends VBox {
         removeInfos();
         ArrayList<String> infos = f.getInfos();
         for (String line : infos) {
-            MyLabel mL = new MyLabel(line, "normal");
+            Label mL = new Label(line);
             this.getChildren().add(mL);
         }
 
-        Options optionsData = new Options();
+        
 
         if(f instanceof Noeud) {
-            MyButton addForceBtn = new MyButton(optionsData.traduction("add force"));
-            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(actionCenter, (Noeud) f));
+            Button addForceBtn = new Button("Ajouter une force");
+            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(controleur, (Noeud) f));
             this.getChildren().add(addForceBtn);
         }
-        MyButton deleteBtn = new MyButton(optionsData.traduction("delete"));
+        Button deleteBtn = new Button("Supprimer");
         deleteBtn.setOnAction(actionEvent -> {
-            actionCenter.deleteForme(f);
+            controleur.deleteForme(f);
             removeInfos();
         });
 
@@ -52,14 +59,13 @@ public class FenetreInfo extends VBox {
         removeInfos();
         ArrayList<String> infos = t.getInfos();
         for (String line : infos) {
-            MyLabel mL = new MyLabel(line, "normal");
+            Label mL = new Label(line);
             this.getChildren().add(mL);
         }
 
-        Options optionsData = new Options();
-        MyButton deleteBtn = new MyButton(optionsData.traduction("delete"));
+        Button deleteBtn = new Button("Supprimer");
         deleteBtn.setOnAction(actionEvent -> {
-            actionCenter.deleteZoneConstru(t);
+            controleur.deleteZoneConstru(t);
             removeInfos();
         });
 
@@ -74,15 +80,15 @@ public class FenetreInfo extends VBox {
     public void drawInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
         removeInfos();
 
-        MyLabel mLN = new MyLabel("nombre de noeuds simple : " + nbNoeud, "normal");
-        MyLabel mLAD = new MyLabel("nombre d'appuis double : " + nbAppuiDouble, "normal");
-        MyLabel mLAS = new MyLabel("nombre d'appuis simple : " + nbAppuiSimple, "normal");
-        MyLabel mLB = new MyLabel("nombre de barres : " + nbBarre, "normal");
+        Label mLN = new Label("nombre de noeuds simple : " + nbNoeud);
+        Label mLAD = new Label("nombre d'appuis double : " + nbAppuiDouble);
+        Label mLAS = new Label("nombre d'appuis simple : " + nbAppuiSimple);
+        Label mLB = new Label("nombre de barres : " + nbBarre);
 
-        Options optionsData = new Options();
-        MyButton delete = new MyButton(optionsData.traduction("deleteAll"));
+   
+        Button delete = new Button("Tout supprimer");
         delete.setOnAction(actionEvent -> {
-            actionCenter.deleteAllFormes();
+            controleur.deleteAllFormes();
             removeInfos();
         });
         this.getChildren().addAll(mLN, mLAD, mLAS, mLB, delete);
@@ -93,22 +99,22 @@ public class FenetreInfo extends VBox {
     public void drawCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         removeInfos();
 
-        MyLabel priceLbl = new MyLabel(optionsData.traduction("treillis price") + " : " + actionCenter.getCost() + " €", "normal");
+        Label priceLbl = new Label("Prix du treillis" + " : " + controleur.getCost() + " €");
         this.getChildren().addAll(priceLbl);
 
 
         for(Forme f : formeId.keySet()){
             int id = formeId.get(f);
-            if(f instanceof Barres){
-                MyLabel t = new MyLabel("Traction de la barre : " + idValues.get(id)[0], "normal");
+            if(f instanceof Barre){
+                Label t = new Label("Traction de la barre : " + idValues.get(id)[0]);
                 this.getChildren().add(t);
-            }else if(f instanceof AppuiSimple){
-                MyLabel r = new MyLabel("Reaction de l'appui : " + idValues.get(id)[0], "normal");
+            }else if(f instanceof NoeudAppuiSimple){
+                Label r = new Label("Reaction de l'appui : " + idValues.get(id)[0]);
                 this.getChildren().add(r);
             }else{
-                MyLabel rx = new MyLabel("Reaction de l'appui en x : " + idValues.get(id)[0], "normal");
+                Label rx = new Label("Reaction de l'appui en x : " + idValues.get(id)[0]);
                 this.getChildren().add(rx);
-                MyLabel ry = new MyLabel("Reaction de l'appui en y : " + idValues.get(id)[1], "normal");
+                Label ry = new Label("Reaction de l'appui en y : " + idValues.get(id)[1]);
                 this.getChildren().add(ry);
             }
         }

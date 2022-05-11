@@ -18,6 +18,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.leneve.projet_s2.interfa;
 
+import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Treillis;
 import fr.insa.leneve.projet_s2.structure.TypedeBarre;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
@@ -97,6 +98,41 @@ public class Controleur {
         this.etat = nouvelEtat;
         this.activeBoutonsSuivantSelection();
 
+    }
+    
+    //supprime un element
+    public void deleteForme(Forme f){
+        if(f != null) {
+            if (f instanceof PointTerrain || f instanceof Triangle || f instanceof SegmentTerrain) {
+                if(terrain != null) {
+                    terrain.remove(f, false);
+                    graphics.draw(selectedButton, inDrawing);
+                }
+            } else {
+                graphics.remove(f);
+                treillis.removeElement(f);
+                currentSelect = null;
+            }
+        }
+    }
+    public void deleteAllFormes() {
+        multipleSelect.forEach(f -> {
+            graphics.remove(f);
+            treillis.removeElement(f);
+        });
+
+        multipleSelect.clear();
+        graphics.removeInfos();
+        inMultSelect = false;
+        graphics.draw(selectedButton, inDrawing);
+    }
+    public double getCost(){
+        double price = 0;
+        for (Barre barres : treillis.getBarres()) {
+            if(barres.getType() == null) continue;
+            price += barres.getType().getCout() * barres.length() / echelle;
+        }
+        return (double) ((int) price * 100) / 100;
     }
 
     /**

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package fr.insa.leneve.projet_s2.interfa;
+import fr.insa.leneve.projet_s2.structure.Treillis;
 import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -74,7 +75,7 @@ public class DessinCanvas extends Pane {
         this.asRect.setyMax(this.realCanvas.getHeight());
         Transform curTrans = this.main.getZoneModelVue().fitTransform(this.asRect);
         this.setTransform(curTrans);
-        model.dessine(context);
+        Treillis.dessine(context);
         List<Forme> select = this.main.getControleur().getSelection();
         if (!select.isEmpty()) {//a refaire
             for (Forme f : select) {
