@@ -40,7 +40,6 @@ public final class MainPanel extends BorderPane {
      */
     private static double MULT_POUR_FIT_ALL = 1.1;
     
-    private Groupe model;
     private Controleur controleur;
 
     private Stage inStage;
@@ -50,23 +49,12 @@ public final class MainPanel extends BorderPane {
 
     private Button bGrouper;
     private ColorPicker cpCouleur;
-
-    private BoutonIcone bZoomDouble;
-    private BoutonIcone bZoomDemi;
-    private BoutonIcone bZoomFitAll;
-    
-    private BoutonIcone bTranslateGauche;
-    private BoutonIcone bTranslateDroite;
-    private BoutonIcone bTranslateHaut;
-    private BoutonIcone bTranslateBas;
-    
-    private Button bCreeNoeudDialog;
  
     private DessinCanvas1 cDessin;
     private RectangleHV zoneModelVue;
 
     private MainMenu menu;
-    
+    private final FenetreInfo Info;
     
     private RadioButton RbNoeud;
     private RadioButton RbNoeudAS;
@@ -75,7 +63,8 @@ public final class MainPanel extends BorderPane {
 
     private Button bRes;
     
-   
+    private final BoutonGauche boutong;
+    private final BoutonDroite boutond;
     
     private Button bSupObj;
 
@@ -99,7 +88,6 @@ public final class MainPanel extends BorderPane {
     public MainPanel(Stage inStage, File fromFile, Groupe model){  
         this.inStage = inStage;
         this.curFile = fromFile;
-        this.model = model;
         this.fitAll(); 
         this.controleur = new Controleur(this);
        
@@ -107,107 +95,14 @@ public final class MainPanel extends BorderPane {
 // label à mettre à côté d'un TextArea pour donner des informations à l'utilisateur
         this.setBottom(information);
         
-        this.rbSelect = new RadioButton("Select");
-        this.rbSelect.setOnAction((t) -> {
-            this.controleur.boutonSelect(t);
-        });
+        boutond = new BoutonDroite(this);
+        this.setRight(boutond);
         
-        this.RbNoeud = new RadioButton("Noeud simple");
-        this.RbNoeud.setOnAction((t) -> {
-            this.controleur.boutonNoeud(t);
-        });
+        boutong = new BoutonGauche(this);
+        this.setLeft(boutong);
                 
-        this.RbBarre = new RadioButton("Barre");
-        this.RbBarre.setOnAction((t) -> {
-            this.controleur.boutonBarre(t);
-        });
-        
-        ToggleGroup bgEtat = new ToggleGroup();
-        this.rbSelect.setToggleGroup(bgEtat);
-        this.RbNoeud.setToggleGroup(bgEtat);
-        this.RbBarre.setToggleGroup(bgEtat);
-        this.RbNoeud.setSelected(true);
-        
-        VBox vbGauche = new VBox(this.rbSelect, this.RbNoeud, this.RbBarre);
-        this.setLeft(vbGauche);
-        
-        this.bGrouper = new Button("Grouper");
-        this.bGrouper.setOnAction((t) -> {
-            this.controleur.boutonGrouper(t);
-        });
-        
-        this.bGrouper.setOnMouseEntered((t) -> {
-            System.out.println("entre dans bgroupe");
-        });
-        
-        this.bSupObj = new Button("Supprimer");
-        this.bSupObj.setOnAction((t) -> {
-            this.controleur.boutonSupprimer(t);
-        });
-        this.cpCouleur = new ColorPicker(Color.BLACK);
-        this.cpCouleur.setOnAction((t) -> {
-            this.controleur.changeColor(this.cpCouleur.getValue());
-        });
-        this.cbTypeBarre = new ChoiceBox(FXCollections.observableArrayList(
-               "A", "B", "C"));// mettre les différents type de barres
-        cbTypeBarre.setTooltip(new Tooltip("Séléctionner le type de barre"));//permet d'indiquer la fonction du bouton
-        cbTypeBarre.setMaxSize(cbTypeBarre.getMaxWidth(), cbTypeBarre.getMaxHeight());
-        
-        this.bRes = new Button("Résolution"); //crée le toggle bouton 
-        this.bRes.setOnAction((t) -> {
-            this.controleur.boutonResolution(t);
-        });   
-        
-        
-        this.bZoomDouble = new BoutonIcone("icones/zoomPlus.png",32,32);
-        this.bZoomDouble.setOnAction((t) -> {
-            this.controleur.zoomDouble();
-        });
-        this.bZoomDemi = new BoutonIcone("icones/zoomMoins.png",32,32);
-        this.bZoomDemi.setOnAction((t) -> {
-            this.controleur.zoomDemi();
-        });
-        this.bZoomFitAll = new BoutonIcone("icones/zoomTout.png",32,32);
-        this.bZoomFitAll.setOnAction((t) -> {
-            this.controleur.zoomFitAll();
-        });
-        
-        this.bTranslateGauche = new BoutonIcone("icones/gauche.png",32,32);
-        this.bTranslateGauche.setOnAction((t) -> {
-            this.controleur.translateGauche();
-        });
-        this.bTranslateDroite = new BoutonIcone("icones/droite.png",32,32);
-       this.bTranslateDroite.setOnAction((t) -> {
-            this.controleur.translateDroite();
-        });
-         this.bTranslateHaut = new BoutonIcone("icones/haut.png",32,32);
-        this.bTranslateHaut.setOnAction((t) -> {
-            this.controleur.translateHaut();
-        });
-        this.bTranslateBas = new BoutonIcone("icones/bas.png",32,32);
-       this.bTranslateBas.setOnAction((t) -> {
-            this.controleur.translateBas();
-        });
-      
-        HBox hbZoom = new HBox(this.bZoomDouble, this.bZoomDemi, this.bZoomFitAll);
-        
-        GridPane gpTrans = new GridPane();
-        // add(compo, column , row , columnSpan , rowSpan
-        gpTrans.add(this.bTranslateGauche, 0, 1,1,1);
-        gpTrans.add(this.bTranslateDroite, 2, 1,1,1);
-        gpTrans.add(this.bTranslateHaut, 1, 0,1,1);
-        gpTrans.add(this.bTranslateBas, 1, 2,1,1);
-        
-        VBox vbZoom = new VBox(hbZoom,gpTrans);
-        vbZoom.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-
-        this.bCreeNoeudDialog = new Button("Point par coord");
-        this.bCreeNoeudDialog.setOnAction((t) -> {
-            this.controleur.creePointParDialog();
-        });
-        
-        VBox vbDroit = new VBox(this.bGrouper,this.bSupObj, this.cbTypeBarre, this.cpCouleur, vbZoom,this.bCreeNoeudDialog, this.bRes);
-        this.setRight(vbDroit);
+        Info = new FenetreInfo(this);
+        this.setRight(Info);
         
         this.cDessin = new DessinCanvas1(this);// zone de dessin
         this.setCenter(this.cDessin);
@@ -216,13 +111,8 @@ public final class MainPanel extends BorderPane {
         this.setTop(this.menu);
 
         this.controleur.changeEtat(20);
-    }    
-
-    public void fitAll() {
-        this.zoneModelVue = new RectangleHV(this.model.minX(),
-                this.model.maxX(), this.model.minY(), this.model.maxY());
-        this.zoneModelVue = this.zoneModelVue.scale(MULT_POUR_FIT_ALL);
-    }
+    }  
+        
 
     public void redrawAll() {
         this.cDessin.redrawAll();
@@ -300,7 +190,7 @@ public final class MainPanel extends BorderPane {
     /**
      * @return the cDessin
      */
-    public DessinCanvas1 getcDessin() {
+    public DessinCanvas getcDessin() {
         return cDessin;
     }
 
