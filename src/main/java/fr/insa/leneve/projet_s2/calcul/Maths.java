@@ -2,6 +2,7 @@ package fr.insa.leneve.projet_s2.calcul;
 
 
 import fr.insa.leneve.projet_s2.structure.forme.Point;
+import javafx.scene.paint.Color;
 
 public class Maths {
 
@@ -74,6 +75,11 @@ public class Maths {
         double py = p.getPx() * Math.sin(angle) + p.getPy() * Math.cos(angle);
 
         return new Point(px, py);
+    }
+    
+    //transform a color to an hexadecimal string
+    public static String colorToHexa(Color color){
+        return Integer.toHexString(color.hashCode()).substring(0, 6);
     }
 
 }

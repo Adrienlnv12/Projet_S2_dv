@@ -3,12 +3,12 @@ package fr.insa.leneve.projet_s2.structure;
 
 
 import fr.insa.leneve.projet_s2.Numerateur;
+import fr.insa.leneve.projet_s2.graphic.Graphics;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
-import java.awt.Graphics;
 import java.util.ArrayList;
 
 

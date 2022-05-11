@@ -174,7 +174,7 @@ public final class BoutonGauche extends VBox {
 
         //boutons
         Button addTypeBtn = new Button("Ajouter un type");
-        addTypeBtn.setOnAction(e -> TypedeBarre.createTypePopUp(controleur, typeComboBox));
+        addTypeBtn.setOnAction(e -> TypedeBarre.BoutonTypedeBarre(controleur, typeComboBox));
 
         Button chooseBtn = new Button("Choisir");
         chooseBtn.setOnAction(e -> controleur.setBarreType(typeComboBox.getValue()));

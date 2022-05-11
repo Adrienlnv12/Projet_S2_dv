@@ -6,9 +6,7 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 
-import java.io.File;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 /**
  *
  * @author adrie
@@ -29,23 +27,12 @@ public final class MainPanel extends BorderPane {
 
     private final MainMenu menu;
     private final FenetreInfo Info;
-    private RectangleHV zoneModelVue;
     
     private final BoutonGauche boutong;
     private final BoutonDroite boutond;
     
-    public MainPanel(Stage inStage) {
-        this(inStage, new Groupe());
-    }
-
-    public MainPanel(Stage inStage, Groupe model) {
-        this(inStage, null, model);
-    }
-    
-    public MainPanel(Stage inStage, File fromFile, Controleur controleur){ 
-        this.inStage = inStage;
-        this.curFile = fromFile;
-        this.fitAll();
+    public MainPanel(int w, int h, Controleur controleur){ 
+        super();
         this.controleur = controleur;
        
         
@@ -76,7 +63,11 @@ public final class MainPanel extends BorderPane {
     public Controleur getControleur() {
         return controleur;
     }
-
+    
+    public FenetreInfo getInfos() {
+        return Info;
+    }
+    
     /**
      * @return the cDessin
      */

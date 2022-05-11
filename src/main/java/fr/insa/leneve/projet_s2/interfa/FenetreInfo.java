@@ -4,6 +4,7 @@ import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Force;
 import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
 import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
+import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
@@ -30,7 +31,7 @@ public class FenetreInfo extends VBox {
     }
 
     //dessine les informations de la forme sélectionné
-    public void drawInfos(Forme f) {
+    public void dessineInfos(Forme f) {
         removeInfos();
         ArrayList<String> infos = f.getInfos();
         for (String line : infos) {
@@ -55,7 +56,7 @@ public class FenetreInfo extends VBox {
     }
 
     //dessine les informations de l'élément sélectionné
-    public void drawInfos(Terrain t) {
+    public void dessineInfos(Terrain t) {
         removeInfos();
         ArrayList<String> infos = t.getInfos();
         for (String line : infos) {
@@ -65,7 +66,7 @@ public class FenetreInfo extends VBox {
 
         Button deleteBtn = new Button("Supprimer");
         deleteBtn.setOnAction(actionEvent -> {
-            controleur.deleteZoneConstru(t);
+             controleur.deleteZoneConstru(t);
             removeInfos();
         });
 
@@ -77,7 +78,7 @@ public class FenetreInfo extends VBox {
     }
 
     //dessine des informations général des élements selectionné (nombre et possibilité de tout supprimer)
-    public void drawInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
+    public void dessineInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
         removeInfos();
 
         Label mLN = new Label("nombre de noeuds simple : " + nbNoeud);
@@ -96,7 +97,7 @@ public class FenetreInfo extends VBox {
     }
 
 
-    public void drawCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
+    public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         removeInfos();
 
         Label priceLbl = new Label("Prix du treillis" + " : " + controleur.getCost() + " €");

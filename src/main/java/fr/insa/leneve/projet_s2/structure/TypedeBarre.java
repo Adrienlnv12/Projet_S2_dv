@@ -60,7 +60,7 @@ public class TypedeBarre {
         return "TypeBarre;" + id + ";" + cout + ";" + lMin + ";" + lMax + ";" + rTension + ";" + rComp + ";" + name+ ";" + Maths.colorToHexa(color);
     }
     
-    static public void createTypePopUp(Controleur ac, ComboBox<TypedeBarre> typeComboBox){
+    static public void BoutonTypedeBarre(Controleur ac, ComboBox<TypedeBarre> typeComboBox){
         Stage typeChoice = new Stage();
 
         typeChoice.initModality(Modality.APPLICATION_MODAL);
@@ -140,7 +140,7 @@ public class TypedeBarre {
                 Treillis treillis = ac.getTreillis();
                 TypedeBarre type = new TypedeBarre(nameTF.getText(), Double.parseDouble(costTF.getText()), Double.parseDouble(lMinTF.getText()),
                         Double.parseDouble(lmaxTF.getText()), Double.parseDouble(rTensionTF.getText()),
-                        Double.parseDouble(rCompTF.getText()), treillis.getNumerateur().getNewTypeId(), colorPicker.getValue());
+                        Double.parseDouble(rCompTF.getText()), treillis.getNumerateur().getNewTypeId(), cpCouleur.getValue());
                 treillis.addType(type);
                 ArrayList<TypedeBarre> catalogue = treillis.getCatalogue();
                 typeComboBox.setItems(FXCollections.observableArrayList(catalogue));
