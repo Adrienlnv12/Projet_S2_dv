@@ -18,8 +18,8 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.leneve.projet_s2.interfa;
 
-import fr.insa.leneve.projet_s2.Figure;
-import fr.insa.leneve.projet_s2.Groupe;
+import fr.insa.leneve.projet_s2.structure.Treillis;
+import fr.insa.leneve.projet_s2.structure.TypedeBarre;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import fr.insa.leneve.projet_s2.structure.forme.Segment;
@@ -47,6 +47,9 @@ import javafx.stage.Stage;
 public class Controleur {
 
     private MainPanel vue;
+    private int boutonSelect = 0;
+    private TypedeBarre barreType = null;
+    private Treillis treillis;
 
     private int etat;
 
@@ -165,10 +168,18 @@ public class Controleur {
         }
     }
 
-    public void boutonSelect(ActionEvent t) {
-        this.changeEtat(20);
+    public void boutonSelect(int t) {
+        this.boutonSelect = t ;
+;
+    }
+    public int getboutonSelect() {
+        return boutonSelect;
     }
 
+    public void setBarreType(TypedeBarre barreType) {
+        this.barreType = barreType;
+    }
+    
     public void boutonNoeud(ActionEvent t) {
         this.changeEtat(30);
     }
@@ -369,6 +380,9 @@ public class Controleur {
             this.vue.redrawAll();
         }
     }
-    
+
+    public Treillis getTreillis() {
+        return treillis;
+    }
 
 }
