@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
  */
 public abstract class Forme{
     
+    private Color couleur;
     public static Color COULEUR_SELECTION = Color.RED;
     protected boolean selected = false;
     protected int id;
@@ -36,5 +37,17 @@ public abstract class Forme{
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public void changeCouleur(Color value) {
+        this.setCouleur(value);
+    }
+    
+    public Color getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(Color couleur) {
+        this.couleur = couleur;
     }
 }

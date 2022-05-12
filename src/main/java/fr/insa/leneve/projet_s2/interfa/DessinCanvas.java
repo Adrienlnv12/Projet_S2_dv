@@ -45,31 +45,6 @@ public class DessinCanvas extends Pane {
 
         canvas.heightProperty().addListener((o) -> graphics.draw(controleur.getboutonSelect(), controleur.isInDrawing()));
         canvas.widthProperty().addListener((o) -> graphics.draw(controleur.getboutonSelect(), controleur.isInDrawing()));
-        /*this.main=main;
-        this.realCanvas = new Canvas(this.getWidth(),this.getHeight());
-        this.asRect = new RectangleHV(0, 0, this.getWidth(), this.getHeight());
-        this.getChildren().add(this.realCanvas);
-        this.realCanvas.heightProperty().bind(this.heightProperty());
-        this.realCanvas.heightProperty().addListener((o) -> {
-             this.redrawAll();
-             System.out.println("w = "+this.realCanvas.getWidth()+" ; h = "+this.realCanvas.getHeight());
-        
-        });
-        this.realCanvas.widthProperty().bind(this.widthProperty());
-        this.realCanvas.widthProperty().addListener((o) -> {
-            this.redrawAll();
-        });
-        this.realCanvas.setOnMouseClicked((t) -> {
-            System.out.println("clic");
-            Controleur control = this.main.getControleur();
-            //control.clicDansZoneDessin(t);
-        });
-        this.realCanvas.setOnMouseMoved((t) -> {
-            this.main.getControleur().mouseMovedDansZoneDessin(t);
-        });
-            this.redrawAll();
-        */
-        
         
     }
     
@@ -87,28 +62,6 @@ public class DessinCanvas extends Pane {
         return this.realCanvas.getGraphicsContext2D().getTransform();
     }
     
-    public void redrawAll() {//a refaire
-        GraphicsContext context = this.realCanvas.getGraphicsContext2D();
-        context.setTransform(new Affine());
-        context.clearRect(0, 0, this.realCanvas.getWidth(), this.realCanvas.getHeight());
-        this.asRect.setxMax(this.realCanvas.getWidth());
-        this.asRect.setyMax(this.realCanvas.getHeight());
-        Transform curTrans = this.main.getZoneModelVue().fitTransform(this.asRect);
-        this.setTransform(curTrans);
-        //Treillis.dessine(context);
-        List<Forme> select = this.main.getControleur().getSelection();
-        if (!select.isEmpty()) {//a refaire
-            for (Forme f : select) {
-                f.dessine(context);
-            }
-        }
-        Segment enCOurs = this.main.getControleur().getBarreEnCoursDeCreation();
-        if (enCOurs != null) {
-            context.setLineDashes(1, 1);
-            enCOurs.dessine(context);
-            context.setLineDashes(null);
-        }
-    }
     /**
      * @return the realCanvas
      */

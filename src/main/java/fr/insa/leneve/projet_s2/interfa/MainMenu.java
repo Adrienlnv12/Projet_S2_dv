@@ -28,10 +28,10 @@ import javafx.scene.control.MenuItem;
  */
 public class MainMenu extends MenuBar{
     
-    //private MainPanel main;
+    private MainPanel main;
     
     public MainMenu(MainPanel main) {
-        /*this.main = main;
+        this.main = main;
         Menu file = new Menu("Fichier");
         MenuItem nouveau = new MenuItem("Nouveau");
         nouveau.setOnAction((t) -> {
@@ -58,6 +58,6 @@ public class MainMenu extends MenuBar{
         help.getItems().addAll(apropos);
         
         this.getMenus().addAll(file,help);
-    */}
+    }
     
 }

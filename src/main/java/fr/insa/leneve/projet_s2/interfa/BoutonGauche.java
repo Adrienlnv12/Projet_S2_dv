@@ -149,16 +149,16 @@ public final class BoutonGauche extends VBox {
         rbSelect.setSelected(true);
 
         this.rbSelect.setOnAction((t) -> {
-            this.controleur.boutonSelect(t)
+            this.controleur.boutonSelection(t);
+        });
     }
 
     private void initBarre() {
         RbBarre = new RadioButton("Barre");
         RbBarre.setToggleGroup(bgEtat);
 
-        RbBarre.setOnAction(actionEvent -> {
-            /*controleur.removeSelected();*/
-            controleur.boutonSelect(20);
+        this.RbBarre.setOnAction((t) -> {
+            this.controleur.boutonBarre(t);
         });
     }
 
@@ -191,20 +191,16 @@ public final class BoutonGauche extends VBox {
     public void initTrn(){
         RbTerrain = new RadioButton("Aire de construction");
         RbTerrain.setToggleGroup(bgEtat);
-
-        RbTerrain.setOnAction( actionEvent -> {
-            /*controleur.removeSelected();*/
-            controleur.boutonSelect(30);
+        this.RbTerrain.setOnAction((t) -> {
+            this.controleur.boutonTerrain(t);
         });
     }
 
     private void initTriangleTrn() {
         RbTriangleTerrain = new RadioButton("Triangle");
         RbTriangleTerrain.setToggleGroup(bgEtat);
-
-        RbTriangleTerrain.setOnAction(actionEvent -> {
-            /*controleur.removeSelected();*/
-            controleur.boutonSelect(40);
+        this.RbTriangleTerrain.setOnAction((t) -> {
+            this.controleur.boutonTriangle(t);
         });
     }
 
@@ -231,5 +227,40 @@ public final class BoutonGauche extends VBox {
           /*controleur.removeSelected();*/
         }
         controleur.boutonSelect(id);
+    }
+    
+    /**
+     * @return the rbSelect
+     */
+    public RadioButton getRbSelect() {
+        return rbSelect;
+    }
+
+    /**
+     * @return the RbNoeud
+     */
+    public RadioButton getRbNoeud() {
+        return RbNoeud;
+    }
+
+    /**
+     * @return the RbBarre
+     */
+    public RadioButton getRbBarre() {
+        return RbBarre;
+    }
+    
+    /**
+     * @return the RbTerrain
+     */
+    public RadioButton getRbTerrain() {
+        return RbTerrain;
+    }
+    
+     /**
+     * @return the RbTriangleTerrain
+     */
+    public RadioButton getRbTriangleTerrain() {
+        return RbTriangleTerrain;
     }
 }
