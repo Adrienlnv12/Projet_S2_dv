@@ -17,17 +17,12 @@ import fr.insa.leneve.projet_s2.structure.Treillis;
  */
 public class MainFx extends Application {
     
-    private Controleur controleur;
     
     @Override
     public void start(Stage stage) throws Exception {
-        String Name = "";
-        Treillis treillis = null;
-        controleur  = new Controleur(treillis, getHostServices());
-        Scene sc = new Scene(new MainPanel(600,400, controleur),800,600);
-        if(Name.equals("")) Name = "~Nouveau~";
+        Scene sc = new Scene(new MainPanel(stage),800,600);
         stage.setScene(sc);
-        stage.setTitle(Name);
+        stage.setTitle("Modélisateur de treillis");
         stage.show();
           
     }

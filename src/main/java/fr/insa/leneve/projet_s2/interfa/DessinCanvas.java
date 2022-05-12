@@ -27,9 +27,10 @@ public class DessinCanvas extends Pane {
     private RectangleHV asRect;
     private final Graphics graphics;
     
-    public DessinCanvas(double width, double height, MainPanel main){
+    public DessinCanvas(MainPanel main){
         super();
-        this.setPrefSize(width, height);
+        this.realCanvas = new Canvas(this.getWidth(), this.getHeight());
+        this.asRect = new RectangleHV(0, 0, this.getWidth(), this.getHeight());
 
         Canvas canvas = new Canvas();
         this.controleur = main.getControleur();

@@ -6,7 +6,9 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 
+import java.io.File;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 /**
  *
  * @author adrie
@@ -25,32 +27,39 @@ public final class MainPanel extends BorderPane {
  
     private final DessinCanvas cDessin;
 
-    private final MainMenu menu;
+    //private final MainMenu menu;
     private final FenetreInfo Info;
     
-    private final BoutonGauche boutong;
+    //private final BoutonGauche boutong;
     private final BoutonDroite boutond;
     private RectangleHV zoneModelVue;
+    private Stage inStage;
+    private File curFile;
     
-    public MainPanel(int w, int h, Controleur controleur){ 
-        super();
-        this.controleur = controleur;
+    public MainPanel(Stage inStage) {
+        this(inStage, null);
+    }
+    
+    public MainPanel(Stage inStage, File fromFile){ 
+        this.inStage = inStage;
+        this.curFile = fromFile;
+        this.controleur = new Controleur(this);
        
         
         boutond = new BoutonDroite(this);
         this.setRight(boutond);
         
-        boutong = new BoutonGauche(this);
-        this.setLeft(boutong);
+        /*boutong = new BoutonGauche(this);
+        this.setLeft(boutong);*/
                 
         Info = new FenetreInfo(this);
         this.setRight(Info);
         
-        this.cDessin = new DessinCanvas(w,h,this);// zone de dessin
+        this.cDessin = new DessinCanvas(this);// zone de dessin
         this.setCenter(this.cDessin);
         
-        this.menu = new MainMenu(this);
-        this.setTop(this.menu);
+        /*this.menu = new MainMenu(this);
+        this.setTop(this.menu);*/
     }  
         
 
@@ -80,7 +89,7 @@ public final class MainPanel extends BorderPane {
         return boutond;
     }
     
-    public BoutonGauche getBoutonGauche() {
+    /*public BoutonGauche getBoutonGauche() {
         return boutong;
     }
 

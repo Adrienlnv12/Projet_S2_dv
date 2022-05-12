@@ -69,7 +69,7 @@ public class Controleur {
     private double mouseX, mouseY;
     private double dragMouseX, dragMouseY;
     
-    private final Treillis treillis;
+    private Treillis treillis;
     private MainPanel vue;
     private int boutonSelect = 0;
     private TypedeBarre barreType = null;
@@ -92,17 +92,19 @@ public class Controleur {
 
     private boolean inDrawing = true;
 
-    private final HostServices hostServices;
+    private HostServices hostServices;
 
     //1 m => 50 px
     private final double echelle = 50;
     
     
     
-    public Controleur(Treillis treillis, HostServices hostServices) {
+    public Controleur(/*Treillis treillis /*HostServices hostServices*/MainPanel vue) {
+        this.vue = vue;
+        this.selection = new ArrayList<>();
         graphics = new Graphics();
-        this.treillis = treillis;
-        this.hostServices = hostServices;
+        //this.treillis = treillis;
+        //this.hostServices = hostServices;
     }
 
     //initialisation de la classe
@@ -302,29 +304,7 @@ public class Controleur {
             }
         });
     }
-    
-    //fonction permettant la selection d'un point
-    private void setSelected(){
-        if(terrain.isSelected()){
-            terrain.setSelected(false);
-            graphics.removeInfos();
-        }
-
-        if (currentSelect != null) {
-            currentSelect.setSelected(false);
-        }
-        if (nearest != null) {
-            if(nearest.equals(currentSelect)){
-                nearest.setSelected(false);
-                currentSelect = null;
-                graphics.removeInfos();
-            }else {
-                nearest.setSelected(true);
-                currentSelect = nearest;
-                graphics.drawInfos(nearest);
-            }
-        }
-    }    
+       
     
     //retire le point selectionnÃƒÂ©
     public void removeSelected() {
@@ -776,8 +756,10 @@ public class Controleur {
         return Matrice.concatCol(systeme, Matrice.creeVecteur(vecResult));
     }*/
     
-    public void boutonSelect(int t) {
-        this.boutonSelect = t ;
+   
+    
+    public void boutonSelect(ActionEvent t) {
+        this.boutonSelect(t) ;
     }
     public int getboutonSelect() {
         return boutonSelect;
@@ -832,7 +814,7 @@ public class Controleur {
                 
     }
     
-    /*public void changeColor(Color value) {
+    public void changeColor(Color value) {
         if (this.etat == 20 && this.selection.size() > 0) {
             for (Forme f : this.selection) {
                 f.changeCouleur(value);
@@ -841,7 +823,7 @@ public class Controleur {
         } else if (this.etat == 41 && this.barreEnCoursDeCreation != null) {
             this.barreEnCoursDeCreation.changeCouleur(value);
         }
-    }*/
+    }
     
     public void selection(int selectedButton){
         //ajoute les formes dans la selection
@@ -927,10 +909,10 @@ public class Controleur {
         this.vue.redrawAll();
     }
 
-    /*public void zoomFitAll() {
+    public void zoomFitAll() {
         this.vue.fitAll();
         this.vue.redrawAll();
-    }*/
+    }
 
     public void translateGauche() {
          this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateGauche(0.8));

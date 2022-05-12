@@ -148,7 +148,8 @@ public final class BoutonGauche extends VBox {
         rbSelect.setToggleGroup(bgEtat);
         rbSelect.setSelected(true);
 
-        rbSelect.setOnAction(actionEvent -> controleur.boutonSelect(0));
+        this.rbSelect.setOnAction((t) -> {
+            this.controleur.boutonSelect(t)
     }
 
     private void initBarre() {
