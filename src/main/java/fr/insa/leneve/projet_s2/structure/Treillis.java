@@ -143,4 +143,6 @@ public class Treillis {
             graphics.remove(noeud);
         }
     }
+    
+    
 }
