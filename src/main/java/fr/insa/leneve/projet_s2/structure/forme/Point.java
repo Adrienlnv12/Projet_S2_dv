@@ -119,7 +119,14 @@ public class Point extends Forme{
     public void setSegmentSelected(boolean segmentSelected) {
         this.segmentSelected = segmentSelected;
     }
+    
+    public Point add(Point p){
+        return new Point(p.px + px, p.py + py);
+    }
 
+    public Point substract(Point p){
+        return new Point(- p.px + px, - p.py + py);
+    }
 
 
 

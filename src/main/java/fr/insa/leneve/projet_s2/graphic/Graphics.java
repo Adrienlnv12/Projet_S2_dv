@@ -6,7 +6,7 @@ import fr.insa.leneve.projet_s2.interfa.*;
 
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
-
+import fr.insa.leneve.projet_s2.structure.Noeud.NoeudSimple;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.Treillis;
@@ -52,15 +52,15 @@ public class Graphics {
     }
 
     public void drawInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
-        fenetreinfo.drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
+        fenetreinfo.dessineInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
     }
 
     public void drawInfos(Forme nearest){
-        fenetreinfo.drawInfos(nearest);
+        fenetreinfo.dessineInfos(nearest);
     }
 
     public void drawInfos(Terrain terrain){
-        fenetreinfo.drawInfos(terrain);
+        fenetreinfo.dessineInfos(terrain);
     }
 
     public void resetFormes(){
@@ -85,12 +85,12 @@ public class Graphics {
         }
     }
 
-    private void drawNear(){
+    /*private void drawNear(){
         Forme nearest = controleur.getNearest();
         if(nearest != null){
             nearest.drawNear(gc, origin);
         }
-    }
+    }*/
 
     //fonction de dessin principale
     public void draw(int selectedButton, boolean inDrawing) {
@@ -127,7 +127,7 @@ public class Graphics {
             if(selectedButton != 20 && selectedButton != 40 && f instanceof Point){
                 ((Point) f).setSegmentSelected(false);
             }
-            f.draw(gc, origin);
+            f.dessine(gc);
         }
 
         //dessin des noeuds et barres selectionné + des infos associées
@@ -164,91 +164,9 @@ public class Graphics {
                     Math.abs(dragMouseX - mouseX),
                     Math.abs(dragMouseY - mouseY));
         }else if(selectedButton == 0 || selectedButton == 20 || selectedButton == 40){
-            drawNear();
+           /* drawNear();*/
         }
         gc.setGlobalAlpha(1);
-
-        if(controleur.isInDrawing()) {
-            //dessin le fantome de la zone constructible
-            if (selectedButton == 30 && controleur.getCurrentClick() == 1) {
-                drawTerrainZone(controleur.getMouseX(), controleur.getMouseY(), controleur.getTerrainX() + origin.getPx(), controleur.getTerrainY() + origin.getPy());
-            }
-
-            //dessin le fantome des triangles
-            if (selectedButton == 40) {
-                if (controleur.getCurrentClick() >= 1 && controleur.getFirstSegmentPoint() != null) {
-                    SegmentTerrain.drawGhost(gc, origin, controleur.getFirstSegmentPoint(), mousePoint);
-                }
-                if (controleur.getCurrentClick() == 2 && controleur.getSecondSegmentPoint() != null && v.getFirstSegmentPoint() != null) {
-                    SegmentTerrain.drawGhost(gc, origin, controleur.getFirstSegmentPoint(), new Point(
-                            controleur.getSecondSegmentPoint().getPx() + origin.getPx(),
-                            controleur.getSecondSegmentPoint().getPy() + origin.getPy()));
-                    SegmentTerrain.drawGhost(gc, origin, controleur.getSecondSegmentPoint(), mousePoint);
-                }
-            }
-
-            //dessin le fantome des barres
-            if (selectedButton == 20) {
-                Point firstPoint = controleur.getFirstSegmentPoint();
-                if (controleur.getCurrentClick() >= 1 && firstPoint != null) {
-                    if (Maths.dist(firstPoint, mousePoint.substract(origin)) > controleur.getBarreType().getlMin() * controleur.getEchelle()) {
-                        Point point = mousePoint;
-
-                        double lMax = controleur.getBarreType().getlMax() * ac.getEchelle();
-                        if (Maths.distancePoint(firstPoint, mousePoint.substract(origin)) > lMax) {
-                            double angle = Maths.angle(firstPoint, mousePoint.substract(origin));
-                            point = new Point(firstPoint.getPx() + lMax * Math.cos(angle) + origin.getPx(), firstPoint.getPy() + lMax * Math.sin(angle) + origin.getPy());
-                        }
-
-
-                        assert terrain != null;
-                        SegmentTerrain segment = NoeudAppui.isCreable(terrain, mousePoint.getPx() - origin.getPx(), mousePoint.getPy() - origin.getPy());
-                        if (segment != null) {
-                            Point point1 = NoeudAppui.drawGhost(gc, origin, segment, Maths.distancePoint(segment.getDebut(), mousePoint.getPx() - origin.getPx(), mousePoint.getPy() - origin.getPy()) / segment.length());
-                            Barre.drawGhost(gc, controleur.getFirstSegmentPoint(), point1, origin);
-                        } else if (terrain.containOutTriangle(point.getPx() - origin.getPx(), point.getPy() - origin.getPy())) {
-                            Barre.drawGhost(gc, controleur.getFirstSegmentPoint(), point, origin);
-                            point.drawGhost(gc, new Point(0, 0));
-                        }
-                    }
-
-                }
-            }
-
-            //dessin du fantome des noeuds
-            if (!(selectedButton == 0 || selectedButton == 30) && (selectedButton != 20 || controleur.getCurrentClick() == 0)) {
-                assert terrain != null;
-
-                SegmentTerrain segment = NoeudAppui.isCreable(terrain, mousePoint.getPx() - origin.getPx(), mousePoint.getPy() - origin.getPy());
-                if (selectedButton == 10 || (segment == null && (selectedButton != 11 && selectedButton != 12))) {
-                    if (terrain.containOutTriangle(mousePoint.getPx() - origin.getPx(), mousePoint.getPy() - origin.getPy())) {
-                        mousePoint.drawGhost(gc, new Point(0, 0));
-                    }
-                } else if (segment != null) {
-                   NoeudAppui.drawGhost(gc, origin, segment, Maths.distancePoint(segment.getDebut(), mousePoint.getPx() - origin.getPx(), mousePoint.getPy() - origin.getPy()) / segment.length());
-                }
-
-            }
-        }else{
-            HashMap<Integer, double[]> results = ac.getResultCalcul();
-            HashMap<Forme, Integer> formeId = ac.getFormeId();
-
-            if(results.size() > 0) {
-                for (Forme value : formeId.keySet()) {
-                    int id = formeId.get(value);
-                    if (value instanceof NoeudAppuiDouble) {
-                        value.drawResult(results.get(id)[0], gc, origin);
-                        value.drawResult(results.get(id)[1], gc, new Point(origin.getPx() + 5, origin.getPy() + 10));
-
-                    } else if (value instanceof Barre) {
-                        value.drawResult(results.get(id)[0], gc, origin);
-                    }else {
-                        value.drawResult(results.get(id)[0], gc, origin);
-                    }
-                }
-            }
-        }
-
     }
 
     public void drawTerrainZone(double x1, double y1, double x2, double y2){

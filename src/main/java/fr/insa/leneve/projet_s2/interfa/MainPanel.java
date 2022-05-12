@@ -30,6 +30,7 @@ public final class MainPanel extends BorderPane {
     
     private final BoutonGauche boutong;
     private final BoutonDroite boutond;
+    private RectangleHV zoneModelVue;
     
     public MainPanel(int w, int h, Controleur controleur){ 
         super();
@@ -45,7 +46,7 @@ public final class MainPanel extends BorderPane {
         Info = new FenetreInfo(this);
         this.setRight(Info);
         
-        this.cDessin = new DessinCanvas(this);// zone de dessin
+        this.cDessin = new DessinCanvas(w,h,this);// zone de dessin
         this.setCenter(this.cDessin);
         
         this.menu = new MainMenu(this);
@@ -81,6 +82,23 @@ public final class MainPanel extends BorderPane {
     
     public BoutonGauche getBoutonGauche() {
         return boutong;
+    }
+
+    /*public void fitAll() {
+        this.zoneModelVue = new RectangleHV(this.model.minX(),
+                this.model.maxX(), this.model.minY(), this.model.maxY());
+        this.zoneModelVue = this.zoneModelVue.scale(1.1);
+    }*/
+    
+    public void setZoneModelVue(RectangleHV zoneModelVue) {
+        this.zoneModelVue = zoneModelVue;
+    }
+    
+    /**
+     * @return the zoneModelVue
+     */
+    public RectangleHV getZoneModelVue() {
+        return zoneModelVue;
     }
    
     

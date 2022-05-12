@@ -42,7 +42,7 @@ public class BoutonDroite extends VBox{
     
     private Button bCreeNoeudDialog;
     
-    private DessinCanvas1 cDessin;
+    private DessinCanvas cDessin;
     private RectangleHV zoneModelVue;
     
     public BoutonDroite(MainPanel mainpanel) {
@@ -52,14 +52,14 @@ public class BoutonDroite extends VBox{
 
         this.controleur = mainpanel.getControleur();
         
-        initGrouper();
+       /* initGrouper();
         initSup();
 
 
-        initColorPicker();
+        initColorPicker();*/
         initZoomDouble();
         initZoomDemi();
-        initZoomFitAll();
+        //initZoomFitAll();
         bTranslateGauche();
         bTranslateDroite();
         bTranslateHaut();
@@ -83,7 +83,7 @@ public class BoutonDroite extends VBox{
 
     }
     
-    private void initGrouper() {
+    /*private void initGrouper() {
         bGrouper = new Button("Grouper");
         bGrouper.setOnAction((t) -> {
             this.controleur.boutonGrouper(t);
@@ -106,7 +106,7 @@ public class BoutonDroite extends VBox{
         this.cpCouleur.setOnAction((t) -> {
             this.controleur.changeColor(this.cpCouleur.getValue());
         });
-    }
+    }*/
         
         /*this.bRes = new Button("Résolution"); //crée le toggle bouton 
         this.bRes.setOnAction((t) -> {
@@ -126,12 +126,12 @@ public class BoutonDroite extends VBox{
         });
     }
     
-    private void initZoomFitAll() {  
+    /*private void initZoomFitAll() {  
         this.bZoomFitAll = new BoutonIcone("icones/zoomTout.png",32,32);
         this.bZoomFitAll.setOnAction((t) -> {
             this.controleur.zoomFitAll();
         });
-    }
+    }*/
     private void bTranslateGauche() {
         this.bTranslateGauche = new BoutonIcone("icones/gauche.png",32,32);
         this.bTranslateGauche.setOnAction((t) -> {

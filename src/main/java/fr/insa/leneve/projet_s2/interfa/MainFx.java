@@ -21,21 +21,9 @@ public class MainFx extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        
-        //ouvre le dernier treillis ouvert s'il existe
-        String lastOpenPath = options.getLastOpen();
-        String Name = Controleur.nameFromPath(lastOpenPath);
-        Treillis treillis;
-        if(lastOpenPath.equals("")){
-            treillis = new Treillis();
-        }else{
-            treillis = Save.getTreillis(lastOpenPath);
-            if(treillis == null){
-                Name = "";
-                treillis = new Treillis();
-            }
-        }
-        controleur = new Controleur( treillis, , getHostServices());
+        String Name = "";
+        Treillis treillis = null;
+        controleur  = new Controleur(treillis, getHostServices());
         Scene sc = new Scene(new MainPanel(600,400, controleur),800,600);
         if(Name.equals("")) Name = "~Nouveau~";
         stage.setScene(sc);

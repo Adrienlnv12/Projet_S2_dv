@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package fr.insa.leneve.projet_s2.interfa;
+import fr.insa.leneve.projet_s2.graphic.Graphics;
 import fr.insa.leneve.projet_s2.structure.Treillis;
 import java.util.List;
 import javafx.scene.canvas.Canvas;
@@ -20,12 +21,30 @@ import fr.insa.leneve.projet_s2.structure.forme.Segment;
 public class DessinCanvas extends Pane {
     
     private MainPanel main;
-    
+    private final GraphicsContext gc;
+    private final Controleur controleur;
     private Canvas realCanvas;
     private RectangleHV asRect;
+    private final Graphics graphics;
     
-    public DessinCanvas(MainPanel main){
-        this.main=main;
+    public DessinCanvas(double width, double height, MainPanel main){
+        super();
+        this.setPrefSize(width, height);
+
+        Canvas canvas = new Canvas();
+        this.controleur = main.getControleur();
+        this.graphics = controleur.getGraphics();
+
+        gc = canvas.getGraphicsContext2D();
+
+        canvas.setManaged(false);
+        canvas.widthProperty().bind(this.widthProperty());
+        canvas.heightProperty().bind(this.heightProperty());
+        this.getChildren().add(canvas);
+
+        canvas.heightProperty().addListener((o) -> graphics.draw(controleur.getboutonSelect(), controleur.isInDrawing()));
+        canvas.widthProperty().addListener((o) -> graphics.draw(controleur.getboutonSelect(), controleur.isInDrawing()));
+        /*this.main=main;
         this.realCanvas = new Canvas(this.getWidth(),this.getHeight());
         this.asRect = new RectangleHV(0, 0, this.getWidth(), this.getHeight());
         this.getChildren().add(this.realCanvas);
@@ -42,13 +61,13 @@ public class DessinCanvas extends Pane {
         this.realCanvas.setOnMouseClicked((t) -> {
             System.out.println("clic");
             Controleur control = this.main.getControleur();
-            control.clicDansZoneDessin(t);
+            //control.clicDansZoneDessin(t);
         });
         this.realCanvas.setOnMouseMoved((t) -> {
             this.main.getControleur().mouseMovedDansZoneDessin(t);
         });
             this.redrawAll();
-        
+        */
         
         
     }
@@ -75,7 +94,7 @@ public class DessinCanvas extends Pane {
         this.asRect.setyMax(this.realCanvas.getHeight());
         Transform curTrans = this.main.getZoneModelVue().fitTransform(this.asRect);
         this.setTransform(curTrans);
-        Treillis.dessine(context);
+        //Treillis.dessine(context);
         List<Forme> select = this.main.getControleur().getSelection();
         if (!select.isEmpty()) {//a refaire
             for (Forme f : select) {
@@ -94,6 +113,9 @@ public class DessinCanvas extends Pane {
      */
     public Canvas getRealCanvas() {
         return realCanvas;
+    }
+      public GraphicsContext getGraphicsContext() {
+        return gc;
     }
         
 }
