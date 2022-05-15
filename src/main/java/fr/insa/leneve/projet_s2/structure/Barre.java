@@ -17,35 +17,23 @@ import javafx.scene.paint.Color;
  * @author adrie
  */
 public class Barre extends Segment {
-        
-    private final TypedeBarre Type; // chaque barre a un type 
     
-    public Barre(Noeud debut, Noeud fin,TypedeBarre Type, int id) {
+    public Barre(Noeud debut, Noeud fin, int id) {
         super(debut, fin);
         this.id = id;
-        this.Type = Type;
-    }
-    
-     public TypedeBarre getType() {
-        return Type;
     }
     
     @Override
     public ArrayList<String> getInfos() {
         ArrayList<String> infos = super.getInfos();
-        infos.add("Type : ");
-        infos.addAll(Type.getInfos());
 
         return infos;
 
     }
     
      public String saveString() {
-        int typeId;
-        if(Type == null) typeId = -1;
-        else typeId = Type.getId();
 
-        return "Barre;" + id + ";" + typeId + ";" + debut.getId() + ";" + fin.getId();
+        return "Barre;" + id + ";" + debut.getId() + ";" + fin.getId();
     }
      
     @Override
@@ -62,7 +50,7 @@ public class Barre extends Segment {
     
     @Override
     public String toString() {
-        return "barre{" + "typebarre=" + Type + ", id=" + id + ", noeud1=" + debut + ", noeud2=" + fin + '}';
+        return "barre{" +  ", id=" + id + ", noeud1=" + debut + ", noeud2=" + fin + '}';
     }
     
     public double Longueur_barre(Barre B){

@@ -20,8 +20,8 @@ import javafx.scene.paint.Color;
 public class Point extends Forme{
     public static double RAYON_IN_DRAW = 5;
 
-    protected double px;
-    protected double py;
+    public double px;
+    public double py;
     protected boolean segmentSelected;
     
     public Point(double px, double py, int id) {
@@ -91,6 +91,12 @@ public class Point extends Forme{
             context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
     }
+    
+    @Override
+    public void dessinProche(GraphicsContext context) {
+        context.setFill(Color.BLUE);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+    }
 
     @Override
     public int getId() {
@@ -128,6 +134,35 @@ public class Point extends Forme{
         return new Point(- p.px + px, - p.py + py);
     }
 
+     @Override
+    public double maxX() {
+        return this.px;
+    }
+
+    @Override
+    public double minX() {
+        return this.px;
+    }
+
+    @Override
+    public double maxY() {
+        return this.py;
+    }
+
+    @Override
+    public double minY() {
+        return this.py;
+    }
+
+    @Override
+    public double distancePoint(Point p) {
+        double dx = this.px - p.px;
+        double dy = this.py - p.py;
+        return Math.sqrt(dx*dx+dy*dy);
+
+    }
+    
+    
 
 
 }

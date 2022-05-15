@@ -11,12 +11,9 @@ package fr.insa.leneve.projet_s2.structure.Terrain;
 
 
 
-import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.calcul.Maths;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
-import java.io.IOException;
-import java.io.Writer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -27,10 +24,11 @@ import java.util.ArrayList;
  */
 public class Triangle extends Forme {
 
+    private final int id;
     private final PointTerrain[] points = new PointTerrain[3];
     private final SegmentTerrain[] segments = new SegmentTerrain[3];
 
-    public Triangle(PointTerrain pt1, PointTerrain pt2, PointTerrain pt3, int id, Terrain terrain){
+    public Triangle(PointTerrain pt1, PointTerrain pt2, PointTerrain pt3, int id,Terrain terrain){
 
         double max = Maths.max(pt1.getPx(), pt2.getPx(), pt3.getPx());
         if(max == pt1.getPx()){
@@ -129,17 +127,7 @@ public class Triangle extends Forme {
         }
         return save.toString();
     }
-    /*@Override
-    public void save(Writer w, Numeroteur<Forme> num) throws IOException {
-        if (!num.objExist(this)) {
-            int id = num.creeID(this);
-            this.debut.save(w, num);
-            this.fin.save(w, num);
-            w.append("Segment;" + id + ";" +
-                    num.getID(this.debut) + ";" + num.getID(this.fin) +
-                    ";" + Forme.saveColor(this.getCouleur())+"\n");
-        }
-    }*/
+
 
     public PointTerrain[] getPoints() {
         return points;
@@ -199,6 +187,35 @@ public class Triangle extends Forme {
     public boolean isTriangle(Triangle t){
         PointTerrain[] tPoints = t.getPoints();
         return asPoint(tPoints[0]) && asPoint(tPoints[1]) && asPoint(tPoints[2]);
+    }
+
+    @Override
+    public double maxX() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public double minX() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public double maxY() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public double minY() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public double distancePoint(Point p) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void dessinProche(GraphicsContext context) {
     }
 
 }

@@ -9,7 +9,7 @@ import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import fr.insa.leneve.projet_s2.structure.Treillis;
+import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 
 /**
  *
@@ -17,28 +17,12 @@ import fr.insa.leneve.projet_s2.structure.Treillis;
  */
 public class MainFx extends Application {
     
-    private Controleur controleur;
     @Override
-    public void start(Stage stage) throws Exception {
-        
-        String lastOpenPath = controleur.getLastOpen();
-        String Name = Controleur.nameFromPath(lastOpenPath);
-        Treillis treillis;
-        if(lastOpenPath.equals("")){
-            treillis = new Treillis();
-        }else{
-            treillis = Save.getTreillis(lastOpenPath);
-            if(treillis == null){
-                Name = "";
-                treillis = new Treillis();
-            }
-        }
-        
-        Scene sc = new Scene(new MainPanel(stage,treillis),800,600);
+    public void start(Stage stage) {
+        Scene sc = new Scene(new MainPanel(stage,Treillis.LastTreillis()),1000,800);
         stage.setScene(sc);
-        stage.setTitle("Nouveau");
-        stage.show();
-          
+        stage.setTitle("Modélisateur de treillis");
+          stage.show();
     }
 
     public static void main(String[] args) {

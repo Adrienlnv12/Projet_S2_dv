@@ -1,21 +1,16 @@
 package fr.insa.leneve.projet_s2.structure.Terrain;
 
 
-import fr.insa.leneve.projet_s2.structure.forme.Forme;
-import fr.insa.leneve.projet_s2.structure.forme.Point;
+
+import fr.insa.leneve.projet_s2.structure.forme.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class Terrain {
 
-    public double xMin;
-    public double xMax;
-    public double yMin;
-    public double yMax;
     private boolean selected = false;
 
     private HashMap<Integer, Triangle> triangles = new HashMap<>();
@@ -26,24 +21,12 @@ public class Terrain {
     public Terrain() {
     }
 
-    //constructeur auto
-    public Terrain(double xMin, double yMin, double xMax, double yMax) {
-        this.xMin = xMin;
-        this.yMin = yMin;
-        this.xMax = xMax;
-        this.yMax = yMax;
-    }
-
-    public boolean contain(double x, double y){
-        return (x >= xMin && x <= xMax && y >= yMin && y <= yMax);
-    }
-
     //verifie si un point est dans la zone constructible mais pas dans les triangles
     public boolean containOutTriangle(double x, double y){
         for (Triangle triangle : triangles.values()) {
             if(triangle.contain(x, y)) return false;
         }
-        return contain(x, y);
+        return true;
     }
 
     //get et set
@@ -135,55 +118,11 @@ public class Terrain {
         }
     }
 
-
-
-    public ArrayList<String> getInfos(){
-        ArrayList<String> infos = new ArrayList<>();
-        infos.add("xMin :" + xMin);
-        infos.add("yMin :" + yMin);
-        infos.add("xMax :" + xMax);
-        infos.add("yMax :" + yMax);
-
-        return infos;
-    }
-
     // fonction de dessin
     public void draw(GraphicsContext gc, boolean drawBorder, Point origin){
-        if(drawBorder) {
-            gc.setGlobalAlpha(0.5);
-            gc.setFill(Color.LIGHTGREEN);
-            gc.fillRect(xMin + origin.getPx(), yMin + origin.getPy(), xMax - xMin, yMax - yMin);
-            gc.setGlobalAlpha(1);
-
-            gc.setLineWidth(3);
-            if(selected){
-                gc.setStroke(Color.DARKGREEN);
-            }else{
-                gc.setStroke(Color.GREEN);
-            }
-            gc.strokeRect(xMin + origin.getPx(), yMin + origin.getPy(), xMax - xMin, yMax - yMin);
-        }
         if(!triangles.isEmpty()) triangles.values().forEach(t -> t.dessine(gc));
         if(!points.isEmpty()) points.forEach(p -> p.dessine(gc));
         if(!segments.isEmpty()) segments.forEach(s -> s.dessine(gc));
-    }
-
-    public String saveString() {
-        return "ZoneConstructible;" + xMin + ";" + yMin + ";" + xMax + ";" + yMax;
-    }
-
-    public void setBorderNull(){
-        xMax = -1;
-        xMin = -1;
-        yMax = -1;
-        yMin = -1;
-    }
-
-    public void setBorder(double x1, double y1, double x2, double y2){
-        this.xMax = Math.max(x1, x2);
-        this.xMin = Math.min(x1, x2);
-        this.yMax = Math.max(y1, y2);
-        this.yMin = Math.min(y1, y2);
     }
 
 }

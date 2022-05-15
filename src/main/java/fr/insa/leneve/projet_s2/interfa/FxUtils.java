@@ -4,6 +4,7 @@
  */
 package fr.insa.leneve.projet_s2.interfa;
 
+
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -11,10 +12,9 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-
 /**
  *
- * @author francois
+ * @author adrie
  */
 public class FxUtils {
     

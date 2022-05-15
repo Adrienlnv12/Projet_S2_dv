@@ -5,7 +5,8 @@ import fr.insa.leneve.projet_s2.structure.forme.Point;
 import javafx.scene.paint.Color;
 
 public class Maths {
-
+    
+    
     public static double distancePoint(Point a, Point b) {
         return Math.sqrt(Math.pow(a.getPx() - b.getPx(), 2) + Math.pow(a.getPy() - b.getPy(), 2));
     }

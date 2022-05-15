@@ -32,22 +32,6 @@ public abstract class Noeud extends Point {
         this.px = py;
         this.id = id;
     }
-    /*public class Poids {
-        
-        public Poids(){
-            this.px = 0;
-            this.py = 0;
-        }
-    }
-     
-    public Poids Poids(Barre B){
-        Poids poids  = new Poids();
-        double angle = B.getAngleBarre(B);
-        if(B.Noeud1 instanceof NoeudSimple){
-            
-        }
-        return(poids);
-    }*/
      
      public void addBarres(Barre barre){
         linkedBarres.add(barre);
@@ -57,7 +41,7 @@ public abstract class Noeud extends Point {
         linkedBarres.remove(barre);
     }
 
-    public abstract String saveString() throws IOException;
+    public abstract String saveString();
 
     public void setForceApplique(Force forceApplique) {
         this.forceApplique = forceApplique;

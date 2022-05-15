@@ -5,27 +5,25 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 import fr.insa.leneve.projet_s2.calcul.Maths;
-import fr.insa.leneve.projet_s2.graphic.Graphics;
-import fr.insa.leneve.projet_s2.interfa.BoutonGauche;
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.*;
-import fr.insa.leneve.projet_s2.structure.Treillis;
-import fr.insa.leneve.projet_s2.structure.TypedeBarre;
+import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import javafx.application.HostServices;
 import javafx.event.ActionEvent;
-import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.NonInvertibleTransformException;
-import javafx.scene.transform.Transform;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -34,9 +32,7 @@ import javafx.stage.Stage;
  */
 public class Controleur {
     private String lastOpen;
-    private Terrain terrain;
     private MainPanel mainpanel;
-    private final Graphics graphics;
     private Stage stage;
     private String name;
     private String path;
@@ -44,17 +40,17 @@ public class Controleur {
     private Forme nearest, currentSelect;
     private double X, Y;
     private double dragMouseX, dragMouseY;
-    
+    private GraphicsContext context;
+    private Terrain terrain;
     private Treillis treillis;
     private MainPanel vue;
     private int boutonSelect = 0;
-    private TypedeBarre barreType = null;
     private Segment barreEnCoursDeCreation = null;
 
     private int etat;
     private final ArrayList<Forme> multipleSelect = new ArrayList<>();
 
-    private List<Forme> selection;
+    private ArrayList<Forme> selection;
     
     private final HashMap<Integer, double[]> formesRes = new HashMap<>();
     private final HashMap<Forme, Integer> formeId = new HashMap<>();
@@ -62,13 +58,13 @@ public class Controleur {
     private int currentClick = 0;
     private Point firstSegmentPoint = null, secondSegmentPoint = null;
 
-    private double terrainX, terrainY;
 
     private boolean inMultSelect = false, drag = false;
 
     private boolean inDrawing = true;
 
-    private HostServices hostServices;
+    private FenetreInfo fenetreinfo;
+
 
     //1 m => 50 px
     private final double echelle = 50;
@@ -78,94 +74,99 @@ public class Controleur {
     public Controleur(MainPanel vue) {
         this.vue = vue;
         this.selection = new ArrayList<>();
-        graphics = new Graphics();
-    }
-
-    /*//initialisation de la classe
-    // impossible de le faire dans son constructeur car cette classe a besoin de "mainscene" qui a besoin de
-    // cet "action center" pour etre initialisÃƒÂ©
-    public void init(MainPanel mainpanel, Stage stage, String path){
-        this.mainpanel = mainpanel;
-        this.stage = stage;
-        this.path = path;
-        this.name = nameFromPath(path);
-        this.terrain = treillis.getTerrain();
-
-        GraphicsContext gc = mainpanel.getcDessin().getGraphicsContext();
-        graphics.init(mainpanel, gc, this);
-        graphics.updateFormes(treillis);
-        graphics.draw(boutonSelect, inDrawing);
-
-        addMouseEvent();
-    }*/
-    
-    public void changeEtat(int nouvelEtat) {
-        switch (nouvelEtat) {
-            case 20 -> {
-                this.vue.getRbSelect().setSelected(true);
-                this.selection.clear();
-            }
-            case 30 -> {
-
-                this.vue.getRbNoeud().setSelected(true);
-                this.selection.clear();
-            }
-            case 40 -> {
-                this.vue.getRbBarre().setSelected(true);
-                this.selection.clear();
-            }
-            case 50 -> {
-                this.vue.getRbTerrain().setSelected(true);
-                this.selection.clear();  
-                }
-            case 60 -> {
-                //création d'un terrain
-                this.vue.getRbTriangleTerrain().setSelected(true);
-                this.selection.clear();
-                }
-            default -> {
-            }
-        }
-        // creation de segments étape 2
-        this.etat = nouvelEtat;
-        //this.activeBoutonsSuivantSelection();
-
     }
     
-    /**
-     * transforme les coordonnées (xVue,yVue) dans le repère de la vue, en un
-     * point du modele en tenant compte de la transformation actuelle appliquée
-     * à la vue.
-     *
-     * @param xVue pos x dans la vue
-     * @param yVue pos y dans la vue
-     * @return un Point apprès application de la transformation vue --> model
-     */
-    public Point posInModel(double xVue, double yVue) {
-        Transform modelVersVue = this.vue.getcDessin().getTransform();
-        Point2D ptrans;
+    private void realSave(File f) {
         try {
-            ptrans = modelVersVue.inverseTransform(xVue, yVue);
-        } catch (NonInvertibleTransformException ex) {
-            throw new Error(ex);
+            //this.vue.getModel().sauvegarde(f);
+            this.vue.setCurFile(f);
+            this.vue.getInStage().setTitle(f.getName());
+        }/* catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Problème durant la sauvegarde");
+            alert.setContentText(ex.getLocalizedMessage());
+
+            alert.showAndWait();
+        }*/ finally {
+            //this.changeEtat(20);
         }
-        Point pclic = new Point(ptrans.getX(), ptrans.getY());
-        //pclic.setCouleur(this.vue.getCpCouleur().getValue());
-        return pclic;
     }
+
+    public void menuSave(ActionEvent t) {
+        if (this.vue.getCurFile() == null) {
+            this.menuSaveAs(t);
+        } else {
+            this.realSave(this.vue.getCurFile());
+        }
+    }
+
+    public void menuSaveAs(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showSaveDialog(this.vue.getInStage());
+        if (f != null) {
+            this.realSave(f);
+        }
+    }
+
+    public void menuOpen(ActionEvent t) {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(this.vue.getInStage());
+        if (f != null) {
+            try {
+               /* Forme lue = Forme.lecture(f);
+                Treillis glu = (Treillis) lue;
+                Stage nouveau = new Stage();
+                nouveau.setTitle(f.getName());
+                Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
+                nouveau.setScene(sc);
+                nouveau.show();
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Problème durant la sauvegarde");
+                alert.setContentText(ex.getLocalizedMessage());
+
+                alert.showAndWait();*/
+            } finally {
+                //this.changeEtat(20);
+            }
+        }
+    }
+//    }
+    public void menuNouveau(ActionEvent t) {
+        Stage nouveau = new Stage();
+        nouveau.setTitle("Nouveau");
+        Scene sc = new Scene(new MainPanel(nouveau), 800, 600);
+        nouveau.setScene(sc);
+        nouveau.show();
+    }
+    
+    public void menuApropos(ActionEvent t) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("A propos");
+        alert.setHeaderText(null);
+        alert.setContentText("NUL\n"
+                + "Vraiment\n"
+                + "NUL\n"
+                + "à l'INSA de Strasbourg");
+
+        alert.showAndWait();
+    }
+    
     
     //ajout des fonctions appelÃƒÂ©s durant diffÃƒÂ©rentes actions de la souris
     private void addMouseEvent() {
         DessinCanvas canvas = mainpanel.getcDessin();
 
-        //actions quand la couris est dÃƒÂ©placÃƒÂ© dans le canvas
+        //actions quand la souris est déplacé dans le canvas
         canvas.setOnMouseMoved(mouseEvent -> {
             X = mouseEvent.getX();
             Y = mouseEvent.getY();
             if(inDrawing && (boutonSelect/10) % 2 == 0){
                 selection(boutonSelect/10);
             }
-            graphics.draw(boutonSelect, inDrawing);
+            dessine(inDrawing);
         });
 
         //action quand on clic sur la souris
@@ -177,70 +178,73 @@ public class Controleur {
                 inMultSelect = false;
                 removeSelectedAll();
 
-                switch (this.etat) {
-                    case 20 -> {
-                        // selection
-                            Point pclic = this.posInModel(t.getX(), t.getY());
-                            // pas de limite de distance entre le clic et l'objet selectionné
-                            Forme proche = this.vue.getTreillis().plusProche(pclic, Double.MAX_VALUE);
-                            // il faut tout de même prévoir le cas ou le groupe est vide
-                            // donc pas de plus proche
-                            if (proche != null) {
-                                if (t.isShiftDown()) {
-                                    this.selection.add(proche);
-                                } else if (t.isControlDown()) {
-                                    if (this.selection.contains(proche)) {
-                                        this.selection.remove(proche);
-                                    } else {
-                                        this.selection.add(proche);
-                                    }
-                                } else {
-                                    this.selection.clear();
-                                    this.selection.add(proche);
-                                }
-                            } 
-                    }
-                    case 30 -> {
-                        //création d'un point
-                        addNoeud();
-                    }
-                    case 40 -> {
-                        //création d'une barre
-                        addBarre();
-                    }
-                    case 50 -> {
-                        //création d'un zone constructible
-                        addZoneConstructible();   
-                        }
-                    case 60 -> {
-                        //création d'un terrain
-                        addTriangleTrn();   
-                        }
-                    default -> {
-                    }
+                switch (boutonSelect/10) {
+                    case 0 -> setSelected();
+                    case 1 -> addNoeud();
+                    case 2 -> addBarre();
+                    case 3 -> addTriangleTrn();
                 }
+                
+            }
+        });
+        
+        //action quand on arrete de cliquer sur la souris
+        canvas.setOnMouseReleased(mouseEvent -> {
+            dragMouseX = -1;
+            dragMouseY = -1;
+            if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                drag = false;
+                dessine(inDrawing);
+            }else if(mouseEvent.getButton() == MouseButton.SECONDARY) {
+            //mettre qqch
+            }
+        });
+
+        canvas.setOnMouseDragged(mouseEvent -> {
+            if(mouseEvent.getButton() == MouseButton.PRIMARY && inDrawing) {
+                if (boutonSelect == 0) {
+                    drag = true;
+                    inMultSelect = true;
+                    dragMouseX = mouseEvent.getX();
+                    dragMouseY = mouseEvent.getY();
+                    dragSelection();
+                   dessine(inDrawing);
+                }
+            } else if(mouseEvent.getButton() == MouseButton.SECONDARY) {
+                dragMouseX = mouseEvent.getX();
+                dragMouseY = mouseEvent.getY();
+                dessine(inDrawing);
             }
         });
     }
+    
+    //fonction permettant la selection d'un point
+    private void setSelected(){
+
+        if (currentSelect != null) {
+            currentSelect.setSelected(false);
+        }
+        if (nearest != null) {
+            if(nearest.equals(currentSelect)){
+                nearest.setSelected(false);
+                currentSelect = null;
+                removeInfos();
+            }else {
+                nearest.setSelected(true);
+                currentSelect = nearest;
+                drawInfos(nearest);
+            }
+        }
+    }
+    
     //appele la bonne fonction d'ajout du noeud selon le type choisi
     private void addNoeud(){
-        
-        if(terrain.contain(X ,Y)) {
             switch (boutonSelect) {
                 case 10 -> addNoeudSimple();
                 case 11 -> addAppui(false);
                 case 12 -> addAppui(true);
                 default -> System.out.println(boutonSelect);
             }
-
-        }else{
-
-            Alert alerteZoneConstructible = new Alert(Alert.AlertType.ERROR);
-            alerteZoneConstructible.setTitle("Erreur");
-            alerteZoneConstructible.setContentText("Noeud hors zone constructible!");
-            alerteZoneConstructible.showAndWait();
-
-        }
 
     }
     
@@ -257,8 +261,7 @@ public class Controleur {
         if(distCreable && triangleCreable) {
 
             NoeudSimple ns = treillis.createNoeudSimple(posX, posY);
-            graphics.updateFormes(treillis);
-            graphics.draw(boutonSelect, inDrawing);
+            dessine(inDrawing);
             return ns;
         }
 
@@ -289,7 +292,7 @@ public class Controleur {
 
     //test si il est possible de creer un appui, et si oui alors il le crÃƒÂ©e
     public NoeudAppui testAppui(boolean simple, double posX, double posY){
-        SegmentTerrain segment = NoeudAppui.isCreable(terrain, posX, posY);
+        SegmentTerrain segment = NoeudAppui.isCreable(terrain,posX, posY);
         if(segment != null) {
             return createAppui(simple, posX, posY, segment);
         }else {
@@ -303,8 +306,7 @@ public class Controleur {
 
     public NoeudAppui createAppui(boolean simple, double posX, double posY, SegmentTerrain segment) {
             NoeudAppui appui = treillis.createAppui(simple, segment.getTriangles().get(0), segment, Maths.distancePoint(segment.getDebut(), posX, posY) / segment.length());
-            graphics.updateFormes(treillis);
-            graphics.draw(boutonSelect, inDrawing);
+            dessine(inDrawing);
             return appui;
     }
     
@@ -314,25 +316,14 @@ public class Controleur {
         Noeud p = null;
         //test si on clique a cotÃƒÂ© d'un point ou pas
         //Besoin d'ajouter la vÃƒÂ©rification que le point est crÃƒÂ©able, et quel type de point
-        if(barreType == null){
-            System.err.println("TYPE NULL");
-            Alert alerteTypeNull = new Alert(Alert.AlertType.INFORMATION);
-            alerteTypeNull.setTitle("");
-            alerteTypeNull.setHeaderText("CREATION BARRE IMPOSSIBLE");
-            alerteTypeNull.setContentText("Type nul!");
-            alerteTypeNull.showAndWait();
-            currentClick --;
-            return;
-        }
 
-        double lMin = barreType.getlMin() * echelle;
-        double lMax = barreType.getlMax() * echelle;
+
 
         if(nearest != null && nearest instanceof Noeud){
             boolean creable = true;
             if(currentClick > 1 && firstSegmentPoint != null) {
                 double dist = Maths.distancePoint((Point) nearest, firstSegmentPoint);
-                if(dist < lMin || dist > lMax){
+                if(dist < 0){
                     creable = false;
                 }
             }
@@ -341,10 +332,10 @@ public class Controleur {
         if(p == null){
             double dist = 0;
             if(currentClick > 1 && firstSegmentPoint != null) {
-                dist = Maths.distancePoint(firstSegmentPoint, (new Point(X ,Y)).substract(graphics.getOrigin()));
+                dist = Maths.distancePoint(firstSegmentPoint, (new Point(X ,Y)));
             }
-            if(dist >= lMin || currentClick == 1){
-                p = createNoeudBarre(dist > lMax, firstSegmentPoint);
+            if(currentClick == 1){
+                p = createNoeudBarre(firstSegmentPoint);
             }
             if(p == null){
                 currentClick --;
@@ -361,72 +352,32 @@ public class Controleur {
                 return;
             }
             currentClick = 0;
-            treillis.createBarre((Noeud) firstSegmentPoint, p, barreType);
+            treillis.createBarre((Noeud) firstSegmentPoint, p);
             firstSegmentPoint.setSegmentSelected(false);
-            graphics.updateFormes(treillis);
         }
-        graphics.draw(boutonSelect, inDrawing);
+        dessine(inDrawing);
     }
 
     //fonction de creation de noeud pour les barres
     //construit par defaut un noeud simple ou sinon un appui simple s'il ne peut pas
-    public Noeud createNoeudBarre(boolean distSup, Point firstSegmentPoint){
+    public Noeud createNoeudBarre(Point firstSegmentPoint){
         Noeud noeudRes = null;
         double posX, posY;
-        if(distSup){
-            double angle = Maths.angle(firstSegmentPoint, (new Point(X ,Y)).substract(graphics.getOrigin()));
-            posX = firstSegmentPoint.getPx() + barreType.getlMax() * echelle * Math.cos(angle);
-            posY = firstSegmentPoint.getPy() + barreType.getlMax() * echelle * Math.sin(angle);
-        }else {
             posX = X;
             posY = Y;
-        }
-        if (!terrain.contain(posX, posY)){
-            Alert alerteZoneConstructible = new Alert(Alert.AlertType.WARNING);
-            alerteZoneConstructible.setTitle("Erreur");
-            alerteZoneConstructible.setHeaderText("CREATION BARRE IMPOSSIBLE");
-            alerteZoneConstructible.setContentText("Point hors zone constructible!");
-            alerteZoneConstructible.showAndWait(); 
-        }
-        if(terrain.contain(posX, posY)) {
             noeudRes = addNoeudSimple(posX, posY);
             if(noeudRes == null){
                 noeudRes = testAppui(true, posX, posY);
             }
-
-        }else{
-            Alert alerteZoneConstructible = new Alert(Alert.AlertType.WARNING);
-            alerteZoneConstructible.setTitle("Erreur");
-            alerteZoneConstructible.setHeaderText("CREATION BARRE IMPOSSIBLE");
-            alerteZoneConstructible.setContentText("Point hors zone constructible!");
-            alerteZoneConstructible.showAndWait();
-        }
         return noeudRes;
 
     }
     
-    //met en place la zone constructible
-    private void addZoneConstructible() {
-        currentClick ++;
 
-        if(currentClick == 1){
-            terrainX = X;
-            terrainY = Y;
-        }else{
-            currentClick = 0;
-            treillis.updateTerrain(Math.min(terrainX, X), Math.min(terrainY, Y),
-                    Math.max(terrainX,X),Math.max(terrainY, Y));
-
-            treillis.updateNoeuds(graphics);
-            graphics.updateFormes(treillis);
-            redraw();
-        }
-    }
-
-   /* //ecrit les infos liÃƒÂ© au calcul
+    //ecrit les infos lié au calcul
     public void writeCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
-        mainpanel.getInfos().drawCalculInfo(formeId, idValues);
-    }*/
+        mainpanel.getInfos().dessineCalculInfo(formeId, idValues);
+    }
 
     //fonction de creation des points composant un triangle
     public PointTerrain addPointTrn() {
@@ -439,7 +390,7 @@ public class Controleur {
         }
         if(creable) pt = terrain.addPoint(px, py);
 
-        graphics.draw(boutonSelect, inDrawing);
+        dessine(inDrawing);
         return pt;
     }
     
@@ -474,85 +425,136 @@ public class Controleur {
                 return;
             }
             currentClick = 0;
-            Triangle triangle = new Triangle((PointTerrain) firstSegmentPoint, (PointTerrain) secondSegmentPoint, p, treillis.getNumerateur().getNewTriangleId(), terrain);
-            terrain.addTriangle(triangle);
+            Triangle triangle = new Triangle((PointTerrain) firstSegmentPoint, (PointTerrain) secondSegmentPoint, p, treillis.getNumerateur().getNewTriangleId(),terrain);
+             terrain.addTriangle(triangle);
 
-            treillis.updateNoeuds(graphics);
+            treillis.updateNoeuds();
             firstSegmentPoint.setSegmentSelected(false);
             secondSegmentPoint.setSegmentSelected(false);
         }
-        redraw();
+        this.vue.redrawAll();
     }
+    
+    private void dessinProche(){
+        Forme nearestforme = getNearest();
+        if(nearestforme != null){
+            nearestforme.dessinProche(context);
+        }
+    }
+    
+    //fonction de dessin principale
+    public void dessine(boolean inDrawing) {
+
+        DessinCanvas canvas = mainpanel.getcDessin();
+
+        //dessinne de l'echelle
+        context.setStroke(Color.BLACK);
+        context.setLineWidth(5);
+        context.setFill(Color.BLACK);
+        context.fillText("1 m", canvas.getWidth() - 30 - getEchelle() / 2, canvas.getHeight() - 5);
+        context.strokeLine(canvas.getWidth() - 20 - getEchelle(), canvas.getHeight() - 20, canvas.getWidth() - 20, canvas.getHeight() - 20);
+
+        //dessin des noeud et des barres
+        for (Forme f: treillis.getContient()) {
+            if(boutonSelect != 0) {
+                f.setSelected(false);
+            }
+            if(boutonSelect != 20 && boutonSelect != 40 && f instanceof Point){
+                ((Point) f).setSegmentSelected(false);
+            }
+            f.dessine(context);
+            this.vue.redrawAll();
+        }
+
+        //dessin des noeuds et barres selectionné + des infos associées
+        if(isInMultSelect()){
+            ArrayList<Forme> multipleSelectec = getMultipleSelect();
+            int nbNoeud = 0;
+            int nbAppuiSimple = 0;
+            int nbAppuiDouble = 0;
+            int nbBarre = 0;
+            for (Forme f: multipleSelectec) {
+                if(f instanceof NoeudSimple) nbNoeud ++;
+                else if(f instanceof Barre) nbBarre ++;
+                else if(f instanceof NoeudAppuiDouble) nbAppuiDouble ++;
+                else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
+            }
+            drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
+        }
+
+        //dessin de la zone de selection avec clic droit aire que l'on veut séléctionner
+        if (isDrag()) {
+            double mouseX = getMouseX(), mouseY = getMouseY();
+            double dragmouseX = getDragMouseX(), dragmouseY = getDragMouseY();
+            context.setFill(Color.BLUE);
+            context.setStroke(Color.DARKBLUE);
+            context.setGlobalAlpha(0.5);
+            context.fillRect(
+                    Math.min(mouseX, dragmouseX),
+                    Math.min(mouseY, dragmouseY),
+                    Math.abs(dragmouseX - mouseX),
+                    Math.abs(dragmouseY - mouseY));
+            context.strokeRect(
+                    Math.min(mouseX, dragmouseX),
+                    Math.min(mouseY, dragmouseY),
+                    Math.abs(dragmouseX - mouseX),
+                    Math.abs(dragmouseY - mouseY));
+        }else if(boutonSelect == 0 || boutonSelect == 20 || boutonSelect == 40){
+         dessinProche();
+         this.vue.redrawAll();
+        }
+        context.setGlobalAlpha(1);
+    }
+    
     
     public void changeColor(Color value) {
         if (this.etat == 20 && !this.selection.isEmpty()) {
             for (Forme f : this.selection) {
                 f.changeCouleur(value);
             }
-            redraw();
+            this.vue.redrawAll();
         }
     }
-    /*
+    
     public void zoomDouble() { //a refaire les partie zoom et déplacement
         this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
-        redraw();
+        this.vue.redrawAll();
     }
 
     public void zoomDemi() {
         this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(2));
-        redraw();
+        this.vue.redrawAll();
     }
 
-    /*public void zoomFitAll() {
+    public void zoomFitAll() {
         this.vue.fitAll();
-        redraw();
+        this.vue.redrawAll();
     }
 
     public void translateGauche() {
          this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateGauche(0.8));
-        redraw();
+        this.vue.redrawAll();
    }
 
     public void translateDroite() {
          this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateDroite(0.8));
-        redraw();
+        this.vue.redrawAll();
    }
 
     public void translateHaut() {
          this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateHaut(0.8));
-        redraw();
+        this.vue.redrawAll();
    }
 
     public void translateBas() {
-         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
-        redraw();
-   }*/
-    
-    //calcul le prix final du treillis
-    public double getCost(){
-        double price = 0;
-        for (Barre barres : treillis.getBarres()) {
-            if(barres.getType() == null) continue;
-            price += barres.getType().getCout() * barres.length() / echelle;
-        }
-        return (double) ((int) price * 100) / 100;
-    }
-
-    //ecrit les infos liÃƒÂ© au calcul
-    public void writeCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
-        mainpanel.getInfos().dessineCalculInfo(formeId, idValues);
-    }
+        this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
+        this.vue.redrawAll();
+   }
     
     //supprime un element
     public void deleteForme(Forme f){
         if(f != null) {
             if (f instanceof PointTerrain || f instanceof Triangle || f instanceof SegmentTerrain) {
-                if(terrain != null) {
-                    terrain.remove(f, false);
-                    graphics.draw(boutonSelect, inDrawing);
-                }
-            } else {
-                graphics.remove(f);
                 treillis.removeElement(f);
                 currentSelect = null;
             }
@@ -561,30 +563,20 @@ public class Controleur {
     
     public void deleteAllFormes() {
         multipleSelect.forEach(f -> {
-            graphics.remove(f);
             treillis.removeElement(f);
         });
 
         multipleSelect.clear();
-        graphics.removeInfos();
+        removeInfos();
         inMultSelect = false;
-        graphics.draw(boutonSelect, inDrawing);
-    }
-    
-    public void deleteZoneConstru(Terrain t){
-        if(t != null){
-            t.setBorderNull();
-        }
+        dessine(inDrawing);
     }
 
     
-    //retire le point selectionnÃƒÂ©
+    //retire le point selectionné
     public void removeSelected() {
         if (currentSelect != null) {
             currentSelect.setSelected(false);
-        }
-        if(terrain != null) {
-            terrain.setSelected(false);
         }
         mainpanel.getInfos().removeInfos();
         currentSelect = null;
@@ -594,7 +586,7 @@ public class Controleur {
     public void removeSelectedAll() {
         multipleSelect.forEach(p -> p.setSelected(false));
         multipleSelect.clear();
-        graphics.removeInfos();
+        removeInfos();
     }
     
     public void selection(int selectedButton){
@@ -602,13 +594,10 @@ public class Controleur {
 
         ArrayList<Forme> formes = new ArrayList<>();
 
-        formes.addAll(graphics.getFormes());
-        Terrain terrain = treillis.getTerrain();
-        if(terrain != null){
-            formes.addAll(terrain.getTriangles());
-            formes.addAll(terrain.getPoints());
-            formes.addAll(terrain.getSegments());
-        }
+        formes.addAll(treillis.getContient());
+        formes.addAll(terrain.getTriangles());
+        formes.addAll(terrain.getPoints());
+        formes.addAll(terrain.getSegments());
 
         double bestDist = 15;
 
@@ -644,7 +633,7 @@ public class Controleur {
     }
     
     private void dragSelection() {
-        ArrayList<Forme> formes = graphics.getFormes();
+        ArrayList<Forme> formes = treillis.getContient();
 
         for (Forme f: formes) {
             Point p;
@@ -655,9 +644,8 @@ public class Controleur {
             }
 
             if (drag) {
-                Point origin = graphics.getOrigin();
-                if (p.getPx() + origin.getPx() < Math.max(X, dragMouseX) && p.getPx() + origin.getPx()> Math.min(X, dragMouseX) &&
-                        p.getPy() + origin.getPy() < Math.max(Y, dragMouseY) && p.getPy() + origin.getPy() > Math.min(Y, dragMouseY)) {
+                if (p.getPx()< Math.max(X, dragMouseX) && p.getPx() > Math.min(X, dragMouseX) &&
+                        p.getPy() < Math.max(Y, dragMouseY) && p.getPy() > Math.min(Y, dragMouseY)) {
                     if (!multipleSelect.contains(f)) {
                         multipleSelect.add(f);
                         f.setSelected(true);
@@ -670,27 +658,20 @@ public class Controleur {
         }
     }
     
-    
-    public void boutonSelection(ActionEvent t) {
-        this.changeEtat(20);
+    public void removeInfos()
+    {
+        fenetreinfo.removeInfos();
     }
 
-    public void boutonNoeud(ActionEvent t) {
-        this.changeEtat(30);
+    public void drawInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
+        fenetreinfo.dessineInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
     }
 
-    public void boutonBarre(ActionEvent t) {
-        this.changeEtat(40);
+    public void drawInfos(Forme nearest){
+        fenetreinfo.dessineInfos(nearest);
     }
     
-    public void boutonTerrain(ActionEvent t) {
-        this.changeEtat(50);
-    }
-    
-    public void boutonTriangle(ActionEvent t) {
-        this.changeEtat(60);
-    }
-    
+
     public void boutonSelect(int t) {
         this.boutonSelect=t ;
     }
@@ -699,35 +680,24 @@ public class Controleur {
         return boutonSelect;
     }
    
-    public List<Forme> getSelection() {
+    public ArrayList<Forme> getSelection() {
         return selection;
-    }
-    
-    public void setBarreType(TypedeBarre barreType) {
-        this.barreType = barreType;
     }
     
     void creePointParDialog() {
         Optional<Point> p = EnterPointDialog.demandePoint();
         if (p.isPresent()) {
-            //this.vue.getModel().add(p.get());
-            redraw();
+            this.vue.getModel().add(p.get());
+            this.vue.redrawAll();
         }
     }
+    
     public String getLastOpen() {
         return lastOpen;
     }
-    
-    public Graphics getGraphics() {
-        return graphics;
-    }
-    
+       
     public Forme getNearest(){
         return nearest;
-    }
-    
-    public void redraw() {
-        graphics.draw(boutonSelect, inDrawing);
     }
 
     public boolean isDrag() {
@@ -752,14 +722,6 @@ public class Controleur {
 
     public String getName() {
         return name;
-    }
-
-    public double getTerrainX() {
-        return terrainX;
-    }
-
-    public double getTerrainY() {
-        return terrainY;
     }
 
     public int getCurrentClick() {
@@ -798,17 +760,8 @@ public class Controleur {
         return multipleSelect;
     }
 
-    public static String nameFromPath(String path){
-        String[] nameS = path.split("\\\\");
-        return nameS[nameS.length - 1].split("\\.")[0];
-    }
-
     public double getEchelle() {
         return echelle;
-    }
-
-    public TypedeBarre getBarreType() {
-        return barreType;
     }
 
     public HashMap<Integer, double[]> getResultCalcul() {

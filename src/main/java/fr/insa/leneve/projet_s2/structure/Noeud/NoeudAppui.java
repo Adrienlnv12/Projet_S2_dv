@@ -54,7 +54,7 @@ public class NoeudAppui extends Noeud {
         return segmentTerrain;
     }
 
-    public static SegmentTerrain isCreable(Terrain terrain, double posX, double posY){
+    public static SegmentTerrain isCreable(Terrain terrain ,double posX, double posY){
         for (SegmentTerrain s : terrain.getSegments()) {
             if(s.contain(posX, posY, 10) && s.asOneTriangle()){
                 return s;

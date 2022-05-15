@@ -4,7 +4,6 @@ import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Force;
 import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
 import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
-import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
@@ -55,24 +54,6 @@ public class FenetreInfo extends VBox {
         this.getChildren().add(deleteBtn);
     }
 
-    //dessine les informations de l'élément sélectionné
-    public void dessineInfos(Terrain t) {
-        removeInfos();
-        ArrayList<String> infos = t.getInfos();
-        for (String line : infos) {
-            Label mL = new Label(line);
-            this.getChildren().add(mL);
-        }
-
-        Button deleteBtn = new Button("Supprimer");
-        deleteBtn.setOnAction(actionEvent -> {
-             controleur.deleteZoneConstru(t);
-            removeInfos();
-        });
-
-        this.getChildren().add(deleteBtn);
-    }
-
     public void removeInfos() {
         this.getChildren().clear();
     }
@@ -99,9 +80,6 @@ public class FenetreInfo extends VBox {
 
     public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         removeInfos();
-
-        Label priceLbl = new Label("Prix du treillis" + " : " + controleur.getCost() + " €");
-        this.getChildren().addAll(priceLbl);
 
 
         for(Forme f : formeId.keySet()){

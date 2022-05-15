@@ -7,7 +7,7 @@ package fr.insa.leneve.projet_s2.structure.Noeud;
 import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.calcul.Maths;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
-import fr.insa.leneve.projet_s2.structure.Treillis;
+import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import static fr.insa.leneve.projet_s2.structure.forme.Point.RAYON_IN_DRAW;
