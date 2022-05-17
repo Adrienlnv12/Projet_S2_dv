@@ -68,7 +68,7 @@ public class NoeudSimple extends Noeud{
     public void dessine(GraphicsContext context) {
         if(selected){
             context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.fillOval(this.px-RAYON_IN_DRAW-150, this.py-RAYON_IN_DRAW-50, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
         if(segmentSelected){
             context.setStroke(Color.GREEN);

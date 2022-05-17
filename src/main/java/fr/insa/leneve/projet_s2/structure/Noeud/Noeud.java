@@ -29,7 +29,7 @@ public abstract class Noeud extends Point {
 
     public Noeud(double px, double py, int id){
         this.px = px;
-        this.px = py;
+        this.py = py;
         this.id = id;
     }
      

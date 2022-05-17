@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
  * @author adrie
  */
 public class Point extends Forme{
-    public static double RAYON_IN_DRAW = 5;
+    public static double RAYON_IN_DRAW = 4;
 
     public double px;
     public double py;
@@ -82,13 +82,13 @@ public class Point extends Forme{
             context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
         if(segmentSelected){
-            context.setFill(Color.GREEN);
+            context.setStroke(Color.GREEN);
             context.setLineWidth(2);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }else{
-            context.setFill(Color.BLACK);
+            context.setStroke(Color.BLACK);
             context.setLineWidth(2);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
     }
     

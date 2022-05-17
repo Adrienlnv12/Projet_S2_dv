@@ -29,6 +29,7 @@ public class Treillis extends Forme{
         this.numerateur = new Numerateur();
         this.noeuds = new ArrayList<>();
         this.barres = new ArrayList<>();
+        this.terrain = new Terrain();
     }
 
     public void add(Forme f) {
@@ -147,9 +148,6 @@ public class Treillis extends Forme{
         }
     }
     
-    public int size() {
-        return this.contient.size();
-    }
     
     /**
      * retourne la figure contenue dans le groupe la plus proche du point et au

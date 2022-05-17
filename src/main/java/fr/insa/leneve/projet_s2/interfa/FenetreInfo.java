@@ -17,14 +17,14 @@ import javafx.scene.control.Label;
 //VBox avec les informations sur la selection en cours
 public class FenetreInfo extends VBox {
 
-    private final MainPanel Mainpanel;
+    private MainPanel main;
     private final Controleur controleur;
 
 
-    public FenetreInfo(MainPanel mainpanel) {
-        super();
-        this.Mainpanel = mainpanel;
-        this.controleur = mainpanel.getControleur();
+    public FenetreInfo(MainPanel main) {
+        super(10);
+        this.main = main;
+        this.controleur = main.getControleur();
         this.setAlignment(Pos.CENTER);
         this.setId("infoBox");
     }
@@ -40,9 +40,9 @@ public class FenetreInfo extends VBox {
 
         
 
-        if(f instanceof Noeud) {
+        if(f instanceof Noeud noeud) {
             Button addForceBtn = new Button("Ajouter une force");
-            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(controleur, (Noeud) f));
+            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(controleur, noeud));
             this.getChildren().add(addForceBtn);
         }
         Button deleteBtn = new Button("Supprimer");

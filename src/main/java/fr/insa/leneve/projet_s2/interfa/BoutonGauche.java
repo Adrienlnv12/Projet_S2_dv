@@ -205,7 +205,10 @@ public final class BoutonGauche extends VBox {
 
     public void setSelected(int id){
         switch (id) {
-            case 0 -> rbSelect.setSelected(true);
+            case 0 -> {
+                rbSelect.setSelected(true);
+            System.out.println("bonjour");
+        }
             case 10 -> {
                 RbNoeud.setSelected(true);
                 choixNoeud.setText("Noeud Simple");
@@ -222,7 +225,7 @@ public final class BoutonGauche extends VBox {
             case 30 -> RbTriangleTerrain.setSelected(true);
         }
         if(id != 0) {
-          /*controleur.removeSelected();*/
+          controleur.removeSelected();
         }
         controleur.boutonSelect(id);
     }

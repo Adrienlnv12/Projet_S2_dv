@@ -45,7 +45,6 @@ public final class MainPanel extends BorderPane {
     private Treillis model;
     
     private final Controleur controleur;
-    
     private Stage inStage;
     private File curFile;
     
@@ -70,18 +69,21 @@ public final class MainPanel extends BorderPane {
         this.model = model;
         this.fitAll();
         this.controleur = new Controleur(this);
-                       
-        Info = new FenetreInfo(this);
-        this.setRight(Info);
         
-        bgauche = new BoutonGauche(this);
+        
+        this.bgauche = new BoutonGauche(this);
         this.setLeft(bgauche);
+        
+        this.Info = new FenetreInfo(this);
+        this.setRight(Info);
         
         this.cDessin = new DessinCanvas(this);// zone de dessin
         this.setCenter(this.cDessin);
         
         this.menu = new MainMenu(this);
         this.setTop(this.menu);
+        
+        
     }  
 
     public void redrawAll() {
@@ -95,7 +97,7 @@ public final class MainPanel extends BorderPane {
         return controleur;
     }
     
-    public FenetreInfo getInfos() {
+    public FenetreInfo getInfo() {
         return Info;
     }
     
@@ -122,7 +124,6 @@ public final class MainPanel extends BorderPane {
     public DessinCanvas getcDessin() {
         return cDessin;
     }
-    
     /**
      * @return the treillis
      */
