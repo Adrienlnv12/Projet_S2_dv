@@ -22,7 +22,7 @@ public class NoeudAppui extends Noeud {
     
     private final Triangle associatedTriangle;
     private final PointTerrain segmentPoint;
-    private SegmentTerrain segmentTerrain;
+    private final SegmentTerrain segmentTerrain;
     private final double posSegment;
     protected Image image;
 
@@ -76,7 +76,6 @@ public class NoeudAppui extends Noeud {
     
 
     //dessine l'image corrrespondante Ã  l'appui avec rotation
-    @Override
     public void dessine(GraphicsContext context) {
         context.save();
         // angle de rotation et point pivot

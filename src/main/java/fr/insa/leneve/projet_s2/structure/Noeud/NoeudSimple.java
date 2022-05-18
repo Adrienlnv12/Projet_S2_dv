@@ -47,7 +47,7 @@ public class NoeudSimple extends Noeud{
     }
    
     
-    public static boolean DistestCreable(Treillis treillis, double px, double py) {//chercher a quoi sert cette fonction
+    public static boolean DistestCreable(Treillis treillis, double px, double py) {//si un point est trop proche alors ca dit pas bon
         boolean creable = true;
         for (Noeud p : treillis.getNoeuds()) {
             if (Maths.distancePoint(p, new Point(px, py)) < 15) creable = false;
@@ -56,7 +56,7 @@ public class NoeudSimple extends Noeud{
         return creable;
     }
     
-    public static boolean TriangleestCreable(Treillis treillis, double px, double py){//chercher a quoi sert cette fonction
+    public static boolean TriangleestCreable(Treillis treillis, double px, double py){//si un point se creer dans un triangle il dit que c'est pas bon
         boolean creable = true;
         for (Triangle triangle : treillis.getTerrain().getTriangles()) {
             if (triangle.contain(px, py)) creable = false;
@@ -64,11 +64,10 @@ public class NoeudSimple extends Noeud{
         return creable;
     }
     
-    @Override
     public void dessine(GraphicsContext context) {
         if(selected){
             context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW-150, this.py-RAYON_IN_DRAW-50, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
         if(segmentSelected){
             context.setStroke(Color.GREEN);

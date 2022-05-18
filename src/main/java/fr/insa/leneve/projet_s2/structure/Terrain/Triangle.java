@@ -28,33 +28,16 @@ public class Triangle extends Forme {
     private final PointTerrain[] points = new PointTerrain[3];
     private final SegmentTerrain[] segments = new SegmentTerrain[3];
 
-    public Triangle(PointTerrain pt1, PointTerrain pt2, PointTerrain pt3, int id,Terrain terrain){
-
-        double max = Maths.max(pt1.getPx(), pt2.getPx(), pt3.getPx());
-        if(max == pt1.getPx()){
-            points[0] = pt1;
-        }else if(max == pt2.getPx()){
-            points[0] = pt2;
-        }else{
-            points[0] = pt3;
-        }
-
-        double min = Maths.min(pt1.getPx(), pt2.getPx(), pt3.getPx());
-        if(min == pt1.getPx()){
-            points[2] = pt1;
-        }else if(min == pt2.getPx()){
-            points[2] = pt2;
-        }else{
-            points[2] = pt3;
-        }
-
-        if(pt1 != points[0] && pt1 != points[2]){
-            points[1] = pt1;
-        }else if(pt2 != points[0] && pt2 != points[2]){
-            points[1] = pt2;
-        }else{
-            points[1] = pt3;
-        }
+    public Triangle(PointTerrain pt1,double x, int id,Terrain terrain){
+       
+        points[0] = pt1;
+        PointTerrain pt2 = new PointTerrain(x,pt1.getPy());
+        points[1] = pt2;
+        double px=(pt1.getPx()+pt2.getPx())/2;
+        double py=pt1.getPy()-50;
+        PointTerrain pt3 = new PointTerrain(px,py);
+        points[2] = pt3;
+       
 
 
         for (int i = 0; i < points.length; i++) {

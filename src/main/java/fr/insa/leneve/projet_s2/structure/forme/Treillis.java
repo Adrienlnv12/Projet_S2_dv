@@ -6,6 +6,7 @@ import fr.insa.leneve.projet_s2.Numerateur;
 import fr.insa.leneve.projet_s2.interfa.MainPanel;
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
+import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
@@ -115,6 +116,11 @@ public class Treillis extends Forme{
         pA.addBarres(b);
         pB.addBarres(b);
     }
+    
+    public void createTriangle(PointTerrain pt1, double x, Terrain terrain){
+        Triangle b = new Triangle(pt1, x,numerateur.getNewTriangleId(),terrain);
+        contient.add(b);
+    }
 
     public void removeElement(Forme f){
         if(f instanceof Noeud noeud) removeNoeuds(noeud);
@@ -175,6 +181,9 @@ public class Treillis extends Forme{
                 return null;
             }
         }
+    }
+    public int size() {
+        return this.contient.size();
     }
     
     @Override

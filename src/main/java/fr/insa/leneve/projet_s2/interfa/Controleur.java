@@ -5,16 +5,13 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 import fr.insa.leneve.projet_s2.calcul.Maths;
-import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.*;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
@@ -22,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -142,7 +138,7 @@ public class Controleur {
     public void menuNouveau(ActionEvent t) {
         Stage nouveau = new Stage();
         nouveau.setTitle("Nouveau");
-        Scene sc = new Scene(new MainPanel(nouveau), 800, 600);
+        Scene sc = new Scene(new MainPanel(nouveau), 1000,700);
         nouveau.setScene(sc);
         nouveau.show();
     }
@@ -165,26 +161,7 @@ public class Controleur {
         switch (boutonSelect/10) {
             case 0:
                 {
-                    /*// selection
-                    Point pclic = this.posInModel(t.getX(), t.getY());
-                    // pas de limite de distance entre le clic et l'objet selectionné
-                    Forme proche = this.vue.getModel().plusProche(pclic, Double.MAX_VALUE);
-                    // il faut tout de même prévoir le cas ou le groupe est vide
-                    // donc pas de plus proche
-                    if (proche != null) {
-                        if (t.isShiftDown()) {
-                            this.selection.add(proche);
-                        } else if (t.isControlDown()) {
-                            if (this.selection.contains(proche)) {
-                                this.selection.remove(proche);
-                            } else {
-                                this.selection.add(proche);
-                            }
-                        } else {
-                            this.selection.clear();
-                            this.selection.add(proche);
-                        }*/
-                                    if (currentSelect != null) {
+                             /*if (currentSelect != null) {
                             currentSelect.setSelected(false);
                         }
                         if (nearest != null) {
@@ -197,9 +174,10 @@ public class Controleur {
                                 currentSelect = nearest;
                                 drawInfos(nearest);
                             }
-                        }
+                        }*/
                         this.vue.redrawAll();
                         break;
+                
                 }
             case 1:
                 {
@@ -208,17 +186,17 @@ public class Controleur {
                         case 10:
                         {
                             addNoeudSimple(t);
-                        this.vue.redrawAll();
+                            this.vue.redrawAll();
                         break;
                         }
                         case 11:
-                        { addAppui(false,t);
-                        this.vue.redrawAll();
+                        {   addAppui(false,t);
+                            this.vue.redrawAll();
                         break;
                         }
                         case 12:
-                        { addAppui(true,t);
-                        this.vue.redrawAll();
+                        {   addAppui(true,t);
+                            this.vue.redrawAll();
                         break;
                         }
                         default: System.out.println(boutonSelect);
@@ -227,88 +205,18 @@ public class Controleur {
                     break;
                 }
             case 2:
-                /*addBarre(t);
-                this.vue.redrawAll();*/
+                addBarre(t);
+                this.vue.redrawAll();
                 break;
             case 3:
                 {
-                    /*// creation de segment deuxieme point
-                    Point pclic = this.posInModel(t.getX(), t.getY());
-                    Segment ns = new Segment(this.point1DansModel, pclic,
-                            this.vue.getCpCouleur().getValue());
-                    this.vue.getModel().add(ns);
-                    this.segmentEnCoursDeCreation = null;
+                    addTriangleTrn(t);
                     this.vue.redrawAll();
-                    this.changeEtat(40);*/
                     break;
                 }
             default:
                 break;
         }
-    }
-    
-    
-    //ajout des fonctions appelÃƒÂ©s durant diffÃƒÂ©rentes actions de la souris
-    public void addMouseEvent(MouseEvent t) {
-        DessinCanvas canvas = mainpanel.getcDessin();
-
-        //actions quand la souris est déplacé dans le canvas
-        canvas.setOnMouseMoved(mouseEvent -> {
-            X = t.getX();
-            Y = t.getY();
-            if(inDrawing && (boutonSelect/10) % 2 == 0){
-                selection(boutonSelect/10);
-            }
-            this.vue.redrawAll();
-        });
-
-        //action quand on clic sur la souris
-        canvas.setOnMousePressed(mouseEvent -> {
-            X = t.getX();
-            Y = t.getY();
-
-            if(mouseEvent.getButton() == MouseButton.PRIMARY && inDrawing) {
-                inMultSelect = false;
-                removeSelectedAll();
-
-                switch (boutonSelect/10) {
-                    case 0 -> setSelected(t);
-                    //case 1 -> break;
-                    case 2 -> addBarre(t);
-                    case 3 -> addTriangleTrn();
-                }
-                
-            }
-        });
-        
-        //action quand on arrete de cliquer sur la souris
-        canvas.setOnMouseReleased(mouseEvent -> {
-            dragMouseX = -1;
-            dragMouseY = -1;
-            if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-                drag = false;
-                this.vue.redrawAll();
-            }else if(mouseEvent.getButton() == MouseButton.SECONDARY) {
-            //mettre qqch
-            }
-        });
-
-        canvas.setOnMouseDragged(mouseEvent -> {
-            if(mouseEvent.getButton() == MouseButton.PRIMARY && inDrawing) {
-                if (boutonSelect == 0) {
-                    drag = true;
-                    inMultSelect = true;
-                    dragMouseX = mouseEvent.getX();
-                    dragMouseY = mouseEvent.getY();
-                    dragSelection();
-                    this.vue.redrawAll();
-                }
-            } else if(mouseEvent.getButton() == MouseButton.SECONDARY) {
-                dragMouseX = mouseEvent.getX();
-                dragMouseY = mouseEvent.getY();
-                this.vue.redrawAll();
-            }
-        });
     }
     
     /**
@@ -337,7 +245,7 @@ public class Controleur {
     private void setSelected(MouseEvent t){
         
         // selection
-                    Point pclic = this.posInModel(t.getX(), t.getY());
+        Point pclic = this.posInModel(t.getX(), t.getY());
                     // pas de limite de distance entre le clic et l'objet selectionné
                     Forme proche = this.vue.getModel().plusProche(pclic, Double.MAX_VALUE);
                     // il faut tout de même prévoir le cas ou le groupe est vide
@@ -355,7 +263,7 @@ public class Controleur {
                             this.selection.clear();
                             this.selection.add(proche);
                         }
-                        this.vue.redrawAll();
+                        this.vue.redrawAll();            
         
         
         }
@@ -364,14 +272,20 @@ public class Controleur {
    
     
     private NoeudSimple addNoeudSimple(MouseEvent t) {
-
-        boolean distCreable = NoeudSimple.DistestCreable(treillis, t.getX() ,t.getY());
-        boolean triangleCreable = NoeudSimple.TriangleestCreable(treillis, t.getX() ,t.getY());
+        Transform modelVersVue = this.vue.getcDessin().getTransform();
+        Point2D ptrans;
+        try {
+            ptrans = modelVersVue.inverseTransform(t.getX() ,t.getY());
+        } catch (NonInvertibleTransformException ex) {
+            throw new Error(ex);
+        }
+        boolean distCreable = NoeudSimple.DistestCreable(treillis, ptrans.getX() ,ptrans.getY());
+        boolean triangleCreable = NoeudSimple.TriangleestCreable(treillis, ptrans.getX() ,ptrans.getY());
         //System.out.println(distCreable + " " + triangleCreable);
         if(distCreable && triangleCreable) {
 
-            NoeudSimple ns = treillis.createNoeudSimple(t.getX() ,t.getY());
-            System.out.println(t.getX() + " " +t.getY());
+            NoeudSimple ns = treillis.createNoeudSimple(ptrans.getX() ,ptrans.getY());
+            System.out.println(ptrans.getX() + " " +ptrans.getY());
             return ns;
         }
 
@@ -407,8 +321,8 @@ public class Controleur {
             return createAppui(simple, t.getX() ,t.getY(), segment);
         }else {
             Alert alerteNoeudAppui = new Alert(Alert.AlertType.WARNING);
-            alerteNoeudAppui.setTitle("Erreur crÃ©ation noeud");
-            alerteNoeudAppui.setContentText("Noeud non positionnÃ© sur un segment de terrain!");
+            alerteNoeudAppui.setTitle("Erreur création noeud");
+            alerteNoeudAppui.setContentText("Noeud non positionné sur un segment de terrain!");
             alerteNoeudAppui.showAndWait();
         }
         return null;
@@ -420,31 +334,36 @@ public class Controleur {
             return appui;
     }
     
-    //fonction de crÃƒÂ©ation d'une barre
+    //fonction de création d'une barre
     private void addBarre(MouseEvent t){
         currentClick++;
         Noeud p = null;
-        //test si on clique a cotÃƒÂ© d'un point ou pas
-        //Besoin d'ajouter la vÃƒÂ©rification que le point est crÃƒÂ©able, et quel type de point
+        Point pclic = this.posInModel(t.getX(), t.getY());
+        Forme proche = this.vue.getModel().plusProche(pclic, 30);
+        //test si on clique a coté d'un point ou pas
+        //Besoin d'ajouter la vérification que le point est créable, et quel type de point
 
 
 
-        if(nearest != null && nearest instanceof Noeud){
+        if(proche != null && proche instanceof Noeud){
             boolean creable = true;
             if(currentClick > 1 && firstSegmentPoint != null) {
-                double dist = Maths.distancePoint((Point) nearest, firstSegmentPoint);
+                double dist = Maths.distancePoint((Point) proche, firstSegmentPoint);
                 if(dist < 0){
                     creable = false;
                 }
             }
-            if(creable) p = (Noeud) nearest;
+            if(creable){
+                p = (Noeud) proche;
+            }
         }
         if(p == null){
             double dist = 0;
             if(currentClick > 1 && firstSegmentPoint != null) {
-                dist = Maths.distancePoint(firstSegmentPoint, (new Point(X ,Y)));
+                Point pdclic = this.posInModel(t.getX(), t.getY());
+                dist = Maths.distancePoint(firstSegmentPoint, (new Point(pdclic.getPx() ,pdclic.getPy())));
             }
-            if(currentClick == 1){
+            if(dist >= 0 || currentClick == 1){
                 p = createNoeudBarre(firstSegmentPoint,t);
             }
             if(p == null){
@@ -464,14 +383,14 @@ public class Controleur {
             currentClick = 0;
             treillis.createBarre((Noeud) firstSegmentPoint, p);
             firstSegmentPoint.setSegmentSelected(false);
+            this.vue.redrawAll();
         }
-        this.vue.redrawAll();
     }
 
     //fonction de creation de noeud pour les barres
     //construit par defaut un noeud simple ou sinon un appui simple s'il ne peut pas
     public Noeud createNoeudBarre(Point firstSegmentPoint,MouseEvent t){
-        Noeud noeudRes = null;
+        Noeud noeudRes;
             noeudRes = addNoeudSimple(t);
             if(noeudRes == null){
                 noeudRes = testAppui(true, t);
@@ -482,13 +401,13 @@ public class Controleur {
     
 
     //ecrit les infos lié au calcul
-    public void writeCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
+    /*public void writeCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         mainpanel.getInfo().dessineCalculInfo(formeId, idValues);
-    }
+    }*/
 
     //fonction de creation des points composant un triangle
-    public PointTerrain addPointTrn() {
-        double px = X, py = Y;
+    public PointTerrain addPointTrn(MouseEvent t) {
+        double px = t.getX(), py = t.getY();
         PointTerrain pt = null;
 
         boolean creable = true;
@@ -502,44 +421,30 @@ public class Controleur {
     }
     
     //fonction de creation de triangles
-    public void addTriangleTrn(){
+    public void addTriangleTrn(MouseEvent t){
         currentClick++;
         PointTerrain p;
-        //test si on clique a cotÃƒÂ© d'un point ou pas
-        //Besoin d'ajouter la vÃƒÂ©rification que le point est crÃƒÂ©able, et quel type de point
+        //test si on clique a coté d'un point ou pas
+        //Besoin d'ajouter la vérification que le point est crÃƒÂ©able, et quel type de point
         if(nearest != null && nearest instanceof PointTerrain){
             p = (PointTerrain) nearest;
         }else{
-            p = addPointTrn();
+            p = addPointTrn(t);
             if(p == null) {
                 currentClick --;
                 return;
             }
         }
-        if(currentClick == 1){
-            p.setSegmentSelected(true);
-            firstSegmentPoint = p;
-        }else if(currentClick == 2){
-            if(firstSegmentPoint.equals(p)){
-                currentClick--;
-                return;
-            }
-            p.setSegmentSelected(true);
-            secondSegmentPoint = p;
-        }else{
-            if(secondSegmentPoint.equals(p) || firstSegmentPoint.equals(p)){
-                currentClick--;
-                return;
-            }
-            currentClick = 0;
-            Triangle triangle = new Triangle((PointTerrain) firstSegmentPoint, (PointTerrain) secondSegmentPoint, p, treillis.getNumerateur().getNewTriangleId(),terrain);
-             terrain.addTriangle(triangle);
+      
+            treillis.createTriangle((PointTerrain)p, t.getX(), terrain);
+            
+            //terrain.addTriangle(triangle);
 
             treillis.updateNoeuds();
             firstSegmentPoint.setSegmentSelected(false);
             secondSegmentPoint.setSegmentSelected(false);
-        }
-        this.vue.redrawAll();
+            this.vue.redrawAll();
+        
     }
     
     private void dessinProche(){
@@ -616,14 +521,14 @@ public class Controleur {
     }
 
     
-    //retire le point selectionné
+   /* //retire le point selectionné
     public void removeSelected() {
         if (currentSelect != null) {
             currentSelect.setSelected(false);
         }
         mainpanel.getInfo().removeInfos();
         currentSelect = null;
-    }
+    }*/
 
     //retire tout les points selectionnÃƒÂ©s
     public void removeSelectedAll() {
@@ -727,8 +632,8 @@ public class Controleur {
         return selection;
     }
     
-    void creePointParDialog() {
-        Optional<Point> p = EnterPointDialog.demandePoint();
+    void creeNoeudSimpleParDialog() {
+        Optional<NoeudSimple> p = EnterNoeudSimpleDialog.demandeNoeudSimple();
         if (p.isPresent()) {
             this.vue.getModel().add(p.get());
             this.vue.redrawAll();

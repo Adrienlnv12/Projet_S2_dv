@@ -110,7 +110,7 @@ public final class BoutonGauche extends VBox {
         RbNoeud.setOnAction(actionEvent -> {
             System.out.println(NoeudChoisi);
             controleur.boutonSelect(NoeudChoisi);
-            controleur.removeSelected();
+            //controleur.removeSelected();
         });
     
     }
@@ -189,7 +189,7 @@ public final class BoutonGauche extends VBox {
         RbBarre.setToggleGroup(bgEtat);
 
         RbBarre.setOnAction(actionEvent -> {
-            controleur.removeSelected();
+            //controleur.removeSelected();
             controleur.boutonSelect(20);
             });
     }
@@ -198,7 +198,7 @@ public final class BoutonGauche extends VBox {
         RbTriangleTerrain = new RadioButton("Triangle");
         RbTriangleTerrain.setToggleGroup(bgEtat);
         RbTriangleTerrain.setOnAction(actionEvent -> {
-            controleur.removeSelected();
+            //controleur.removeSelected();
             controleur.boutonSelect(30);
         });
     }
@@ -207,7 +207,6 @@ public final class BoutonGauche extends VBox {
         switch (id) {
             case 0 -> {
                 rbSelect.setSelected(true);
-            System.out.println("bonjour");
         }
             case 10 -> {
                 RbNoeud.setSelected(true);
@@ -225,7 +224,7 @@ public final class BoutonGauche extends VBox {
             case 30 -> RbTriangleTerrain.setSelected(true);
         }
         if(id != 0) {
-          controleur.removeSelected();
+          //controleur.removeSelected();
         }
         controleur.boutonSelect(id);
     }

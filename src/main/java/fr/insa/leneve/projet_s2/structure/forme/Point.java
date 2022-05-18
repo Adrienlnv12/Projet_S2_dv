@@ -6,8 +6,7 @@ package fr.insa.leneve.projet_s2.structure.forme;
 
 
 import fr.insa.leneve.projet_s2.recup.Lire;
-import java.io.IOException;
-import java.io.Writer;
+import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +17,7 @@ import javafx.scene.paint.Color;
  * @author adrie
  */
 public class Point extends Forme{
+    
     public static double RAYON_IN_DRAW = 4;
 
     public double px;
@@ -75,6 +75,7 @@ public class Point extends Forme{
         return new Point(px, py);
     }    
 
+    
     @Override
     public void dessine(GraphicsContext context) {
         if(selected){
@@ -97,7 +98,9 @@ public class Point extends Forme{
         context.setFill(Color.BLUE);
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
-
+    
+    
+    
     @Override
     public int getId() {
         return id;

@@ -51,7 +51,7 @@ public final class MainPanel extends BorderPane {
     private  DessinCanvas cDessin;
 
     private final MainMenu menu;
-    private final FenetreInfo Info;
+    //private final FenetreInfo Info;
     private final BoutonGauche bgauche;
     private RectangleHV zoneModelVue;
     
@@ -74,8 +74,8 @@ public final class MainPanel extends BorderPane {
         this.bgauche = new BoutonGauche(this);
         this.setLeft(bgauche);
         
-        this.Info = new FenetreInfo(this);
-        this.setRight(Info);
+        /*this.Info = new FenetreInfo(this);
+        this.setRight(Info);*/
         
         this.cDessin = new DessinCanvas(this);// zone de dessin
         this.setCenter(this.cDessin);
@@ -97,9 +97,9 @@ public final class MainPanel extends BorderPane {
         return controleur;
     }
     
-    public FenetreInfo getInfo() {
+    /*public FenetreInfo getInfo() {
         return Info;
-    }
+    }*/
     
     public void fitAll() {
         this.zoneModelVue = new RectangleHV(this.model.minX(),

@@ -28,6 +28,7 @@ public class SegmentTerrain extends Segment {
         }else {
             context.setStroke(Color.BROWN);
         }
+        context.setLineWidth(2);
         context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
     }
 

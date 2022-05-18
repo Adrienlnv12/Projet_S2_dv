@@ -16,6 +16,7 @@ public class PointTerrain extends Point {
 
     private final ArrayList<SegmentTerrain> segments = new ArrayList<>();
     private final ArrayList<Triangle> triangles = new ArrayList<>();
+    
 
     public PointTerrain(Point p) {
         super(p.getPx(), p.getPy());
@@ -31,44 +32,41 @@ public class PointTerrain extends Point {
     
     @Override
     public void dessine(GraphicsContext context) {
+        int size = 7;
+        int offset = (size - 1) / 2;
         if(selected){
             context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-        }if(segmentSelected){
-            context.setGlobalAlpha(0.5);
-            context.setFill(Color.GREEN);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-            context.setGlobalAlpha(0.5);
+            context.fillOval(this.px-RAYON_IN_DRAW- offset, this.py-RAYON_IN_DRAW- offset, size, size);
         }else{
             context.setFill(Color.BROWN);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.fillOval(this.px-RAYON_IN_DRAW- offset, this.py-RAYON_IN_DRAW- offset, size, size);
         }
     }
 
 
 
-    public boolean asTriangle(){
-        return !triangles.isEmpty();
+    public ArrayList<SegmentTerrain> getSegments() {
+        return segments;
     }
-
+    
+    public void addSegments(SegmentTerrain segmentTerrain){
+        segments.add(segmentTerrain);
+    }
+    
     public void addTriangle(Triangle triangle){
         triangles.add(triangle);
     }
 
-    public void addSegments(SegmentTerrain segmentTerrain){
-        segments.add(segmentTerrain);
-    }
+    
 
     public ArrayList<Triangle> getTriangles() {
         return triangles;
     }
 
-    public ArrayList<SegmentTerrain> getSegments() {
-        return segments;
-    }
+    
 
 
-    public boolean EstPoint(PointTerrain pt){
+    public boolean EstPoint(Point pt){
         return this.px == pt.px && this.py == py;
     }
 }

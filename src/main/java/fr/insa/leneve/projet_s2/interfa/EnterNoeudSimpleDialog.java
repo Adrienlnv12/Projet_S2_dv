@@ -19,6 +19,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.leneve.projet_s2.interfa;
 
 
+import fr.insa.leneve.projet_s2.structure.Noeud.NoeudSimple;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import java.util.Optional;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -41,13 +42,16 @@ import javafx.util.Callback;
  */
 // la classe Dialog est une classe générique : le paramètre de type (ici Point)
 // indique quel est le type de l'objet éventuellement créé/retourné par le Dialog
-public class EnterPointDialog extends Dialog<Point> {
+public class EnterNoeudSimpleDialog extends Dialog<NoeudSimple> {
 
     private TextField tfPx;
     private TextField tfPy;
     private ColorPicker cpCouleur;
 
-    public EnterPointDialog() {
+    /**
+     *
+     */
+    public EnterNoeudSimpleDialog() {
         this.setTitle("entrez les coordonnées du Point :");
         this.setResizable(true);
         Label lPx = new Label("px :");
@@ -71,18 +75,18 @@ public class EnterPointDialog extends Dialog<Point> {
         this.getDialogPane().getButtonTypes().add(bOK);
         this.getDialogPane().getButtonTypes().add(bCancel);
 
-        this.setResultConverter(new Callback<ButtonType, Point>() {
+        this.setResultConverter(new Callback<ButtonType, NoeudSimple>() {
             @Override
-            public Point call(ButtonType p) {
+            public NoeudSimple call(ButtonType p) {
                 if (p == bOK) {
                     double px;
                     double py;
                     try {
-                        px = Double.parseDouble(EnterPointDialog.this.tfPx.getText());
-                        py = Double.parseDouble(EnterPointDialog.this.tfPy.getText());
+                        px = Double.parseDouble(EnterNoeudSimpleDialog.this.tfPx.getText());
+                        py = Double.parseDouble(EnterNoeudSimpleDialog.this.tfPy.getText());
                     }catch (NumberFormatException ex) {
                         return null;
-                    }   return new Point(px, py);
+                    }   return new NoeudSimple(px, py);
                 } else {
                     return null;
                 }
@@ -91,8 +95,8 @@ public class EnterPointDialog extends Dialog<Point> {
 
     }
 
-    public static Optional<Point> demandePoint() {
-        EnterPointDialog dialog = new EnterPointDialog();
+    public static Optional<NoeudSimple> demandeNoeudSimple() {
+        EnterNoeudSimpleDialog dialog = new EnterNoeudSimpleDialog();
         return dialog.showAndWait();
     }
 

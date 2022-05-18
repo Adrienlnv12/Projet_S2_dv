@@ -31,6 +31,7 @@ public class RectangleHV{
     private double xMax;
     private double yMin;
     private double yMax;
+    
 
     public RectangleHV(double xMin, double xMax, double yMin, double yMax) {
         this.xMin = xMin;
