@@ -34,7 +34,7 @@ public class Triangle extends Forme {
         PointTerrain pt2 = new PointTerrain(x,pt1.getPy());
         points[1] = pt2;
         double px=(pt1.getPx()+pt2.getPx())/2;
-        double py=pt1.getPy()+50;
+        double py=pt1.getPy()+100;
         PointTerrain pt3 = new PointTerrain(px,py);
         points[2] = pt3;
        
@@ -213,9 +213,9 @@ public class Triangle extends Forme {
         }
         else if ((this.points[0].distancePoint(p)<this.points[2].distancePoint(p))&&(this.points[1].distancePoint(p)<this.points[2].distancePoint(p))){
         if (up1 < 0) {
-            return this.points[0].distancePoint(p);
-        } else if (up1 > 1) {
             return this.points[1].distancePoint(p);
+        } else if (up1 > 1) {
+            return this.points[0].distancePoint(p);
         } else {
             Point p4 = new Point(x1 + up1 * (x2 - x1),
                     y1 + up1 * (y2 - y1));
@@ -228,19 +228,19 @@ public class Triangle extends Forme {
         } else if (up2 > 1) {
             return this.points[2].distancePoint(p);
         } else {
-            Point p4 = new Point(x1 + up2 * (x2 - x1),
-                    y1 + up2 * (y2 - y1));
+            Point p4 = new Point(x2 + up2 * (x3 - x2),
+                    y2 + up2 * (y3 - y2));
             return p4.distancePoint(p);
            
         }
     }else{
          if (up3 < 0) {
-            return this.points[0].distancePoint(p);
-        } else if (up3 > 1) {
             return this.points[2].distancePoint(p);
+        } else if (up3 > 1) {
+            return this.points[0].distancePoint(p);
         } else {
-            Point p4 = new Point(x1 + up3 * (x2 - x1),
-                    y1 + up3 * (y2 - y1));
+            Point p4 = new Point(x3 + up3 * (x1 - x3),
+                    y3 + up3 * (y1 - y3));
             return p4.distancePoint(p);
            
         }
