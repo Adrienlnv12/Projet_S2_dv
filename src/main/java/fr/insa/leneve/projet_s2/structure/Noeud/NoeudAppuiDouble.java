@@ -41,7 +41,7 @@ public class NoeudAppuiDouble extends NoeudAppui {
             context.setLineWidth(2);
             context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }else{
-            context.setFill(Color.AQUAMARINE);
+            context.setFill(Color.BROWN);
             context.setLineWidth(2);
             context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
