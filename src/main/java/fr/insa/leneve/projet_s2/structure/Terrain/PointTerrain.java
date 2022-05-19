@@ -43,7 +43,9 @@ public class PointTerrain extends Point {
         }
     }
 
-
+    public boolean asTriangle(){
+        return !triangles.isEmpty();
+    }
 
     public ArrayList<SegmentTerrain> getSegments() {
         return segments;

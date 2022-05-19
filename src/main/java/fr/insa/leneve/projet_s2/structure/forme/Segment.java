@@ -100,11 +100,13 @@ public class Segment extends Forme {
 
     @Override
     public void dessine(GraphicsContext context) {
-        if(selected){
-            context.setStroke(Forme.COULEUR_SELECTION);
-        } else {
-            context.setStroke(Color.BLUE);
-        }
+        context.setStroke(Color.GREEN);
+        context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
+    }
+    
+     @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setStroke(Forme.COULEUR_SELECTION);
         context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
     }
     

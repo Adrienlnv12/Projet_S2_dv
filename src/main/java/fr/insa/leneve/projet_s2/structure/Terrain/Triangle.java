@@ -34,7 +34,7 @@ public class Triangle extends Forme {
         PointTerrain pt2 = new PointTerrain(x,pt1.getPy());
         points[1] = pt2;
         double px=(pt1.getPx()+pt2.getPx())/2;
-        double py=pt1.getPy()-50;
+        double py=pt1.getPy()+50;
         PointTerrain pt3 = new PointTerrain(px,py);
         points[2] = pt3;
        
@@ -78,12 +78,12 @@ public class Triangle extends Forme {
             px[i] = points[i].getPx();
             py[i] = points[i].getPy();
         }
-        context.setFill(Color.YELLOW);
+        context.setFill(Color.GRAY);
         context.setGlobalAlpha(0.5);
         context.fillPolygon(px, py, 3);
         context.setGlobalAlpha(1);
 
-        context.setStroke(Color.YELLOW);
+        context.setStroke(Color.GRAY);
         context.strokePolygon(px, py, 3);
     }
     
@@ -174,31 +174,98 @@ public class Triangle extends Forme {
 
     @Override
     public double maxX() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return Math.max(this.points[0].maxX(), this.points[1].maxX());
     }
 
     @Override
     public double minX() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return Math.min(this.points[0].minX(), this.points[1].minX());
     }
 
     @Override
     public double maxY() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return Math.max(this.points[0].maxY(), this.points[2].maxY());
     }
 
     @Override
     public double minY() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return Math.min(this.points[0].minY(), this.points[2].minY());
     }
 
     @Override
     public double distancePoint(Point p) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        double x1 = this.points[0].getPx();
+        double y1 = this.points[0].getPy();
+        double x2 = this.points[1].getPx();
+        double y2 = this.points[1].getPy();
+        double x3 = this.points[2].getPx();
+        double y3 = this.points[2].getPy();
+        double x = p.getPx();
+        double y = p.getPy();
+        double up1 = ((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1))
+                / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double up2 = ((x - x2) * (x3 - x2) + (y - y2) * (y3 - y2))
+                / (Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
+        double up3 = ((x - x3) * (x1 - x3) + (y - y3) * (y1 - y3))
+                / (Math.pow(x1 - x3, 2) + Math.pow(y1 - y2, 2));
+        if(contain(x,y)){  
+            return p.distancePoint(p);
+        }
+        else if ((this.points[0].distancePoint(p)<this.points[2].distancePoint(p))&&(this.points[1].distancePoint(p)<this.points[2].distancePoint(p))){
+        if (up1 < 0) {
+            return this.points[0].distancePoint(p);
+        } else if (up1 > 1) {
+            return this.points[1].distancePoint(p);
+        } else {
+            Point p4 = new Point(x1 + up1 * (x2 - x1),
+                    y1 + up1 * (y2 - y1));
+            return p4.distancePoint(p);
+           
+        }
+    } else if ((this.points[1].distancePoint(p)<this.points[0].distancePoint(p))&&(this.points[2].distancePoint(p)<this.points[0].distancePoint(p))){
+        if (up2 < 0) {
+            return this.points[1].distancePoint(p);
+        } else if (up2 > 1) {
+            return this.points[2].distancePoint(p);
+        } else {
+            Point p4 = new Point(x1 + up2 * (x2 - x1),
+                    y1 + up2 * (y2 - y1));
+            return p4.distancePoint(p);
+           
+        }
+    }else{
+         if (up3 < 0) {
+            return this.points[0].distancePoint(p);
+        } else if (up3 > 1) {
+            return this.points[2].distancePoint(p);
+        } else {
+            Point p4 = new Point(x1 + up3 * (x2 - x1),
+                    y1 + up3 * (y2 - y1));
+            return p4.distancePoint(p);
+           
+        }
+    }
+    }
+    
+    @Override
+    public void dessinProche(GraphicsContext context) {
     }
 
     @Override
-    public void dessinProche(GraphicsContext context) {
+    public void dessineSelection(GraphicsContext context) {
+         double[] px = new double[3];
+        double[] py = new double[3];
+        for (int i = 0; i < points.length; i ++) {
+            px[i] = points[i].getPx();
+            py[i] = points[i].getPy();
+        }
+        context.setFill(Color.GRAY);
+        context.setGlobalAlpha(0.5);
+        context.fillPolygon(px, py, 3);
+        context.setGlobalAlpha(1);
+
+        context.setStroke(Color.RED);
+        context.strokePolygon(px, py, 3);
     }
 
 }

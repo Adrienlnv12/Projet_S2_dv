@@ -11,11 +11,6 @@ import java.util.HashMap;
 
 public class Terrain {
 
-    public double xMin;
-    public double xMax;
-    public double yMin;
-    public double yMax;
-
     private HashMap<Integer, Triangle> triangles = new HashMap<>();
 
     private final ArrayList<PointTerrain> points;
@@ -33,8 +28,9 @@ public class Terrain {
         this.xMax = xMax;
         this.yMax = yMax;
     }*/
-
-     public Collection<Triangle> getTriangles() {
+    
+ 
+    public Collection<Triangle> getTriangles() {
         return triangles.values();
     }
 
@@ -81,7 +77,38 @@ public class Terrain {
         }
         return null;
     }
-
+    
+    public void update(){
+        ArrayList<PointTerrain> pointTerrain = new ArrayList<>();
+        for (PointTerrain point : points) {
+            if (!point.asTriangle()) pointTerrain.add(point);
+        }
+        for (PointTerrain pt : pointTerrain) {
+            remove(pt, false);
+        }
+    }
+    
+    public void remove(Forme f, boolean last){
+        if(f instanceof Triangle){
+            triangles.remove(f.getId());
+            if(last) return;
+            for (SegmentTerrain segment : ((Triangle) f).getSegments()) {
+                remove(segment, true);
+            }
+            for (PointTerrain point : ((Triangle) f).getPoints()) {
+                remove(point, true);
+            }
+        }else if(f instanceof PointTerrain){
+            points.remove((PointTerrain) f);
+            if (last) return;
+            ((PointTerrain) f).getSegments().forEach(s -> remove(s, true));
+            ((PointTerrain) f).getTriangles().forEach(t -> remove(t, true));
+        }else if(f instanceof SegmentTerrain){
+            segments.remove(f);
+            if(last) return;
+            ((SegmentTerrain) f).getTriangles().forEach(t -> remove(t, true));
+        }
+    }
 
 
     

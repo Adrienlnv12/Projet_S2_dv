@@ -117,17 +117,21 @@ public class Treillis extends Forme{
         pB.addBarres(b);
     }
     
-    public void createTriangle(PointTerrain pt1, double x, Terrain terrain){
+    public void createTriangle(PointTerrain pt1, double x,Terrain terrain){
         Triangle b = new Triangle(pt1, x,numerateur.getNewTriangleId(),terrain);
         contient.add(b);
     }
 
-    public void removeElement(Forme f){
-        if(f instanceof Noeud noeud) removeNoeuds(noeud);
-        else if(f instanceof Barre barre) removeBarres(barre);
-        this.contient.remove(f);
-        f.setTreillis(null);
+
+    
+    public void removeAll(ArrayList<Forme> lf){
+        for (Forme f : lf) {
+            if(f instanceof Noeud noeud) removeNoeuds(noeud);
+            else if(f instanceof Barre barre) removeBarres(barre);
+            this.contient.remove(f);
+        }
     }
+    
 
     /**
      *
@@ -287,11 +291,19 @@ public class Treillis extends Forme{
             f.dessine(context);
         }
     }
-
+    
     @Override
-    public void changeCouleur(Color value) {
+    public void dessinProche(GraphicsContext context) {
         for (Forme f : this.contient) {
-            f.changeCouleur(value);
+            f.dessinProche(context);
+        }  
+    }
+    
+    
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        for (Forme f : this.contient) {
+            f.dessineSelection(context);
         }
     }
     
@@ -323,8 +335,5 @@ public class Treillis extends Forme{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void dessinProche(GraphicsContext context) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
+    
 }

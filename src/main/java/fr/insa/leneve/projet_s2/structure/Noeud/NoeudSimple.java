@@ -6,6 +6,7 @@ package fr.insa.leneve.projet_s2.structure.Noeud;
 
 import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.calcul.Maths;
+import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
@@ -56,28 +57,36 @@ public class NoeudSimple extends Noeud{
         return creable;
     }
     
-    public static boolean TriangleestCreable(Treillis treillis, double px, double py){//si un point se creer dans un triangle il dit que c'est pas bon
+    public static boolean TriangleestCreable(Terrain terrain, double px, double py){//si un point se creer dans un triangle il dit que c'est pas bon
         boolean creable = true;
-        for (Triangle triangle : treillis.getTerrain().getTriangles()) {
+        for (Triangle triangle : terrain.getTriangles()) {
             if (triangle.contain(px, py)) creable = false;
         }
         return creable;
     }
     
     public void dessine(GraphicsContext context) {
-        if(selected){
-            context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-        }
         if(segmentSelected){
-            context.setStroke(Color.GREEN);
+            context.setFill(Color.GREEN);
             context.setLineWidth(2);
-            context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }else{
             context.setStroke(Color.BLACK);
             context.setLineWidth(2);
             context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
+    }
+    
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setFill(Forme.COULEUR_SELECTION);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+    }
+    
+    @Override
+    public void dessinProche(GraphicsContext context) {
+        context.setFill(Color.BLUE);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
 
     @Override

@@ -5,6 +5,8 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 import fr.insa.leneve.projet_s2.Boutton.RadioBouton;
+import fr.insa.leneve.projet_s2.structure.Force;
+import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -39,9 +41,7 @@ public final class BoutonGauche extends VBox {
     private RadioButton RbBarre;
     private RadioButton RbTriangleTerrain;
     private Treillis Treillis;
-    private ColorPicker cpCouleur;
     
-
     private BoutonIcone bZoomDouble;
     private BoutonIcone bZoomDemi;
     private BoutonIcone bZoomFitAll;
@@ -51,6 +51,8 @@ public final class BoutonGauche extends VBox {
     private BoutonIcone bTranslateHaut;
     private BoutonIcone bTranslateBas;
     
+    private Button addForceBtn;
+    private Button bSupprimer;
     private Button bCreeNoeudDialog;
     
     private DessinCanvas cDessin;
@@ -69,14 +71,14 @@ public final class BoutonGauche extends VBox {
         this.setId("BoutonGauche");
 
         this.controleur = mainpanel.getControleur();
-
+        
+        Force();
         initSelect();
         choixNoeud = new Button("Choix du Noeud");
         choixNoeud.setOnAction(a -> {selectNoeud();});
         initNoeud();
         initBarre();
         initTriangleTrn();
-        initColorPicker();
         initZoomDouble();
         initZoomDemi();
         initZoomFitAll();
@@ -85,6 +87,7 @@ public final class BoutonGauche extends VBox {
         bTranslateHaut();
         bTranslateBas();
         initCreeNoeudDialog(); 
+        initSupprimer();
         
         
         HBox hbZoom = new HBox(this.bZoomDouble, this.bZoomDemi, this.bZoomFitAll);
@@ -100,7 +103,7 @@ public final class BoutonGauche extends VBox {
         VBox vbZoom = new VBox(hbZoom,gpTrans);
         vbZoom.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        this.getChildren().addAll(rbSelect,RbNoeud, RbBarre, RbTriangleTerrain, choixNoeud,this.bCreeNoeudDialog,this.cpCouleur, vbZoom);
+        this.getChildren().addAll(rbSelect,RbNoeud,choixNoeud,this.bCreeNoeudDialog, addForceBtn, RbBarre, RbTriangleTerrain,bSupprimer,vbZoom);
         FxUtils.setSimpleBorder(this, Color.BLACK, 2);
     }
 
@@ -110,11 +113,11 @@ public final class BoutonGauche extends VBox {
         RbNoeud.setOnAction(actionEvent -> {
             System.out.println(NoeudChoisi);
             controleur.boutonSelect(NoeudChoisi);
-            //controleur.removeSelected();
+            controleur.removeSelected();
         });
     
     }
-
+    
     //pop up de selection du type de noeud
     private void selectNoeud() {
         Stage choixNoeud1 = new Stage();
@@ -202,7 +205,21 @@ public final class BoutonGauche extends VBox {
             controleur.boutonSelect(30);
         });
     }
-
+    
+    private void initSupprimer(){
+     this.bSupprimer = new Button("Supprimer");
+        this.bSupprimer.setOnAction((t) -> {
+            this.controleur.boutonSupprimer(t);
+        });
+    }
+    
+    public void Force(){
+        //if(f instanceof Noeud noeud) {
+            addForceBtn = new Button("Ajouter une force");
+            addForceBtn.setOnAction((t) -> {
+            this.controleur.boutonadForce(t);
+        });    }
+    
     public void setSelected(int id){
         switch (id) {
             case 0 -> {
@@ -228,54 +245,47 @@ public final class BoutonGauche extends VBox {
         }
         controleur.boutonSelect(id);
     }
-    
-       private void initColorPicker() {
-        this.cpCouleur = new ColorPicker(Color.BLACK);
-        this.cpCouleur.setOnAction((t) -> {
-            this.controleur.changeColor(this.cpCouleur.getValue());
-        });
-    }
 
         
     private void initZoomDouble() {    
-        this.bZoomDouble = new BoutonIcone("icones/zoomPlus.png",32,32);
+        this.bZoomDouble = new BoutonIcone("imageinfo/zoom+.png",32,32);
         this.bZoomDouble.setOnAction((t) -> {
             this.controleur.zoomDouble();
         });
     }
     private void initZoomDemi() {  
-        this.bZoomDemi = new BoutonIcone("icones/zoomMoins.png",32,32);
+        this.bZoomDemi = new BoutonIcone("imageinfo/Zoom-.png",32,32);
         this.bZoomDemi.setOnAction((t) -> {
             this.controleur.zoomDemi();
         });
     }
     
     private void initZoomFitAll() {  
-        this.bZoomFitAll = new BoutonIcone("icones/zoomTout.png",32,32);
+        this.bZoomFitAll = new BoutonIcone("imageinfo/tout.png",32,32);
         this.bZoomFitAll.setOnAction((t) -> {
             this.controleur.zoomFitAll();
         });
     }
     private void bTranslateGauche() {
-        this.bTranslateGauche = new BoutonIcone("icones/gauche.png",32,32);
+        this.bTranslateGauche = new BoutonIcone("imageinfo/flechegauche.png",32,32);
         this.bTranslateGauche.setOnAction((t) -> {
             this.controleur.translateGauche();
         });
     }
     private void bTranslateDroite() {
-        this.bTranslateDroite = new BoutonIcone("icones/droite.png",32,32);
+        this.bTranslateDroite = new BoutonIcone("imageinfo/flechedroite.png",32,32);
        this.bTranslateDroite.setOnAction((t) -> {
             this.controleur.translateDroite();
         });
     }
     private void bTranslateHaut() {
-         this.bTranslateHaut = new BoutonIcone("icones/haut.png",32,32);
+         this.bTranslateHaut = new BoutonIcone("imageinfo/flechehaut.png",32,32);
         this.bTranslateHaut.setOnAction((t) -> {
             this.controleur.translateHaut();
         });
     }
     private void bTranslateBas() {
-        this.bTranslateBas = new BoutonIcone("icones/bas.png",32,32);
+        this.bTranslateBas = new BoutonIcone("imageinfo/flechebas.png",32,32);
        this.bTranslateBas.setOnAction((t) -> {
             this.controleur.translateBas();
         });
@@ -295,13 +305,7 @@ public final class BoutonGauche extends VBox {
         this.zoneModelVue = this.zoneModelVue.scale(1.1);
     }
     
-        /**
-     * @return the cpCouleur
-     */
-    public ColorPicker getCpCouleur() {
-        return cpCouleur;
-    }
-    
+       
     /**
      * @return the bZoomDouble
      */
@@ -322,4 +326,6 @@ public final class BoutonGauche extends VBox {
     public Button getbZoomFitAll() {
         return bZoomFitAll;
     }
+    
+
 }

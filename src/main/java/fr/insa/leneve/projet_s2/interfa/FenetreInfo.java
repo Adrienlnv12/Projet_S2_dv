@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 
 //VBox avec les informations sur la selection en cours
@@ -22,11 +23,12 @@ public class FenetreInfo extends VBox {
 
 
     public FenetreInfo(MainPanel main) {
-        super(10);
+        super();
         this.main = main;
         this.controleur = main.getControleur();
         this.setAlignment(Pos.CENTER);
         this.setId("infoBox");
+        FxUtils.setSimpleBorder(this, Color.BLACK, 2);
     }
 
     //dessine les informations de la forme sélectionné
@@ -42,16 +44,12 @@ public class FenetreInfo extends VBox {
 
         if(f instanceof Noeud noeud) {
             Button addForceBtn = new Button("Ajouter une force");
-            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(controleur, noeud));
+            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(noeud));
             this.getChildren().add(addForceBtn);
         }
-        Button deleteBtn = new Button("Supprimer");
-        deleteBtn.setOnAction(actionEvent -> {
-            controleur.deleteForme(f);
-            removeInfos();
-        });
+        
 
-        this.getChildren().add(deleteBtn);
+        //this.getChildren().add(deleteBtn);
     }
 
     public void removeInfos() {
@@ -70,7 +68,7 @@ public class FenetreInfo extends VBox {
    
         Button delete = new Button("Tout supprimer");
         delete.setOnAction(actionEvent -> {
-            controleur.deleteAllFormes();
+            //controleur.deleteAllFormes();
             removeInfos();
         });
         this.getChildren().addAll(mLN, mLAD, mLAS, mLB, delete);
@@ -78,7 +76,7 @@ public class FenetreInfo extends VBox {
     }
 
 
-    public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
+    /*public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         removeInfos();
 
 
@@ -97,7 +95,7 @@ public class FenetreInfo extends VBox {
                 this.getChildren().add(ry);
             }
         }
-    }
+    }*/
 
 
 }

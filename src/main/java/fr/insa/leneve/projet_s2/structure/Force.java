@@ -37,7 +37,7 @@ public class Force {
         this.fY = fy;
     }
 
-    static public void createTypePopUp(Controleur ac, Noeud noeud){
+    static public void createTypePopUp(Noeud noeud){
         Stage addForce = new Stage();
 
         addForce.initModality(Modality.APPLICATION_MODAL);

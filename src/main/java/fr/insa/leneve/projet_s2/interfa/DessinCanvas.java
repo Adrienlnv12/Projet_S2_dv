@@ -90,7 +90,7 @@ public class DessinCanvas extends Pane {
         //dessin des noeud et des barres
         if (!select.isEmpty()) {
             for (Forme f : select) {
-                f.dessine(context);
+                f.dessineSelection(context);
             }
         }  
         //dessin des noeuds et barres selectionné + des infos associées

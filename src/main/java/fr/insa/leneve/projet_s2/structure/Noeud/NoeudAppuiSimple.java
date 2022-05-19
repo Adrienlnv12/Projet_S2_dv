@@ -21,7 +21,7 @@ public class NoeudAppuiSimple extends NoeudAppui {
     
     public NoeudAppuiSimple(Triangle associatedTriangle, SegmentTerrain segmentTerrain, double posSegment, int id) {
         super(associatedTriangle, segmentTerrain, posSegment, id);
-        this.image = new Image("dessins/appuiSimple.PNG", 28, 23, true, true);
+        this.image = new Image("projet_s2/interfa/imageinfo/NoeudAppuiSimple.png", 28, 23, true, true);
     }
 
     @Override

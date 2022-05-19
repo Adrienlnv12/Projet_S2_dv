@@ -49,6 +49,7 @@ public abstract class Forme{
     
     public abstract void dessine(GraphicsContext context);
     public abstract void dessinProche(GraphicsContext context);
+    public abstract void dessineSelection(GraphicsContext context);
     
     public void setSelected(boolean selected) {
         this.selected = selected;
@@ -64,18 +65,6 @@ public abstract class Forme{
 
     public void setId(int id) {
         this.id = id;
-    }
-    
-    public void changeCouleur(Color value) {
-        this.setCouleur(value);
-    }
-    
-    public Color getCouleur() {
-        return couleur;
-    }
-
-    public void setCouleur(Color couleur) {
-        this.couleur = couleur;
     }
     
     /*public abstract void save(Writer w, Numeroteur<Figure> num) throws IOException;

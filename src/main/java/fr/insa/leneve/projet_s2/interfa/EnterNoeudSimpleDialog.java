@@ -46,7 +46,6 @@ public class EnterNoeudSimpleDialog extends Dialog<NoeudSimple> {
 
     private TextField tfPx;
     private TextField tfPy;
-    private ColorPicker cpCouleur;
 
     /**
      *
@@ -59,15 +58,13 @@ public class EnterNoeudSimpleDialog extends Dialog<NoeudSimple> {
         Label lC = new Label("couleur :");
         this.tfPx = new TextField("0.0");
         this.tfPy = new TextField("0.0");
-        this.cpCouleur = new ColorPicker(Color.BLACK);
-
+        
         GridPane grid = new GridPane();
         grid.add(lPx, 0, 0);
         grid.add(this.tfPx, 1, 0);
         grid.add(lPy, 0, 1);
         grid.add(this.tfPy, 1, 1);
-         grid.add(lC, 0, 2);
-        grid.add(this.cpCouleur, 1, 2);
+        grid.add(lC, 0, 2);
         this.getDialogPane().setContent(grid);
 
         ButtonType bOK = new ButtonType("OK", ButtonData.OK_DONE);

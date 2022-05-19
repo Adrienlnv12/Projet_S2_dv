@@ -65,23 +65,9 @@ public class Point extends Forme{
     public void setPy(double py) {
         this.py = py;
     }
-
-
-    public static Point demandePoint() {
-        System.out.println("abscisse : ");
-        double px = Lire.d();
-        System.out.println("ordonnée : ");
-        double py = Lire.d();
-        return new Point(px, py);
-    }    
-
     
     @Override
     public void dessine(GraphicsContext context) {
-        if(selected){
-            context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-        }
         if(segmentSelected){
             context.setStroke(Color.GREEN);
             context.setLineWidth(2);
@@ -91,6 +77,11 @@ public class Point extends Forme{
             context.setLineWidth(2);
             context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
+    }
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setFill(Forme.COULEUR_SELECTION);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
     
     @Override
