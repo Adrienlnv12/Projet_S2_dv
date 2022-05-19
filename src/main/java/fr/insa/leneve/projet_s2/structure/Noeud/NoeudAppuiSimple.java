@@ -21,7 +21,7 @@ public class NoeudAppuiSimple extends NoeudAppui {
     
     public NoeudAppuiSimple(Triangle associatedTriangle, SegmentTerrain segmentTerrain, double posSegment, int id) {
         super(associatedTriangle, segmentTerrain, posSegment, id);
-        this.image = new Image("projet_s2/interfa/imageinfo/NoeudAppuiSimple.png", 28, 23, true, true);
+        //this.image = new Image("projet_s2/interfa/imageinfo/NoeudAppuiSimple.png", 28, 23, true, true);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class NoeudAppuiSimple extends NoeudAppui {
             context.setLineWidth(2);
             context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }else{
-            context.setStroke(Color.BLACK);
+            context.setFill(Color.BLUE);
             context.setLineWidth(2);
-            context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
         super.dessine(context);
     }

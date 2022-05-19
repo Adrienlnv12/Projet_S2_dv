@@ -34,8 +34,8 @@ public class NoeudAppui extends Noeud {
         this.segmentPoint = segmentTerrain.getDebut();
         this.posSegment = posSegment;
 
-        this.px = segmentPoint.getPx() + (segmentTerrain.getDebut().getPx() - segmentPoint.getPx()) * posSegment;
-        this.py = segmentPoint.getPy() + (segmentTerrain.getFin().getPy() - segmentPoint.getPy()) * posSegment;
+        this.px = segmentPoint.getPx()+(segmentTerrain.getFin().getPx() - segmentPoint.getPx()) * posSegment;
+        this.py = segmentPoint.getPy()+(segmentTerrain.getFin().getPy() - segmentPoint.getPy()) * posSegment;
     }
 
     public double getPosSegment() {
@@ -77,7 +77,7 @@ public class NoeudAppui extends Noeud {
 
     //dessine l'image corrrespondante Ã  l'appui avec rotation
     public void dessine(GraphicsContext context) {
-        context.save();
+       context.save();
         // angle de rotation et point pivot
         Point centerTriangle = associatedTriangle.getCenter();
         double angleCenter = (double) ((int) (Maths.angle(segmentTerrain.getFin(), segmentTerrain.getDebut(), centerTriangle) * 100)) / 100;
@@ -87,7 +87,7 @@ public class NoeudAppui extends Noeud {
         }
         Rotate r = new Rotate(angle, px , py );
         context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-        context.drawImage(image, px - image.getWidth()/2 , py );
+        //context.drawImage(image, px - image.getWidth()/2 , py );
         context.restore();
     }
     

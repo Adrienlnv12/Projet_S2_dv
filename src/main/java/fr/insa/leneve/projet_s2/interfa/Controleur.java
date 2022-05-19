@@ -298,7 +298,7 @@ public class Controleur {
                     if(proche == null){
                         this.selection.clear();
                     }
-                    if(this.selection.size()>1){
+                    /*if(this.selection.size()>1){
                     int nbNoeud = 0;
                     int nbAppuiSimple = 0;
                     int nbAppuiDouble = 0;
@@ -310,7 +310,7 @@ public class Controleur {
                         else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
                     }
                     drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
-                    }
+                    }*/
     }
     
     private NoeudSimple addNoeudSimple(MouseEvent t) {
