@@ -67,16 +67,16 @@ public abstract class Forme{
         this.id = id;
     }
     
-    /*public abstract void save(Writer w, Numeroteur<Figure> num) throws IOException;
+    //public abstract void save(Writer w, Numeroteur<Forme> num) throws IOException;
 
-    public void sauvegarde(File fout) throws IOException {
-        Numeroteur<Figure> num = new Numeroteur<Figure>();
+    /*public void sauvegarde(File fout) throws IOException {
+        Numeroteur<Forme> num = new Numeroteur<Forme>();
         try (BufferedWriter bout = new BufferedWriter(new FileWriter(fout))) {
             this.save(bout, num);
         }
     }
 
-    public static Forme lecture(File fin) throws IOException {
+    public static Treillis lecture(File fin) throws IOException {
         Numeroteur<Forme> num = new Numeroteur<>();
         Forme derniere = null;
         try (BufferedReader bin = new BufferedReader(new FileReader(fin))) {
@@ -87,18 +87,16 @@ public abstract class Forme{
                     int id = Integer.parseInt(bouts[1]);
                     double px = Double.parseDouble(bouts[2]);
                     double py = Double.parseDouble(bouts[3]);
-                    Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
-                    Point np = new Point(px, py, col);
+                    Point np = new Point(px, py);
                     num.associe(id, np);
                     derniere = np;
                 } else if (bouts[0].equals("Segment")) {
                     int id = Integer.parseInt(bouts[1]);
                     int idP1 = Integer.parseInt(bouts[2]);
                     int idP2 = Integer.parseInt(bouts[3]);
-                    Color col = FigureSimple.parseColor(bouts[4], bouts[5], bouts[6]);
                     Point p1 = (Point) num.getObj(idP1);
                     Point p2 = (Point) num.getObj(idP2);
-                    Segment ns = new Segment(p1, p2, col);
+                    Segment ns = new Segment(p1, p2);
                     num.associe(id, ns);
                     derniere = ns;
                 } else if (bouts[0].equals("Groupe")) {

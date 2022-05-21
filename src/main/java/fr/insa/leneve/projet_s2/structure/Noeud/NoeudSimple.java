@@ -4,7 +4,6 @@
  */
 package fr.insa.leneve.projet_s2.structure.Noeud;
 
-import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.calcul.Maths;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;

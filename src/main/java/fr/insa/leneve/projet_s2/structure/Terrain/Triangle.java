@@ -109,10 +109,8 @@ public class Triangle extends Forme {
     }
 
     public String saveString() {
-        StringBuilder save = new StringBuilder("Triangle;" + id);
-        for (PointTerrain point: points) {
-            save.append(";(").append(point.getPx()).append(",").append(point.getPy()).append(")");
-        }
+        StringBuilder save = new StringBuilder("Triangle;" + id); 
+            save.append(";(").append(points.get(0).getPx()).append(",").append(points.get(0).getPy()).append(")").append(";(").append(points.get(1).getPx());
         return save.toString();
     }
 

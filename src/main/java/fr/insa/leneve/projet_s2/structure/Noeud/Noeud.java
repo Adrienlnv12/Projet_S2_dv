@@ -5,7 +5,6 @@
 package fr.insa.leneve.projet_s2.structure.Noeud;
 //a finir
 
-import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Force;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
