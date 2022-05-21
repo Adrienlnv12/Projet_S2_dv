@@ -39,7 +39,7 @@ public class Controleur {
     private Stage stage;
     private String name;
     private String path;
-    
+    private boolean NoeudBoutton;
     private PointTerrain pointTT;
     private Forme nearest, currentSelect;
     private double x,X,Y;
@@ -75,6 +75,8 @@ public class Controleur {
         this.selection = new ArrayList<>();
         this.fenetreinfo = new FenetreInfo(this.vue);
     }
+    
+    
     
     private void realSave(File f) {
         try {
@@ -179,7 +181,7 @@ public class Controleur {
                             addAppui(false,t);
                             this.vue.redrawAll();
                         }
-                        case 12 ->                         {   
+                        case 12 ->                         { 
                             addAppui(true,t);
                             this.vue.redrawAll();
                         }
@@ -268,7 +270,10 @@ public class Controleur {
                     // il faut tout de même prévoir le cas ou le groupe est vide
                     // donc pas de plus proche
                     //fenetreinfo.dessineInfos(proche);
-                    
+                    if((proche instanceof Triangle triangle)&&(proche instanceof NoeudAppui noeud)){
+                        
+                        proche= noeud;
+                    }
                     if (proche != null) {
                         if (t.isShiftDown()) {
                             this.selection.add(proche);
@@ -349,7 +354,7 @@ public class Controleur {
     public NoeudAppui testAppui(boolean simple, MouseEvent t){
         SegmentTerrain segment =null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 40);
+        Forme proche = this.vue.getModel().plusProche(pclic, 50);
         if(proche instanceof Triangle tr){
         segment = NoeudAppui.isCreable(tr,pclic.getPx() ,pclic.getPy());
         }
@@ -385,7 +390,7 @@ public class Controleur {
         currentClick++;
         Noeud p = null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 40);
+        Forme proche = this.vue.getModel().plusProche(pclic, 20);
         //test si on clique a coté d'un point ou pas
         //Besoin d'ajouter la vérification que le point est créable, et quel type de point
 
@@ -447,12 +452,12 @@ public class Controleur {
         if(segment==null){
             noeudRes = addNoeudSimple(t);
             
-        }else{
-                boutonSelect=12;
-                System.out.println("bjr");
-                noeudRes = testAppui(true, t);
-                boutonSelect=20;
-            }
+        }else if(NoeudBoutton==false){                
+            noeudRes = testAppui(true, t);
+        }
+        else{
+            noeudRes = testAppui(false, t);
+        }
         return noeudRes;
 
     }
@@ -553,6 +558,14 @@ public class Controleur {
    
     public int getboutonSelect() {
         return boutonSelect;
+    }
+    
+    public boolean getNoeudBoutton() {
+        return NoeudBoutton;
+    }
+    
+    public void NoeudBoutton(boolean t) {
+        this.NoeudBoutton=t ;
     }
    
     public ArrayList<Forme> getSelection() {

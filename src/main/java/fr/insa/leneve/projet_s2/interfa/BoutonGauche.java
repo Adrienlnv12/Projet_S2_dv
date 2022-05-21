@@ -34,10 +34,9 @@ import javafx.stage.Stage;
 public final class BoutonGauche extends VBox {
     
     private final ToggleGroup bgEtat= new ToggleGroup();
-    
     private RadioButton rbSelect;
     private RadioButton RbNoeud;
-    private final Button choixNoeud;
+    private Button choixNoeud;
     private RadioButton RbBarre;
     private RadioButton RbTriangleTerrain;
     private Treillis Treillis;
@@ -134,7 +133,15 @@ public final class BoutonGauche extends VBox {
         Button fin = new Button("Choisir");
         fin.setOnAction(e -> {
             NoeudChoisi = 10 + Integer.parseInt(typeNoeud);
-            if(controleur.getboutonSelect() / 10 == 1) controleur.boutonSelect(NoeudChoisi);
+            if(NoeudChoisi==11){
+                controleur.NoeudBoutton(true);
+                System.out.println("nad :"+controleur.getNoeudBoutton());
+                }
+                if(NoeudChoisi==12){
+                controleur.NoeudBoutton(false);
+                System.out.println("nas :"+controleur.getNoeudBoutton());
+                }
+            if(controleur.getboutonSelect() / 10 == 1)controleur.boutonSelect(NoeudChoisi);
             this.choixNoeud.setText(name);
             choixNoeud1.close();
         });
@@ -252,7 +259,6 @@ public final class BoutonGauche extends VBox {
         }
         controleur.boutonSelect(id);
     }
-
         
     private void initZoomDouble() {    
         this.bZoomDouble = new BoutonIcone("imageinfo/zoom+.png",32,32);

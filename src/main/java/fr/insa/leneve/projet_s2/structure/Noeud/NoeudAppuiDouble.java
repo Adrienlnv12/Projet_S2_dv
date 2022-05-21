@@ -32,20 +32,23 @@ public class NoeudAppuiDouble extends NoeudAppui {
  
     @Override
     public void dessine(GraphicsContext context) {
-        if(selected){
-            context.setFill(Forme.COULEUR_SELECTION);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-        }
         if(segmentSelected){
-            context.setStroke(Color.GREEN);
+            context.setFill(Color.GREEN);
+            context.setLineWidth(2);
+            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+        }else{
+            context.setStroke(Color.BROWN);
             context.setLineWidth(2);
             context.strokeOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-        }else{
-            context.setFill(Color.BROWN);
-            context.setLineWidth(2);
-            context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         }
         super.dessine(context);
+    }
+    
+    @Override
+    public void dessineSelection(GraphicsContext context) {
+        context.setFill(Forme.COULEUR_SELECTION);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+        super.dessineSelection(context);
     }
 
     
