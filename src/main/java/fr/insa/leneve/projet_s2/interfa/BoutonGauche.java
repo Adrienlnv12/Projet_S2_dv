@@ -52,6 +52,7 @@ public final class BoutonGauche extends VBox {
     private BoutonIcone bTranslateBas;
     
     private Button addForceBtn;
+    private Button bToutSupprimer;
     private Button bSupprimer;
     private Button bCreeNoeudDialog;
     
@@ -88,7 +89,7 @@ public final class BoutonGauche extends VBox {
         bTranslateBas();
         initCreeNoeudDialog(); 
         initSupprimer();
-        
+        initToutSupprimer();
         
         HBox hbZoom = new HBox(this.bZoomDouble, this.bZoomDemi, this.bZoomFitAll);
         
@@ -103,7 +104,7 @@ public final class BoutonGauche extends VBox {
         VBox vbZoom = new VBox(hbZoom,gpTrans);
         vbZoom.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        this.getChildren().addAll(rbSelect,RbNoeud,choixNoeud,this.bCreeNoeudDialog, addForceBtn, RbBarre, RbTriangleTerrain,bSupprimer,vbZoom);
+        this.getChildren().addAll(rbSelect,RbNoeud,choixNoeud,this.bCreeNoeudDialog, addForceBtn, RbBarre, RbTriangleTerrain,bSupprimer,bToutSupprimer,vbZoom);
         FxUtils.setSimpleBorder(this, Color.BLACK, 2);
     }
 
@@ -210,6 +211,12 @@ public final class BoutonGauche extends VBox {
      this.bSupprimer = new Button("Supprimer");
         this.bSupprimer.setOnAction((t) -> {
             this.controleur.boutonSupprimer(t);
+        });
+    }
+    private void initToutSupprimer(){
+     this.bToutSupprimer = new Button("Tout Supprimer");
+        this.bToutSupprimer.setOnAction((t) -> {
+            this.controleur.boutonToutSupprimer(t);
         });
     }
     

@@ -7,9 +7,10 @@ package fr.insa.leneve.projet_s2.structure.Noeud;
 import fr.insa.leneve.projet_s2.calcul.Maths;
 import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
-import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
+
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
+import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
@@ -37,7 +38,16 @@ public class NoeudAppui extends Noeud {
         this.px = segmentPoint.getPx()+(segmentTerrain.getFin().getPx() - segmentPoint.getPx()) * posSegment;
         this.py = segmentPoint.getPy()+(segmentTerrain.getFin().getPy() - segmentPoint.getPy()) * posSegment;
     }
+    
+    public static boolean DistestCreable(Treillis treillis, double px, double py) {//si un point est trop proche alors ca dit pas bon
+        boolean creable = true;
+        for (Noeud p : treillis.getNoeuds()) {
+            if (Maths.distancePoint(p, new Point(px, py)) < 15) creable = false;
+        }
 
+        return creable;
+    }
+    
     public double getPosSegment() {
         return posSegment;
     }
@@ -54,8 +64,8 @@ public class NoeudAppui extends Noeud {
         return segmentTerrain;
     }
 
-    public static SegmentTerrain isCreable(Terrain terrain ,double posX, double posY){
-        for (SegmentTerrain s : terrain.getSegments()) {
+    public static SegmentTerrain isCreable(Triangle triangle ,double posX, double posY){
+        for (SegmentTerrain s : triangle.getSegments()) {
             if(s.contain(posX, posY, 50) && s.asOneTriangle()){
                 return s;
             }
@@ -65,8 +75,8 @@ public class NoeudAppui extends Noeud {
 
     public String saveString()  {
         int segmentNbr = 0;
-        for (int i = 0; i < associatedTriangle.getSegments().length; i++) {
-            if(associatedTriangle.getSegments()[i].equals(segmentTerrain)){
+        for (int i = 0; i < associatedTriangle.getSegments().size(); i++) {
+            if(associatedTriangle.getSegments().get(i).equals(segmentTerrain)){
                 segmentNbr = i;
                 break;
             }
@@ -77,9 +87,9 @@ public class NoeudAppui extends Noeud {
 
     //dessine l'image corrrespondante Ã  l'appui avec rotation
     public void dessine(GraphicsContext context) {
-       context.save();
+       /*context.save();
         // angle de rotation et point pivot
-        Point centerTriangle = associatedTriangle.getCenter();
+        /*Point centerTriangle = associatedTriangle.getCenter();
         double angleCenter = (double) ((int) (Maths.angle(segmentTerrain.getFin(), segmentTerrain.getDebut(), centerTriangle) * 100)) / 100;
         double angle = Maths.angle(segmentTerrain.getFin(), segmentTerrain.getDebut()) * 360 / (2 * Math.PI);
         if(angleCenter > 0){
@@ -88,7 +98,7 @@ public class NoeudAppui extends Noeud {
         Rotate r = new Rotate(angle, px , py );
         context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
         //context.drawImage(image, px - image.getWidth()/2 , py );
-        context.restore();
+        context.restore();*/
     }
     
     

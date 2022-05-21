@@ -45,8 +45,6 @@ public class Controleur {
     private double x,X,Y;
     private double dragMouseX, dragMouseY;
     private GraphicsContext context;
-    private Terrain terrain;
-    private Treillis treillis;
     private MainPanel vue;
     private int boutonSelect = 0;
     private final ArrayList<Forme> multipleSelect = new ArrayList<>();
@@ -75,9 +73,7 @@ public class Controleur {
     public Controleur(MainPanel vue) {
         this.vue = vue;
         this.selection = new ArrayList<>();
-        this.treillis = this.vue.getModel();
         this.fenetreinfo = new FenetreInfo(this.vue);
-        this.terrain= new Terrain();
     }
     
     private void realSave(File f) {
@@ -207,10 +203,7 @@ public class Controleur {
                         case 31 ->                         {   
                             Point pclic = this.posInModel(t.getX(), t.getY());
                             this.x=pclic.getPx();
-                            Triangle triangle =new Triangle (pointTT, x,treillis.getNumerateur().getNewTriangleId(),terrain);
-                            treillis.createTriangle(pointTT, x,terrain);
-                            terrain.addTriangle(triangle);
-                            treillis.updateNoeuds();
+                            this.vue.getModel().createTriangle(pointTT, x);
                             this.vue.redrawAll();
                             this.boutonSelect=30;
                         }
@@ -243,17 +236,7 @@ public class Controleur {
         Point pclic = new Point(ptrans.getX(), ptrans.getY());
         return pclic;
     }
-    
-    /*private void activeBoutonsSuivantSelection() {
-        if (boutonSelect == 20) {
-            if (this.selection.size() > 0) {
-                this.vue.getSupprimer().setDisable(false);
-                if (this.selection.size() > 1) {
-                    this.vue.getToutSupprimer().setDisable(false);
-                }
-            }boutonadForce
-        }
-    }*/
+   
     public void boutonadForce(ActionEvent t) {
         for (Forme f: this.selection) {
         if(f instanceof Noeud noeud) {
@@ -261,21 +244,27 @@ public class Controleur {
             }
         }
     }
+    
     public void boutonSupprimer(ActionEvent t) {
         if (boutonSelect == 0 && !this.selection.isEmpty()) {
-            // normalement le bouton est disabled dans le cas contraire
-            this.vue.getModel().removeAll(this.selection);
+            this.vue.getModel().remove(this.selection);
             this.selection.clear();
-            //this.activeBoutonsSuivantSelection();
             this.vue.redrawAll();
         }
+    }
+    
+    public void boutonToutSupprimer(ActionEvent t) {
+            this.vue.getModel().removeAll();
+            this.selection.clear();
+            this.vue.redrawAll();
+        
     }
     
     private void setSelected(MouseEvent t){
                     // selection
                     Point pclic = this.posInModel(t.getX(), t.getY());
                     // pas de limite de distance entre le clic et l'objet selectionné
-                    Forme proche = this.vue.getModel().plusProche(pclic, 25);
+                    Forme proche = this.vue.getModel().plusProche(pclic, 10);
                     // il faut tout de même prévoir le cas ou le groupe est vide
                     // donc pas de plus proche
                     //fenetreinfo.dessineInfos(proche);
@@ -322,11 +311,11 @@ public class Controleur {
         } catch (NonInvertibleTransformException ex) {
             throw new Error(ex);
         }
-        boolean distCreable = NoeudSimple.DistestCreable(treillis, ptrans.getX() ,ptrans.getY());
-        boolean triangleCreable = NoeudSimple.TriangleestCreable(terrain, ptrans.getX() ,ptrans.getY());
+        boolean distCreable = NoeudSimple.DistestCreable(this.vue.getModel(), ptrans.getX() ,ptrans.getY());
+        boolean triangleCreable = NoeudSimple.TriangleestCreable(this.vue.getModel(),ptrans.getX() ,ptrans.getY());
         if(distCreable && triangleCreable) {
 
-            NoeudSimple ns = treillis.createNoeudSimple(ptrans.getX() ,ptrans.getY());
+            NoeudSimple ns = this.vue.getModel().createNoeudSimple(ptrans.getX() ,ptrans.getY());
             System.out.println(ptrans.getX() + " " +ptrans.getY());
             return ns;
         }
@@ -358,23 +347,36 @@ public class Controleur {
 
     //test si il est possible de creer un appui, et si oui alors il le crée
     public NoeudAppui testAppui(boolean simple, MouseEvent t){
+        SegmentTerrain segment =null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        SegmentTerrain segment = NoeudAppui.isCreable(terrain,pclic.getPx() ,pclic.getPy());
-        if(segment != null) {
+        Forme proche = this.vue.getModel().plusProche(pclic, 40);
+        if(proche instanceof Triangle tr){
+        segment = NoeudAppui.isCreable(tr,pclic.getPx() ,pclic.getPy());
+        }
+        boolean distCreable = NoeudAppui.DistestCreable(this.vue.getModel(), pclic.getPx() ,pclic.getPy());
+        if(segment != null && distCreable) {
             return createAppui(simple, pclic.getPx() ,pclic.getPy(), segment);
         }else {
-            if(boutonSelect==11 || boutonSelect==12){
-            Alert alerteNoeudAppui = new Alert(Alert.AlertType.WARNING);
-            alerteNoeudAppui.setTitle("Erreur création noeud appui");
-            alerteNoeudAppui.setContentText("Noeud non positionné sur un segment de terrain!");
-            alerteNoeudAppui.showAndWait();
-            } 
+        String textError1 = "";
+        if(!distCreable&&(boutonSelect==11 || boutonSelect==12)){
+            textError1 = "Noeuds trop proches!";
+        }
+        if((segment == null)&&(boutonSelect==11 || boutonSelect==12)){
+            if(textError1.length() > 0) textError1 += " et ";
+            textError1 += "Noeud non positionné sur un segment de terrain!";
+        }
+      
+        Alert alerteNoeudAppui = new Alert(Alert.AlertType.WARNING);
+        alerteNoeudAppui.setTitle("Erreur création noeud appui");
+        alerteNoeudAppui.setContentText(textError1);
+        alerteNoeudAppui.showAndWait();
         }
         return null;
     }
 
     public NoeudAppui createAppui(boolean simple, double posX, double posY, SegmentTerrain segment) {
-            NoeudAppui appui = treillis.createAppui(simple, segment.getTriangles().get(0), segment, Maths.distancePoint(segment.getDebut(), posX, posY) / segment.length());
+        
+            NoeudAppui appui = this.vue.getModel().createAppui(simple, segment.getTriangles().get(0), segment, Maths.distancePoint(segment.getDebut(), posX, posY) / segment.length());
             return appui;
     }
     
@@ -383,7 +385,7 @@ public class Controleur {
         currentClick++;
         Noeud p = null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 15);
+        Forme proche = this.vue.getModel().plusProche(pclic, 40);
         //test si on clique a coté d'un point ou pas
         //Besoin d'ajouter la vérification que le point est créable, et quel type de point
 
@@ -425,7 +427,7 @@ public class Controleur {
                 return;
             }
             currentClick = 0;
-            treillis.createBarre((Noeud) firstSegmentPoint, p);
+            this.vue.getModel().createBarre((Noeud) firstSegmentPoint, p);
             firstSegmentPoint.setSegmentSelected(false);
             this.vue.redrawAll();
         }
@@ -434,10 +436,22 @@ public class Controleur {
     //fonction de creation de noeud pour les barres
     //construit par defaut un noeud simple ou sinon un appui simple s'il ne peut pas
     public Noeud createNoeudBarre(Point firstSegmentPoint,MouseEvent t){
+        
         Noeud noeudRes;
+        SegmentTerrain segment=null;
+        Point pclic = this.posInModel(t.getX(), t.getY());
+        Forme proche = this.vue.getModel().plusProche(pclic, 40);
+        if(proche instanceof Triangle tr){
+        segment = NoeudAppui.isCreable(tr,pclic.getPx() ,pclic.getPy());
+        }
+        if(segment==null){
             noeudRes = addNoeudSimple(t);
-            if(noeudRes == null){
+            
+        }else{
+                boutonSelect=12;
+                System.out.println("bjr");
                 noeudRes = testAppui(true, t);
+                boutonSelect=20;
             }
         return noeudRes;
 
@@ -453,24 +467,16 @@ public class Controleur {
     public PointTerrain addPointTrn(MouseEvent t) {
         Point pclic = this.posInModel(t.getX(), t.getY());
         double px = pclic.getPx(), py = pclic.getPy();
-        PointTerrain pt = null;
-
-        boolean creable = true;
-        for (PointTerrain p : terrain.getPoints()) {
-            if(Maths.distancePoint(p, new Point(px, py)) < 15) creable = false;
-        }
-        if(creable) pt = terrain.addPoint(px, py);
-
-        this.vue.redrawAll();
+        PointTerrain pt = new PointTerrain(px, py);
         return pt;
     }
     
-    private void dessinProche(){
+    /*private void dessinProche(){
         Forme nearestforme = getNearest();
         if(nearestforme != null){
             nearestforme.dessinProche(context);
         }
-    }
+    }*/
     
     public void zoomDouble() { //a refaire les partie zoom et déplacement
         this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
@@ -507,26 +513,7 @@ public class Controleur {
         this.vue.redrawAll();
    }
     
-    /*//supprime un element
-    public void deleteForme(Forme f){
-        if(f != null) {
-            if (f instanceof PointTerrain || f instanceof Triangle || f instanceof SegmentTerrain) {
-                treillis.removeElement(f);
-                currentSelect = null;
-            }
-        }
-    }
     
-    /*public void deleteAllFormes() {
-        multipleSelect.forEach(f -> {
-            treillis.removeElement(f);
-        });
-
-        multipleSelect.clear();
-        removeInfos();
-        inMultSelect = false;
-        this.vue.redrawAll();
-    }*/
 
     
     //retire le point selectionné
@@ -614,10 +601,6 @@ public class Controleur {
 
     public int getCurrentClick() {
         return currentClick;
-    }
-
-    public Treillis getTreillis() {
-        return treillis;
     }
 
     public Stage getStage() {

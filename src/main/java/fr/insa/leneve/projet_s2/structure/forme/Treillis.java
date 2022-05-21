@@ -8,7 +8,7 @@ import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
-import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
+
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import java.util.ArrayList;
@@ -17,20 +17,22 @@ import javafx.scene.paint.Color;
 
 
 public class Treillis extends Forme{
-    
-    private ArrayList<Forme> contient;
-    private Terrain terrain;
+    private ArrayList<Forme> temp,temp1;
+    private ArrayList<Triangle> triangles;
+    private final ArrayList<Forme> contient;
     private final ArrayList<Noeud> noeuds;
     private final ArrayList<Barre> barres;
     private final Numerateur numerateur;
 
 
     public Treillis() {
+        this.temp = new ArrayList<>();
+        this.temp1 = new ArrayList<>();
+        this.triangles = new ArrayList<>();
         this.contient = new ArrayList<>();
         this.numerateur = new Numerateur();
         this.noeuds = new ArrayList<>();
         this.barres = new ArrayList<>();
-        this.terrain = new Terrain();
     }
 
     public void add(Forme f) {
@@ -51,14 +53,6 @@ public class Treillis extends Forme{
 
     public ArrayList<Forme> getContient() {
         return contient;
-    }
-    
-    public void setTerrain(Terrain terrain){
-        this.terrain = terrain;
-    }
-    
-    public Terrain getTerrain() {
-        return terrain;
     }
     
     public void addBarres(Barre barre){
@@ -117,45 +111,92 @@ public class Treillis extends Forme{
         pB.addBarres(b);
     }
     
-    public void createTriangle(PointTerrain pt1, double x,Terrain terrain){
-        Triangle b = new Triangle(pt1, x,numerateur.getNewTriangleId(),terrain);
-        contient.add(b);
-    }
-
-
-    
-    public void removeAll(ArrayList<Forme> lf){
-        for (Forme f : lf) {
-            if(f instanceof Noeud noeud) removeNoeuds(noeud);
-            else if(f instanceof Barre barre) removeBarres(barre);
-            this.contient.remove(f);
-        }
-    }
-    
-
-    /**
-     *
-     */
-    public void updateNoeuds(){
+    public void createTriangle(PointTerrain pt1, double x){
+        Triangle triangle = new Triangle(pt1, x,numerateur.getCurrentTriangleId());     
         ArrayList<Noeud> toRemove = new ArrayList<>();
         for (Noeud noeud : noeuds) {
             if(noeud instanceof NoeudSimple) {
-                for (Triangle triangle : terrain.getTriangles()) {
                     if (triangle.contain(noeud.getPx(), noeud.getPy())) {
                         toRemove.add(noeud);
                         break;
                     }
                 }
-            }else{
-                if(!((NoeudAppui) noeud).getSegmentTerrain().asOneTriangle()){
-                    toRemove.add(noeud);
-                }
             }
-        }
         for (Noeud noeud : toRemove) {
             contient.remove(noeud);
             noeuds.remove(noeud);
         }
+        contient.add(triangle);
+    }
+
+
+    
+    public void remove(ArrayList<Forme> lf){
+        int i=0;
+        for (Forme f : lf) {
+            if(f instanceof Triangle triangle){
+                for(Noeud noeud : noeuds) {
+                    if(noeud instanceof NoeudAppui n){
+                        if(n.getSegmentTerrain().asOneTriangle()){
+                            for(Barre b : barres) {
+                                if(n==b.getDebut()||n==b.getFin()){
+                                    this.contient.remove(b);
+                                    this.temp1.add(b);
+                                }
+                            }
+                            i=i+1;
+                            System.out.println(i);
+                            this.contient.remove(n);
+                            this.temp.add(n);
+                        } 
+                    }
+                }
+                this.barres.removeAll(temp1);
+                this.temp1.clear();
+                this.noeuds.removeAll(temp);
+                this.temp.clear();
+                this.triangles.remove(triangle);
+                for (SegmentTerrain segment : (triangle.getSegments())) {
+                    segment.removeS(segment);
+                    temp.add(segment);
+                }
+                for (PointTerrain point : (triangle.getPoints())) {
+                    point.removeP(point);
+                    temp.add(point);
+                }
+                this.temp.clear();
+                triangle.removeT(triangle);
+                
+            }else if(f instanceof Noeud noeud){
+                for(Barre b : barres) {
+                    if(noeud==b.getDebut()||noeud==b.getFin()){
+                        this.contient.remove(b);
+                        this.temp.add(b);
+                    }
+                }
+                this.barres.removeAll(temp);
+                this.temp.clear();
+                removeNoeuds(noeud);
+            }
+            else if(f instanceof Barre barre) removeBarres(barre);
+            this.contient.remove(f);
+        }
+    }
+    
+    public void removeAll(){
+        this.contient.clear();
+        this.noeuds.clear();
+        this.barres.clear();
+        this.triangles.clear();
+    }
+    
+    public ArrayList<Triangle> getTriangles(){
+        for(Forme T : contient) {
+            if(T instanceof Triangle t){
+                triangles.add(t);
+        }
+        }
+        return triangles;
     }
     
     
@@ -292,12 +333,12 @@ public class Treillis extends Forme{
         }
     }
     
-    @Override
+    /*@Override
     public void dessinProche(GraphicsContext context) {
         for (Forme f : this.contient) {
             f.dessinProche(context);
         }  
-    }
+    }*/
     
     
     @Override

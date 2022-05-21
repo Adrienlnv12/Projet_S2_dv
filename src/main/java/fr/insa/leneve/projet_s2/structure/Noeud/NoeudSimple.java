@@ -6,7 +6,6 @@ package fr.insa.leneve.projet_s2.structure.Noeud;
 
 import fr.insa.leneve.projet_s2.Numeroteur;
 import fr.insa.leneve.projet_s2.calcul.Maths;
-import fr.insa.leneve.projet_s2.structure.Terrain.Terrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
@@ -57,9 +56,9 @@ public class NoeudSimple extends Noeud{
         return creable;
     }
     
-    public static boolean TriangleestCreable(Terrain terrain, double px, double py){//si un point se creer dans un triangle il dit que c'est pas bon
+    public static boolean TriangleestCreable(Treillis treillis,double px, double py){//si un point se creer dans un triangle il dit que c'est pas bon
         boolean creable = true;
-        for (Triangle triangle : terrain.getTriangles()) {
+        for (Triangle triangle : treillis.getTriangles()) {
             if (triangle.contain(px, py)) creable = false;
         }
         return creable;
@@ -83,11 +82,11 @@ public class NoeudSimple extends Noeud{
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
     
-    @Override
+    /*@Override
     public void dessinProche(GraphicsContext context) {
         context.setFill(Color.BLUE);
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-    }
+    }*/
 
     @Override
     public ArrayList<String> getInfos(){

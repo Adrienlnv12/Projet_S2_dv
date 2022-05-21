@@ -93,7 +93,7 @@ public class DessinCanvas extends Pane {
                 f.dessineSelection(context);
             }
         }  
-        //dessin des noeuds et barres selectionné + des infos associées
+       /* //dessin des noeuds et barres selectionné + des infos associées
         if(this.main.getControleur().isInMultSelect()){
             ArrayList<Forme> multipleSelectec = this.main.getControleur().getMultipleSelect();
             int nbNoeud = 0;
@@ -106,32 +106,7 @@ public class DessinCanvas extends Pane {
                 else if(f instanceof NoeudAppuiDouble) nbAppuiDouble ++;
                 else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
             }
-            this.main.getControleur().drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
+            this.main.getControleur().drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);*/
         }
-/*
-        //dessin de la zone de selection avec clic droit aire que l'on veut séléctionner
-        if (isDrag()) {
-            double mouseX = getMouseX(), mouseY = getMouseY();
-            double dragmouseX = getDragMouseX(), dragmouseY = getDragMouseY();
-            context.setFill(Color.BLUE);
-            context.setStroke(Color.DARKBLUE);
-            context.setGlobalAlpha(0.5);
-            context.fillRect(
-                    Math.min(mouseX, dragmouseX),
-                    Math.min(mouseY, dragmouseY),
-                    Math.abs(dragmouseX - mouseX),
-                    Math.abs(dragmouseY - mouseY));
-            context.strokeRect(
-                    Math.min(mouseX, dragmouseX),
-                    Math.min(mouseY, dragmouseY),
-                    Math.abs(dragmouseX - mouseX),
-                    Math.abs(dragmouseY - mouseY));
-        }else if(boutonSelect == 0 || boutonSelect == 20 || boutonSelect == 40){
-         dessinProche();
-         this.vue.redrawAll();
-        }
-        context.setGlobalAlpha(1);*/
+
     }
-    
-     
-}

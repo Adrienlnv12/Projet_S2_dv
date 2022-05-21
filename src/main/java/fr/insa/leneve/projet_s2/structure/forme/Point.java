@@ -84,11 +84,11 @@ public class Point extends Forme{
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
     
-    @Override
+    /*@Override
     public void dessinProche(GraphicsContext context) {
         context.setFill(Color.BLUE);
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-    }
+    }*/
     
     
     

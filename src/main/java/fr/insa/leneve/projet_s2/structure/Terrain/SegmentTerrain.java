@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 
 public class SegmentTerrain extends Segment {
 
+    private final ArrayList<Forme> temps = new ArrayList<>();
     private final ArrayList<Triangle> triangles = new ArrayList<>();
     private final double angle;
 
@@ -41,7 +42,7 @@ public class SegmentTerrain extends Segment {
     public PointTerrain getDebut() {
         return (PointTerrain) super.getDebut();
     }
-
+    
     @Override
     public PointTerrain getFin() {
         return (PointTerrain) super.getFin();
@@ -59,7 +60,7 @@ public class SegmentTerrain extends Segment {
     public boolean contain(double x, double y, int tolerance){
         Point p = new Point(x, y);
 
-        return distanceTo(p) < tolerance && distanceTo(p) != -1;
+        return distancePoint(p) < tolerance && distancePoint(p) != -1;
     }
 
     @Override
@@ -68,14 +69,44 @@ public class SegmentTerrain extends Segment {
         infos.add("triangles : " + triangles.size());
         return infos;
     }
-
-    public double distanceTo(Point p){
-        Point p2 = Maths.rotation(debut, p, angle);
-
-        if(Maths.distancePoint(getCenter(), p) > length() / 2){
-            return -1;
+    
+    @Override
+    public String toString() {
+        return "[" + this.debut + "," + this.fin + ']';
+    }
+    
+    public void removeS(SegmentTerrain t){
+        for (Triangle triangle : (t.getTriangles())) {
+            temps.add(triangle);
         }
-        return Math.sqrt(Math.pow(Maths.distancePoint(debut, p), 2) - Math.pow(p2.getPx() - debut.getPx(), 2));
+        for (Forme f : temps) {
+            if(f instanceof Triangle){
+                triangles.remove(f);
+            }
+        }
+        temps.clear();
+    }
+    
+    
+    @Override
+    public double distancePoint(Point p) {
+        double x1 = this.debut.getPx();
+        double y1 = this.debut.getPy();
+        double x2 = this.fin.getPx();
+        double y2 = this.fin.getPy();
+        double x3 = p.getPx();
+        double y3 = p.getPy();
+        double up = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1))
+                / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        if (up < 0) {
+            return this.debut.distancePoint(p);
+        } else if (up > 1) {
+            return this.fin.distancePoint(p);
+        } else {
+            Point p4 = new Point(x1 + up * (x2 - x1),
+                    y1 + up * (y2 - y1));
+            return p4.distancePoint(p);
+        }
     }
 
     public boolean asOneTriangle() {

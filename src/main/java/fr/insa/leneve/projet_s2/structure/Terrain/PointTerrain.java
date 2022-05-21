@@ -16,6 +16,7 @@ public class PointTerrain extends Point {
 
     private final ArrayList<SegmentTerrain> segments = new ArrayList<>();
     private final ArrayList<Triangle> triangles = new ArrayList<>();
+    private final ArrayList<Forme> temps = new ArrayList<>();
     
 
     public PointTerrain(Point p) {
@@ -42,6 +43,11 @@ public class PointTerrain extends Point {
             context.fillOval(this.px-RAYON_IN_DRAW- offset, this.py-RAYON_IN_DRAW- offset, size, size);
         }
     }
+    
+    
+    public String toString() {
+        return "(" + px + "," + py + ')';
+    }
 
     public boolean asTriangle(){
         return !triangles.isEmpty();
@@ -64,7 +70,24 @@ public class PointTerrain extends Point {
     public ArrayList<Triangle> getTriangles() {
         return triangles;
     }
-
+    
+     public void removeP(PointTerrain t){
+        for (SegmentTerrain segment : (t.getSegments())) {
+            temps.add(segment);
+        }
+        for (Triangle triangle : (t.getTriangles())) {
+            temps.add(triangle);
+        }
+        for (Forme f : temps) {
+            if(f instanceof Triangle){
+                triangles.remove(f);
+            }
+            if(f instanceof SegmentTerrain){
+                segments.remove(f);
+            }
+        }
+        temps.clear();
+    }
     
 
 

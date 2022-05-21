@@ -48,7 +48,7 @@ public abstract class Forme{
     public abstract ArrayList<String> getInfos();
     
     public abstract void dessine(GraphicsContext context);
-    public abstract void dessinProche(GraphicsContext context);
+    //public abstract void dessinProche(GraphicsContext context);
     public abstract void dessineSelection(GraphicsContext context);
     
     public void setSelected(boolean selected) {
