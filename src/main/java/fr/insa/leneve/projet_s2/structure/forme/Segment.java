@@ -55,7 +55,7 @@ public class Segment extends Forme {
         infos.addAll(debut.getInfos());
         infos.add("Deuxieme extrémité : ");
         infos.addAll(fin.getInfos());
-        /*infos.add("Longueur : " + lengthInfo());*/
+        infos.add("Longueur : " + lengthInfo());
 
         return infos;
 

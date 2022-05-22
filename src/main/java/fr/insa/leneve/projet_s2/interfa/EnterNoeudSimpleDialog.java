@@ -51,11 +51,10 @@ public class EnterNoeudSimpleDialog extends Dialog<NoeudSimple> {
      *
      */
     public EnterNoeudSimpleDialog() {
-        this.setTitle("entrez les coordonnées du Point :");
+        this.setTitle("Entrez les coordonnées du Noeud:");
         this.setResizable(true);
         Label lPx = new Label("px :");
         Label lPy = new Label("py :");
-        Label lC = new Label("couleur :");
         this.tfPx = new TextField("0.0");
         this.tfPy = new TextField("0.0");
         
@@ -64,7 +63,6 @@ public class EnterNoeudSimpleDialog extends Dialog<NoeudSimple> {
         grid.add(this.tfPx, 1, 0);
         grid.add(lPy, 0, 1);
         grid.add(this.tfPy, 1, 1);
-        grid.add(lC, 0, 2);
         this.getDialogPane().setContent(grid);
 
         ButtonType bOK = new ButtonType("OK", ButtonData.OK_DONE);

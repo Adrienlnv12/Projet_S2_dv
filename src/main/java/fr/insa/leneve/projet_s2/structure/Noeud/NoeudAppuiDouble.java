@@ -8,6 +8,8 @@ import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import static fr.insa.leneve.projet_s2.structure.forme.Point.RAYON_IN_DRAW;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -23,7 +25,15 @@ public class NoeudAppuiDouble extends NoeudAppui {
         super(associatedTriangle, segmentTerrain, posSegment, id);
         //this.image = new Image("projet_s2/interfa/imageinfo/NoeudAppuiDouble.png", 28, 19, true, true);
     }
-
+    
+    @Override
+    public ArrayList<String> getInfos(){
+       ArrayList<String> output = super.getInfos();
+       output.add(0,"  Noeud Appui Double :  ");
+       
+       return output;
+    }
+    
     @Override
     public String saveString() {
         return "AppuiDouble;" + super.saveString();

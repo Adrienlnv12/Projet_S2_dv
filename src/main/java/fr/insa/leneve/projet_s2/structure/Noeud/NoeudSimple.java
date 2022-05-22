@@ -90,12 +90,11 @@ public class NoeudSimple extends Noeud{
 
     @Override
     public ArrayList<String> getInfos(){
-        String[] str = new String[]{"posX : " + px ,
-                "posY : " + py,
-                "selected : " + selected
+        String[] str = new String[]{ "  posX :  " + px+"  " ,
+                "  posY : " + py+"  ",
         };
         ArrayList<String> output = new ArrayList<>(Arrays.asList(str));
-
+        output.add(0,"  Noeud Simple :  ");
         if(forceApplique != null){
             output.add("Forces :");
             output.addAll(forceApplique.getInfos());

@@ -12,6 +12,7 @@ import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.*;
 import fr.insa.leneve.projet_s2.structure.forme.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class Controleur {
     private String path;
     private boolean NoeudBoutton;
     private PointTerrain pointTT;
-    private Forme nearest, currentSelect;
+    private Forme nearest;
     private double x;
     private final MainPanel vue;
     private int boutonSelect = 0;
@@ -48,8 +49,7 @@ public class Controleur {
     private int currentClick = 0;
     private Point firstSegmentPoint = null, secondSegmentPoint = null;
 
-
-    private boolean inDrawing = true;
+    public boolean inMultSelect = false;
 
     private FenetreInfo fenetreinfo;
 
@@ -65,22 +65,20 @@ public class Controleur {
         this.fenetreinfo = new FenetreInfo(this.vue);
     }
     
-    
-    
     private void realSave(File f) {
         try {
-            //this.vue.getModel().sauvegarde(f);
+            Treillis.saveTreillis(this.vue.getModel(),f);
             this.vue.setCurFile(f);
             this.vue.getInStage().setTitle(f.getName());
-        }/* catch (IOException ex) {
+        }catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Problème durant la sauvegarde");
             alert.setContentText(ex.getLocalizedMessage());
 
             alert.showAndWait();
-        }*/ finally {
-            //this.changeEtat(20);
+        } finally {
+            this.boutonSelect=0;
         }
     }
 
@@ -105,14 +103,14 @@ public class Controleur {
         File f = chooser.showOpenDialog(this.vue.getInStage());
         if (f != null) {
             try {
-               /*Forme lue = Forme.lecture(f);
+                Forme lue = null;//Forme.lecture(f);
                 Treillis glu = (Treillis) lue;
                 Stage nouveau = new Stage();
                 nouveau.setTitle(f.getName());
                 Scene sc = new Scene(new MainPanel(nouveau, f, glu), 800, 600);
                 nouveau.setScene(sc);
                 nouveau.show();
-            } catch (IOException ex) {
+            /*} catch (IOException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erreur");
                 alert.setHeaderText("Problème durant la sauvegarde");
@@ -120,7 +118,7 @@ public class Controleur {
 
                 alert.showAndWait();*/
             } finally {
-                //this.changeEtat(20);
+                this.boutonSelect=0;
             }
         }
     }
@@ -173,22 +171,23 @@ public class Controleur {
         }
 
         System.out.println(2 * ns + " " + nb + nas + 2 * nad);
-        if(2 * ns != nb + nas + 2 * nad) {
+        String textError = "";
+        if (2 * ns < nb + nas + 2 * nad) {
+                textError = "Le treillis n'est pas isostatique!";
+            if (2 * ns < nb + nas + 2 * nad) {
+                if(textError.length() > 0) textError += " et ";
+                textError += "il est hyperstatique!";
+            }
             Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
             alerteHyperstatique.setTitle("Erreur calcul");
-            alerteHyperstatique.setContentText("Le treillis n'est pas isostatique!");
+            alerteHyperstatique.setContentText(textError);
             alerteHyperstatique.showAndWait();
-            inDrawing = true;
-            throw new Error("treillis hyperstatique");
         }
         Matrice systeme = fillMatrice(formeId, id);
-        System.out.println(systeme);
+        System.out.println("12a"+ systeme);
 
         Matrice res = systeme.resolution();
-        System.out.println(systeme.resolution());
-        System.out.println(res+" bonjour");
         if(res == null) {
-            inDrawing = true;
             throw new Error("Matrice non inversible");
         }
         res = res.subCol(systeme.getNbrCol() - 1, systeme.getNbrCol() - 1);
@@ -202,27 +201,13 @@ public class Controleur {
                 formesRes.put(value, new double[]{res.get(value, 0)});
             }
         }
-        System.out.println(formesRes);
-
-        //writeCalculInfo(formeId, formesRes);
+        writeCalculInfo(formeId, formesRes);
+        
     }
 
     public Matrice fillMatrice(HashMap<Forme, Integer> formeToId, int lastId){
-
-        /*
-        double[][] coeffs = {
-                {0.707, 0, 0, 1, 0, 0},
-                {-0.707, 0, -1, 0, 1, 0},
-                {0, 0.707, 0, 0, 0, 1},
-                {0, 0.707, 1, 0, 0, 0},
-                {-0.707, -0.707, 0, 0, 0, 0},
-                {0.707, -0.707, 0, 0, 0, 0}
-        };
-
-        Matrice systeme = new Matrice(6, 6, coeffs);
-        double[] vecResult = {0, 0, 0, 0, 0, 1000};
-        */
-        int size = this.vue.getModel().getNoeuds().size() * 2;
+        
+        int size = this.vue.getModel().getNoeuds().size()* 2; //*2 car on a x et y
         Matrice systeme = new Matrice(size, lastId);
         double[] vecResult = new double[size];
 
@@ -230,7 +215,7 @@ public class Controleur {
         for (int i = 0; i < this.vue.getModel().getNoeuds().size() * 2; i += 2) {
             Noeud noeud = this.vue.getModel().getNoeuds().get(i/2);
             System.out.println(noeud);
-            //ajout des valeurs liÃ©es aux barres
+            //ajout des valeurs liées aux barres
             for (Barre barre : noeud.getLinkedBarres()) {
                 int col = formeToId.get(barre);
                 double angle;
@@ -239,29 +224,34 @@ public class Controleur {
                 }else if(noeud == barre.getFin()){
                     angle = Maths.angle(noeud, barre.getDebut());
                 }else{
-                    angle = 0;
+                    angle = 0;//cos(90) xnoeud=xbarre
                     System.err.println("euuuuh");
                 }
                 systeme.set(i, col, Math.cos(angle));
-                System.out.println(systeme);
                 systeme.set(i + 1, col, Math.sin(angle));
-                System.out.println(systeme);
+                System.out.println("Noeud barre"+systeme);
             }
             //ajout des forces
             vecResult[i] = - noeud.getForceApplique().getfX();
             vecResult[i + 1] = - noeud.getForceApplique().getfY();
 
 
-            if(noeud instanceof NoeudAppuiSimple){
-                int col = formeToId.get(noeud);
-                double angle = Maths.angle(((NoeudAppuiSimple) noeud).getSegmentTerrain().getDebut(), ((NoeudAppuiSimple) noeud).getSegmentTerrain().getFin());
-                systeme.set(i, col, Math.cos(Math.PI /2 + angle));
+            if(noeud instanceof NoeudAppuiSimple noeudAppuiSimple){
+                int col = formeToId.get(noeudAppuiSimple);
+                double angle=0;
+                if(noeudAppuiSimple.getSegmentTerrain().getDebut().getPy()!=noeudAppuiSimple.getSegmentTerrain().getFin().getPy()){
+                    angle = Maths.angle(noeudAppuiSimple.getSegmentTerrain().getDebut(), noeudAppuiSimple.getSegmentTerrain().getFin());
+                }
+                System.out.println("angle de la normale"+angle);
+                systeme.set(i, col, Math.cos((Math.PI /2) + angle));
                 systeme.set(i + 1, col, Math.sin(angle));
+                System.out.println("Noeud D'appui simple"+systeme);
 
             }else if(noeud instanceof NoeudAppuiDouble){
                 int col = formeToId.get(noeud);
                 systeme.set(i, col, 1);
                 systeme.set(i + 1, col + 1, 1);
+                System.out.println("Noeud D'appui double"+systeme);
             }
 
         }
@@ -274,9 +264,7 @@ public class Controleur {
             Point pclic = this.posInModel(t.getX(), t.getY());
             if((boutonSelect/10) % 2 == 0){
                 selection(boutonSelect/10,pclic);
-            }
-            
-            
+            }     
     }
     
     public void selection(int selectedButton,Point pclic){
@@ -323,15 +311,11 @@ public class Controleur {
             case 0:
                 {
                     setSelected(t); 
-                    this.vue.redrawAll();   
-                            
+                    this.vue.redrawAll();                
                     break;
-                
                 }
             case 1:
-                {
-                        
-                
+                {         
                 //appele la bonne fonction d'ajout du noeud selon le type choisi    
                     switch (boutonSelect) {
                         case 10 ->                         {
@@ -408,9 +392,15 @@ public class Controleur {
         }
     }
     
+    public void boutonresolution(ActionEvent t) {
+        calculs();
+    }
+    
     public void boutonSupprimer(ActionEvent t) {
         if (boutonSelect == 0 && !this.selection.isEmpty()) {
             this.vue.getModel().remove(this.selection);
+            this.vue.getInfo().removeInfos();
+            inMultSelect=false;
             this.selection.clear();
             this.vue.redrawAll();
         }
@@ -418,7 +408,9 @@ public class Controleur {
     
     public void boutonToutSupprimer(ActionEvent t) {
             this.vue.getModel().removeAll();
+            inMultSelect=false;
             this.selection.clear();
+            this.vue.getInfo().removeInfos();
             this.vue.redrawAll();
         
     }
@@ -437,8 +429,8 @@ public class Controleur {
                     }    
                     // il faut tout de même prévoir le cas ou le groupe est vide
                     // donc pas de plus proche
-                    //fenetreinfo.dessineInfos(proche);
                     if (proche != null) {
+                    this.vue.getInfo().dessineInfos(proche);
                         if (t.isShiftDown()) {
                             this.selection.add(proche);
                         }else if (t.isControlDown()) {
@@ -452,10 +444,17 @@ public class Controleur {
                             this.selection.clear();
                             this.selection.add(proche);
                         }
-                    }
-                    if(proche == null){
+                    }else{
                         this.selection.clear();
+                        this.vue.getInfo().removeInfos();
+                        
                     }
+                        
+                    if(this.selection.size()>1){
+                        inMultSelect=true;
+                    }
+                    
+                       
     }
     
     private NoeudSimple addNoeudSimple(MouseEvent t) {
@@ -620,10 +619,10 @@ public class Controleur {
     }
     
 
-    /*//ecrit les infos lié au calcul
+    //ecrit les infos lié au calcul
     public void writeCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
-        mainpanel.getInfo().dessineCalculInfo(formeId, idValues);
-    }*/
+        this.vue.getInfo().dessineCalculInfo(formeId, idValues);
+    }
 
     //fonction de creation des points composant un triangle
     public PointTerrain addPointTrn(MouseEvent t) {
@@ -667,28 +666,10 @@ public class Controleur {
         this.vue.setZoneModelVue(this.vue.getZoneModelVue().translateBas(0.8));
         this.vue.redrawAll();
    }
-    
-    //retire le point selectionné
-    public void removeSelected() {
-        if (currentSelect != null) {
-            currentSelect.setSelected(false);
-        }
-        //mainpanel.getInfo().removeInfos();
-        currentSelect = null;
-    }
 
     public void removeInfos()
     {
         fenetreinfo.removeInfos();
-    }
-
-    public void drawInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
-        fenetreinfo.dessineInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
-        this.vue.redrawAll();
-    }
-
-    public void drawInfos(Forme nearest){
-        fenetreinfo.dessineInfos(nearest);
     }
     
 
@@ -723,7 +704,11 @@ public class Controleur {
             this.vue.redrawAll();
         }
     }
-       
+    
+    public boolean isInMultSelect() {
+        return inMultSelect;
+    }
+    
     public Forme getNearest(){
         return nearest;
     }
@@ -750,11 +735,7 @@ public class Controleur {
 
     public Point getSecondSegmentPoint() {
         return secondSegmentPoint;
-    }
-
-    public boolean isInDrawing() {
-        return inDrawing;
-    }
+    } 
 
     public double getEchelle() {
         return echelle;
@@ -766,10 +747,6 @@ public class Controleur {
 
     public HashMap<Forme, Integer> getFormeId() {
         return formeId;
-    }
-
-    public void setInDrawing(boolean inDrawing){
-        this.inDrawing = inDrawing;
     }
 
     }

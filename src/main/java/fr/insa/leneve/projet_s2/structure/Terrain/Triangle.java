@@ -53,17 +53,14 @@ public class Triangle extends Forme {
             if(segments.contains(s)){
                 j=j+1;
             }
-         System.out.println("s: "+j);
         }
 
         for (PointTerrain point : points) {
-            System.out.println(point.toString());
             point.addTriangle(this);
             point.setSelected(false);
         }
 
         for (SegmentTerrain segment : segments) {
-            System.out.println(segment.toString());
             segment.addTriangle(this);
         }
 
@@ -98,6 +95,7 @@ public class Triangle extends Forme {
     @Override
     public ArrayList<String> getInfos() {
         ArrayList<String> infos = new ArrayList<>();
+        infos.add("Terrain :");
         infos.add("premier sommet : ");
         infos.addAll(points.get(0).getInfos());
         infos.add("second sommet : ");
@@ -110,7 +108,7 @@ public class Triangle extends Forme {
 
     public String saveString() {
         StringBuilder save = new StringBuilder("Triangle;" + id); 
-            save.append(";(").append(points.get(0).getPx()).append(",").append(points.get(0).getPy()).append(")").append(";(").append(points.get(1).getPx());
+            save.append(";(").append(points.get(0).getPx()).append(",").append(points.get(0).getPy()).append(")").append(";(").append(points.get(1).getPx()).append(")");
         return save.toString();
     }
 
@@ -237,7 +235,6 @@ public class Triangle extends Forme {
         } else if (up1 > 1) {
             return this.points.get(0).distancePoint(p);
         } else {
-            System.out.println("bonjour");
             Point p4 = new Point(x1 + up1 * (x2 - x1),
                     y1 + up1 * (y2 - y1));
             return p4.distancePoint(p);
@@ -249,7 +246,6 @@ public class Triangle extends Forme {
         } else if (up2 > 1) {
             return this.points.get(2).distancePoint(p);
         } else {
-            System.out.println("bonjour1");
             Point p4 = new Point(x2 + up2 * (x3 - x2),
                     y2 + up2 * (y3 - y2));
             return p4.distancePoint(p);
@@ -261,7 +257,6 @@ public class Triangle extends Forme {
         } else if (up3 > 1) {
             return this.points.get(0).distancePoint(p);
         } else {
-            System.out.println("bonjour2");
             Point p4 = new Point(x3 + up3 * (x1 - x3),
                     y3 + up3 * (y1 - y3));
             return p4.distancePoint(p);

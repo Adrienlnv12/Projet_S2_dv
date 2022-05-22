@@ -12,6 +12,8 @@ import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
@@ -86,6 +88,20 @@ public class NoeudAppui extends Noeud {
         return id + ";" + associatedTriangle.getId() + ";" + segmentNbr + ";" + posSegment;
     }
     
+    @Override
+    public ArrayList<String> getInfos(){ 
+        String[] str = new String[]{"  posX : " + px+"  " ,
+                "  posY : " + py+"  ",
+        };
+        ArrayList<String> output = new ArrayList<>(Arrays.asList(str));
+
+        if(forceApplique != null){
+            output.add("Forces :");
+            output.addAll(forceApplique.getInfos());
+        }
+
+        return output;
+    }
 
     //dessine l'image corrrespondante Ã  l'appui avec rotation
     @Override

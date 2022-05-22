@@ -27,9 +27,11 @@ public class DessinCanvas extends Pane {
     private MainPanel main;
     private final Canvas realCanvas;
     private final RectangleHV asRect;
+    private FenetreInfo fenetreinfo;
     
     public DessinCanvas(MainPanel main){
         this.main = main;
+        fenetreinfo=main.getInfo();
         this.realCanvas = new Canvas(this.getWidth(), this.getHeight());
         this.asRect = new RectangleHV(0, 0, this.getWidth(), this.getHeight());
         this.getChildren().add(this.realCanvas);
@@ -83,10 +85,12 @@ public class DessinCanvas extends Pane {
         context.clearRect(0, 0, this.realCanvas.getWidth(), this.realCanvas.getHeight());
         //dessinne de l'echelle
         context.setStroke(Color.BLACK);
-        context.setLineWidth(5);
+        context.setLineWidth(2);
         context.setFill(Color.BLACK);
-        context.fillText("1 m", this.realCanvas.getWidth() - 30 - 50 / 2, this.realCanvas.getHeight() - 5);
-        context.strokeLine(this.realCanvas.getWidth() - 20 - 50, this.realCanvas.getHeight() - 20, this.realCanvas.getWidth() - 20, this.realCanvas.getHeight() - 20);
+        context.fillText("y", 18, this.realCanvas.getHeight() - 55);
+        context.fillText("x", 55, this.realCanvas.getHeight() - 17);
+        context.strokeLine(20,this.realCanvas.getHeight()-50,20,this.realCanvas.getHeight()-20);
+        context.strokeLine(20+30,this.realCanvas.getHeight()-20,20,this.realCanvas.getHeight()-20);
         this.asRect.setxMax(this.realCanvas.getWidth());
         this.asRect.setyMax(this.realCanvas.getHeight());
         Transform curTrans = this.main.getZoneModelVue().fitTransform(this.asRect);
@@ -104,7 +108,39 @@ public class DessinCanvas extends Pane {
         //dessin des noeud et des barres
         if (nearest!= null) {
                 nearest.dessinProche(context);
+            } 
+        
+        //dessin des noeuds et barres selectionné + des infos associées
+        if(this.main.getControleur().getSelection().size()>1){
+        if(this.main.getControleur().isInMultSelect()){
+            ArrayList<Forme> multipleSelect = this.main.getControleur().getSelection();
+            int nbNoeud = 0;
+            int nbAppuiSimple = 0;
+            int nbAppuiDouble = 0;
+            int nbBarre = 0;
+            for (Forme f: multipleSelect) {
+                if(f instanceof NoeudSimple) nbNoeud ++;
+                else if(f instanceof Barre) nbBarre ++;
+                else if(f instanceof NoeudAppuiDouble) nbAppuiDouble ++;
+                else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
             }
-        } 
-
+            dessineInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
+        }else{
+            removeInfos();
+        }
+        }
+     }
+    public void removeInfos()
+    {
+        fenetreinfo.removeInfos();
     }
+
+    public void dessineInfosMultiplePoint(int nbNoeud,int nbAppuiDouble, int nbAppuiSimple,int nbBarre) {
+        fenetreinfo.dessineInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
+    }
+
+    public void dessineInfos(Forme nearest){
+        fenetreinfo.dessineInfos(nearest);
+    }
+      
+}

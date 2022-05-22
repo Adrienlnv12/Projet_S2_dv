@@ -54,8 +54,8 @@ public final class BoutonGauche extends VBox {
     private Button bToutSupprimer;
     private Button bSupprimer;
     private Button bCreeNoeudDialog;
+    private Button bRes;
     
-    private DessinCanvas cDessin;
     private RectangleHV zoneModelVue;
     
     private final Controleur controleur;
@@ -76,6 +76,7 @@ public final class BoutonGauche extends VBox {
         initSelect();
         choixNoeud = new Button("Choix du Noeud");
         choixNoeud.setOnAction(a -> {selectNoeud();});
+        initRes();
         initNoeud();
         initBarre();
         initTriangleTrn();
@@ -103,17 +104,24 @@ public final class BoutonGauche extends VBox {
         VBox vbZoom = new VBox(hbZoom,gpTrans);
         vbZoom.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        this.getChildren().addAll(rbSelect,RbNoeud,choixNoeud,this.bCreeNoeudDialog, addForceBtn, RbBarre, RbTriangleTerrain,bSupprimer,bToutSupprimer,vbZoom);
+        this.getChildren().addAll(rbSelect,RbNoeud,choixNoeud,this.bCreeNoeudDialog, addForceBtn, RbBarre, RbTriangleTerrain,bSupprimer,bToutSupprimer,vbZoom,bRes);
         FxUtils.setSimpleBorder(this, Color.BLACK, 2);
     }
+    
 
+            
+    private void initRes(){
+    bRes = new Button("Résoudre le système");
+            bRes.setOnAction((t) -> {
+            this.controleur.boutonresolution(t);
+        });    
+    }
+    
     private void initNoeud() {
         RbNoeud = new RadioButton("Noeud");
         RbNoeud.setToggleGroup(bgEtat);
         RbNoeud.setOnAction(actionEvent -> {
-            System.out.println(NoeudChoisi);
             controleur.boutonSelect(NoeudChoisi);
-            controleur.removeSelected();
         });
     
     }
@@ -226,7 +234,6 @@ public final class BoutonGauche extends VBox {
     }
     
     public void Force(){
-        //if(f instanceof Noeud noeud) {
             addForceBtn = new Button("Ajouter une force");
             addForceBtn.setOnAction((t) -> {
             this.controleur.boutonadForce(t);
@@ -303,7 +310,7 @@ public final class BoutonGauche extends VBox {
     }
       
     private void initCreeNoeudDialog() {  
-        this.bCreeNoeudDialog = new Button("Point par coord");
+        this.bCreeNoeudDialog = new Button("Noeud par coordonnée");
         this.bCreeNoeudDialog.setOnAction((t) -> {
             this.controleur.creePointParDialog();
         });

@@ -109,9 +109,9 @@ public class Point extends Forme{
 
     @Override
     public ArrayList<String> getInfos(){
-        String[] str = new String[]{"posX : " + px ,
-                "posY : " + py,
-                "selected : " + selected
+        String[] str = new String[]{"  posX : " + px + "  ",
+                "  posY : " + py+"  ",
+                
         };
         return new ArrayList<>(Arrays.asList(str));
     }

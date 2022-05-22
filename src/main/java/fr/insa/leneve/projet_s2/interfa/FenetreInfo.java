@@ -25,10 +25,12 @@ public class FenetreInfo extends VBox {
     public FenetreInfo(MainPanel main) {
         super();
         this.main = main;
+        
         this.controleur = main.getControleur();
         this.setAlignment(Pos.CENTER);
         this.setId("infoBox");
         FxUtils.setSimpleBorder(this, Color.BLACK, 2);
+        
     }
 
     //dessine les informations de la forme sélectionné
@@ -39,17 +41,6 @@ public class FenetreInfo extends VBox {
             Label mL = new Label(line);
             this.getChildren().add(mL);
         }
-
-        
-
-        if(f instanceof Noeud noeud) {
-            Button addForceBtn = new Button("Ajouter une force");
-            addForceBtn.setOnAction(actionEvent -> Force.createTypePopUp(noeud));
-            this.getChildren().add(addForceBtn);
-        }
-        
-
-        //this.getChildren().add(deleteBtn);
     }
 
     public void removeInfos() {
@@ -65,18 +56,12 @@ public class FenetreInfo extends VBox {
         Label mLAS = new Label("nombre d'appuis simple : " + nbAppuiSimple);
         Label mLB = new Label("nombre de barres : " + nbBarre);
 
-   
-        Button delete = new Button("Tout supprimer");
-        delete.setOnAction(actionEvent -> {
-            //controleur.deleteAllFormes();
-            removeInfos();
-        });
-        this.getChildren().addAll(mLN, mLAD, mLAS, mLB, delete);
+        this.getChildren().addAll(mLN, mLAD, mLAS, mLB);
 
     }
 
 
-    /*public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
+    public void dessineCalculInfo(HashMap<Forme, Integer> formeId, HashMap<Integer, double[]> idValues){
         removeInfos();
 
 
@@ -95,7 +80,7 @@ public class FenetreInfo extends VBox {
                 this.getChildren().add(ry);
             }
         }
-    }*/
+    }
 
 
 }

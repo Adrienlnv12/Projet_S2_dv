@@ -26,6 +26,7 @@ public class Barre extends Segment {
     @Override
     public ArrayList<String> getInfos() {
         ArrayList<String> infos = super.getInfos();
+        infos.add(0,"  Barre n°"+id);
 
         return infos;
 

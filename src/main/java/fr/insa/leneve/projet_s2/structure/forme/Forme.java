@@ -4,6 +4,9 @@
  */
 package fr.insa.leneve.projet_s2.structure.forme;
 
+import fr.insa.leneve.projet_s2.structure.Barre;
+import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
+import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,17 +68,29 @@ public abstract class Forme{
     public void setId(int id) {
         this.id = id;
     }
-    
-    //public abstract void save(Writer w, Numeroteur<Forme> num) throws IOException;
 
-    /*public void sauvegarde(File fout) throws IOException {
-        Numeroteur<Forme> num = new Numeroteur<Forme>();
+    public static void saveTreillis(Treillis treillis, File fout) throws IOException {
         try (BufferedWriter bout = new BufferedWriter(new FileWriter(fout))) {
-            this.save(bout, num);
+
+            for (Triangle triangle: treillis.getTriangles()) {
+                bout.append(triangle.saveString()).append("\n");
+            }
+            bout.append("FINTRIANGLES\n");
+
+
+            for (Noeud noeud: treillis.getNoeuds()) {
+                bout.append(noeud.saveString()).append("\n");
+            }
+            bout.append("FINNOEUDS\n");
+
+            for (Barre barre: treillis.getBarres()) {
+                bout.append(barre.saveString()).append("\n");
+            }
+            bout.append("FINBARRES\n");
         }
     }
 
-    public static Treillis lecture(File fin) throws IOException {
+    /*public static Treillis lecture(File fin) throws IOException {
         Numeroteur<Forme> num = new Numeroteur<>();
         Forme derniere = null;
         try (BufferedReader bin = new BufferedReader(new FileReader(fin))) {

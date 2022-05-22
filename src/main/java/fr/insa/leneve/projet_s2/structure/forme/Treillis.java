@@ -3,22 +3,20 @@ package fr.insa.leneve.projet_s2.structure.forme;
 
 
 import fr.insa.leneve.projet_s2.Numerateur;
-import fr.insa.leneve.projet_s2.interfa.MainPanel;
+
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
-
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
-import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 
 public class Treillis extends Forme{
-    private ArrayList<Forme> temp,temp1;
-    private ArrayList<Triangle> triangles;
+    private final ArrayList<Forme> temp;
+    private final ArrayList<Forme> temp1;
+    private final ArrayList<Triangle> triangles;
     private final ArrayList<Forme> contient;
     private final ArrayList<Noeud> noeuds;
     private final ArrayList<Barre> barres;
