@@ -13,8 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BNFReader extends BufferedReader {
-
+/*public class BNFReader extends BufferedReader {
+/*
     private final HashMap<Integer, Noeud> noeuds = new HashMap<>();
     private final ArrayList<Barre> barres = new ArrayList<>();
     private Numerateur numerateur;
@@ -115,4 +115,4 @@ public class BNFReader extends BufferedReader {
         return new Treillis(new ArrayList<>(noeuds.values()), barres, numerateur);
     }
 
-}
+}*/

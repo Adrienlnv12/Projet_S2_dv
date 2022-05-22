@@ -5,11 +5,11 @@
 package fr.insa.leneve.projet_s2.interfa;
 
 import fr.insa.leneve.projet_s2.calcul.Maths;
+import fr.insa.leneve.projet_s2.calcul.Matrice;
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Force;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.*;
-import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import fr.insa.leneve.projet_s2.structure.forme.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -18,12 +18,9 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
@@ -34,21 +31,15 @@ import javafx.stage.Stage;
  * @author adrie
  */
 public class Controleur {
-    private String lastOpen;
-    private MainPanel mainpanel;
     private Stage stage;
     private String name;
     private String path;
     private boolean NoeudBoutton;
     private PointTerrain pointTT;
     private Forme nearest, currentSelect;
-    private double x,X,Y;
-    private double dragMouseX, dragMouseY;
-    private GraphicsContext context;
-    private MainPanel vue;
+    private double x;
+    private final MainPanel vue;
     private int boutonSelect = 0;
-    private final ArrayList<Forme> multipleSelect = new ArrayList<>();
-
     private final ArrayList<Forme> selection;
     
     private final HashMap<Integer, double[]> formesRes = new HashMap<>();
@@ -57,8 +48,6 @@ public class Controleur {
     private int currentClick = 0;
     private Point firstSegmentPoint = null, secondSegmentPoint = null;
 
-
-    private boolean inMultSelect = false, drag = false;
 
     private boolean inDrawing = true;
 
@@ -157,6 +146,177 @@ public class Controleur {
         alert.showAndWait();
     }
     
+    public void calculs(){
+        int id = 0;
+        int ns = this.vue.getModel().getNoeuds().size(), nb = this.vue.getModel().getBarres().size(), nas = 0, nad = 0;
+        //liste les formes et les associes Ã  un identifiant
+        formeId.clear();
+        HashMap<Integer, Forme> idForme = new HashMap<>();
+        for (Barre barre : this.vue.getModel().getBarres()) {
+            formeId.put(barre, id);
+            idForme.put(id, barre);
+            id ++;
+        }
+        for (Noeud noeud : this.vue.getModel().getNoeuds()) {
+            if(noeud instanceof NoeudAppuiSimple){
+                formeId.put(noeud, id);
+                idForme.put(id, noeud);
+                id ++;
+                nas ++;
+            }else if(noeud instanceof NoeudAppuiDouble){
+                formeId.put(noeud, id);
+                idForme.put(id, noeud);
+                id += 2;
+                nad ++;
+            }
+            
+        }
+
+        System.out.println(2 * ns + " " + nb + nas + 2 * nad);
+        if(2 * ns != nb + nas + 2 * nad) {
+            Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
+            alerteHyperstatique.setTitle("Erreur calcul");
+            alerteHyperstatique.setContentText("Le treillis n'est pas isostatique!");
+            alerteHyperstatique.showAndWait();
+            inDrawing = true;
+            throw new Error("treillis hyperstatique");
+        }
+        Matrice systeme = fillMatrice(formeId, id);
+        System.out.println(systeme);
+
+        Matrice res = systeme.resolution();
+        System.out.println(systeme.resolution());
+        System.out.println(res+" bonjour");
+        if(res == null) {
+            inDrawing = true;
+            throw new Error("Matrice non inversible");
+        }
+        res = res.subCol(systeme.getNbrCol() - 1, systeme.getNbrCol() - 1);
+        System.out.println(res);
+
+        formesRes.clear();
+        for (int value : formeId.values()) {
+            if(idForme.get(value) instanceof NoeudAppuiDouble){
+                formesRes.put(value, new double[]{res.get(value, 0), res.get(value + 1, 0)});
+            }else{
+                formesRes.put(value, new double[]{res.get(value, 0)});
+            }
+        }
+        System.out.println(formesRes);
+
+        //writeCalculInfo(formeId, formesRes);
+    }
+
+    public Matrice fillMatrice(HashMap<Forme, Integer> formeToId, int lastId){
+
+        /*
+        double[][] coeffs = {
+                {0.707, 0, 0, 1, 0, 0},
+                {-0.707, 0, -1, 0, 1, 0},
+                {0, 0.707, 0, 0, 0, 1},
+                {0, 0.707, 1, 0, 0, 0},
+                {-0.707, -0.707, 0, 0, 0, 0},
+                {0.707, -0.707, 0, 0, 0, 0}
+        };
+
+        Matrice systeme = new Matrice(6, 6, coeffs);
+        double[] vecResult = {0, 0, 0, 0, 0, 1000};
+        */
+        int size = this.vue.getModel().getNoeuds().size() * 2;
+        Matrice systeme = new Matrice(size, lastId);
+        double[] vecResult = new double[size];
+
+        //rempli la matrice
+        for (int i = 0; i < this.vue.getModel().getNoeuds().size() * 2; i += 2) {
+            Noeud noeud = this.vue.getModel().getNoeuds().get(i/2);
+            System.out.println(noeud);
+            //ajout des valeurs liÃ©es aux barres
+            for (Barre barre : noeud.getLinkedBarres()) {
+                int col = formeToId.get(barre);
+                double angle;
+                if(noeud == barre.getDebut()){
+                    angle = Maths.angle(noeud, barre.getFin());
+                }else if(noeud == barre.getFin()){
+                    angle = Maths.angle(noeud, barre.getDebut());
+                }else{
+                    angle = 0;
+                    System.err.println("euuuuh");
+                }
+                systeme.set(i, col, Math.cos(angle));
+                System.out.println(systeme);
+                systeme.set(i + 1, col, Math.sin(angle));
+                System.out.println(systeme);
+            }
+            //ajout des forces
+            vecResult[i] = - noeud.getForceApplique().getfX();
+            vecResult[i + 1] = - noeud.getForceApplique().getfY();
+
+
+            if(noeud instanceof NoeudAppuiSimple){
+                int col = formeToId.get(noeud);
+                double angle = Maths.angle(((NoeudAppuiSimple) noeud).getSegmentTerrain().getDebut(), ((NoeudAppuiSimple) noeud).getSegmentTerrain().getFin());
+                systeme.set(i, col, Math.cos(Math.PI /2 + angle));
+                systeme.set(i + 1, col, Math.sin(angle));
+
+            }else if(noeud instanceof NoeudAppuiDouble){
+                int col = formeToId.get(noeud);
+                systeme.set(i, col, 1);
+                systeme.set(i + 1, col + 1, 1);
+            }
+
+        }
+
+        System.out.println(formeToId);
+        return Matrice.concatCol(systeme, Matrice.creeVecteur(vecResult));
+    }
+    
+    public void MoveDansZoneDessin(MouseEvent t) {
+            Point pclic = this.posInModel(t.getX(), t.getY());
+            if((boutonSelect/10) % 2 == 0){
+                selection(boutonSelect/10,pclic);
+            }
+            
+            
+    }
+    
+    public void selection(int selectedButton,Point pclic){
+        //ajoute les formes dans la selection
+
+        ArrayList<Forme> formes = new ArrayList<>();
+
+        formes.addAll(this.vue.getModel().getContient());
+
+        double bestDist = 4;
+
+        for (Forme f: formes) {
+            Point p;
+            if(f instanceof Noeud && (selectedButton == 2 || selectedButton == 0)) {
+                p = (Point) f;
+            }else if(selectedButton == 0){
+                if(f instanceof Segment){
+                    p = ((Segment) f).getCenter();
+                }else if(f instanceof Triangle){
+                    p = ((Triangle) f).getCenter();
+                }else {
+                    return;
+                }
+            }else{
+                continue;
+            }
+
+            //trouve la forme le plus proche de la souris
+            
+            double dist = Maths.distancePoint(p, pclic);
+            if(dist < bestDist){
+                nearest = f;
+                bestDist = dist;
+            }
+            if(bestDist == 4) {
+                nearest = null;
+            }
+        }
+
+    }
     
     public void clicDansZoneDessin(MouseEvent t) {
         switch (boutonSelect/10) {
@@ -170,6 +330,7 @@ public class Controleur {
                 }
             case 1:
                 {
+                        
                 
                 //appele la bonne fonction d'ajout du noeud selon le type choisi    
                     switch (boutonSelect) {
@@ -266,14 +427,17 @@ public class Controleur {
                     // selection
                     Point pclic = this.posInModel(t.getX(), t.getY());
                     // pas de limite de distance entre le clic et l'objet selectionné
-                    Forme proche = this.vue.getModel().plusProche(pclic, 10);
+                    Forme proche = this.vue.getModel().plusProche(pclic, 4);
+                    for (Noeud p : this.vue.getModel().getNoeuds()) {
+                        if (Maths.distancePoint(p, pclic) < 4){
+                            if(p instanceof NoeudAppui np){
+                                proche=np;
+                            }
+                        }   
+                    }    
                     // il faut tout de même prévoir le cas ou le groupe est vide
                     // donc pas de plus proche
                     //fenetreinfo.dessineInfos(proche);
-                    if((proche instanceof Triangle triangle)&&(proche instanceof NoeudAppui noeud)){
-                        
-                        proche= noeud;
-                    }
                     if (proche != null) {
                         if (t.isShiftDown()) {
                             this.selection.add(proche);
@@ -292,19 +456,6 @@ public class Controleur {
                     if(proche == null){
                         this.selection.clear();
                     }
-                    /*if(this.selection.size()>1){
-                    int nbNoeud = 0;
-                    int nbAppuiSimple = 0;
-                    int nbAppuiDouble = 0;
-                    int nbBarre = 0;
-                    for (Forme f: this.selection) {
-                        if(f instanceof NoeudSimple) nbNoeud ++;
-                        else if(f instanceof Barre) nbBarre ++;
-                        else if(f instanceof NoeudAppuiDouble) nbAppuiDouble ++;
-                        else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
-                    }
-                    drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);
-                    }*/
     }
     
     private NoeudSimple addNoeudSimple(MouseEvent t) {
@@ -321,7 +472,6 @@ public class Controleur {
         if(distCreable && triangleCreable) {
 
             NoeudSimple ns = this.vue.getModel().createNoeudSimple(ptrans.getX() ,ptrans.getY());
-            System.out.println(ptrans.getX() + " " +ptrans.getY());
             return ns;
         }
 
@@ -348,22 +498,31 @@ public class Controleur {
     //fonctions d'ajout d'un appui
     public void addAppui(boolean simple, MouseEvent t) {
         testAppui(simple, t);
+        
     }
 
     //test si il est possible de creer un appui, et si oui alors il le crée
     public NoeudAppui testAppui(boolean simple, MouseEvent t){
         SegmentTerrain segment =null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 50);
+        Forme proche = this.vue.getModel().plusProche(pclic, 4);
         if(proche instanceof Triangle tr){
         segment = NoeudAppui.isCreable(tr,pclic.getPx() ,pclic.getPy());
         }
         boolean distCreable = NoeudAppui.DistestCreable(this.vue.getModel(), pclic.getPx() ,pclic.getPy());
+        for (Noeud p : this.vue.getModel().getNoeuds()) {
+            if (Maths.distancePoint(p, pclic) < 4){
+                if(p instanceof NoeudAppui np){
+                    return np;
+                }
+            }   
+        } 
         if(segment != null && distCreable) {
             return createAppui(simple, pclic.getPx() ,pclic.getPy(), segment);
-        }else {
+        }
+        
         String textError1 = "";
-        if(!distCreable&&(boutonSelect==11 || boutonSelect==12)){
+        if(!distCreable){
             textError1 = "Noeuds trop proches!";
         }
         if((segment == null)&&(boutonSelect==11 || boutonSelect==12)){
@@ -375,7 +534,6 @@ public class Controleur {
         alerteNoeudAppui.setTitle("Erreur création noeud appui");
         alerteNoeudAppui.setContentText(textError1);
         alerteNoeudAppui.showAndWait();
-        }
         return null;
     }
 
@@ -390,7 +548,7 @@ public class Controleur {
         currentClick++;
         Noeud p = null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 20);
+        Forme proche = this.vue.getModel().plusProche(pclic, 4);
         //test si on clique a coté d'un point ou pas
         //Besoin d'ajouter la vérification que le point est créable, et quel type de point
 
@@ -445,15 +603,14 @@ public class Controleur {
         Noeud noeudRes;
         SegmentTerrain segment=null;
         Point pclic = this.posInModel(t.getX(), t.getY());
-        Forme proche = this.vue.getModel().plusProche(pclic, 40);
+        Forme proche = this.vue.getModel().plusProche(pclic, 4);
         if(proche instanceof Triangle tr){
         segment = NoeudAppui.isCreable(tr,pclic.getPx() ,pclic.getPy());
         }
         if(segment==null){
-            noeudRes = addNoeudSimple(t);
-            
-        }else if(NoeudBoutton==false){                
-            noeudRes = testAppui(true, t);
+            noeudRes = addNoeudSimple(t);     
+        }else if(NoeudBoutton==false){
+            noeudRes = testAppui(true, t);          
         }
         else{
             noeudRes = testAppui(false, t);
@@ -475,13 +632,6 @@ public class Controleur {
         PointTerrain pt = new PointTerrain(px, py);
         return pt;
     }
-    
-    /*private void dessinProche(){
-        Forme nearestforme = getNearest();
-        if(nearestforme != null){
-            nearestforme.dessinProche(context);
-        }
-    }*/
     
     public void zoomDouble() { //a refaire les partie zoom et déplacement
         this.vue.setZoneModelVue(this.vue.getZoneModelVue().scale(0.5));
@@ -518,9 +668,6 @@ public class Controleur {
         this.vue.redrawAll();
    }
     
-    
-
-    
     //retire le point selectionné
     public void removeSelected() {
         if (currentSelect != null) {
@@ -530,13 +677,6 @@ public class Controleur {
         currentSelect = null;
     }
 
-    //retire tout les points selectionnÃƒÂ©s
-    public void removeSelectedAll() {
-        multipleSelect.forEach(p -> p.setSelected(false));
-        multipleSelect.clear();
-        removeInfos();
-    }
-    
     public void removeInfos()
     {
         fenetreinfo.removeInfos();
@@ -554,6 +694,10 @@ public class Controleur {
 
     public void boutonSelect(int t) {
         this.boutonSelect=t ;
+        if(this.boutonSelect!=0){
+                this.selection.clear();
+                this.vue.redrawAll(); 
+                }
     }
    
     public int getboutonSelect() {
@@ -579,33 +723,9 @@ public class Controleur {
             this.vue.redrawAll();
         }
     }
-    
-    public String getLastOpen() {
-        return lastOpen;
-    }
        
     public Forme getNearest(){
         return nearest;
-    }
-
-    public boolean isDrag() {
-        return drag;
-    }
-
-    public double getMouseX() {
-        return X;
-    }
-
-    public double getMouseY() {
-        return Y;
-    }
-    
-    public double getDragMouseX() {
-        return dragMouseX;
-    }
-
-    public double getDragMouseY() {
-        return dragMouseY;
     }
 
     public String getName() {
@@ -634,14 +754,6 @@ public class Controleur {
 
     public boolean isInDrawing() {
         return inDrawing;
-    }
-
-    public boolean isInMultSelect() {
-        return inMultSelect;
-    }
-
-    public ArrayList<Forme> getMultipleSelect() {
-        return multipleSelect;
     }
 
     public double getEchelle() {

@@ -109,12 +109,12 @@ public class Segment extends Forme {
         context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
     }
     
-    /*@Override
+    @Override
     public void dessinProche(GraphicsContext context) {
         context.setStroke(Color.BLUE);
         context.setLineWidth(1);
         context.strokeLine(this.debut.getPx(), this.debut.getPy(), this.fin.getPx(), this.fin.getPy());
-    }*/
+    }
     
     @Override
     public double maxX() {

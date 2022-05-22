@@ -16,7 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Save {
-
+/*
     public static Treillis getTreillis(String path) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -54,5 +54,5 @@ public class Save {
         }
     }
     }
-
+*/
 }

@@ -128,8 +128,6 @@ public class Treillis extends Forme{
         }
         contient.add(triangle);
     }
-
-
     
     public void remove(ArrayList<Forme> lf){
         int i=0;
@@ -144,8 +142,6 @@ public class Treillis extends Forme{
                                     this.temp1.add(b);
                                 }
                             }
-                            i=i+1;
-                            System.out.println(i);
                             this.contient.remove(n);
                             this.temp.add(n);
                         } 
@@ -268,7 +264,8 @@ public class Treillis extends Forme{
     }
 
     /**
-     * abscice minimale d'un groupe de figures. 0 si le groupe est vide.
+     * abscice minimale d'un groupe de figures.0 si le groupe est vide.
+     * @return 
      */
     @Override
     public double minX() {
@@ -289,7 +286,8 @@ public class Treillis extends Forme{
    
     
     /**
-     * ordonnee maximale d'un groupe de figures. 0 si le groupe est vide.
+     * ordonnee maximale d'un groupe de figures.0 si le groupe est vide.
+     * @return 
      */
     @Override
     public double maxY() {
@@ -308,7 +306,8 @@ public class Treillis extends Forme{
     }
 
     /**
-     * ordonnee minimale d'un groupe de figures. 0 si le groupe est vide.
+     * ordonnee minimale d'un groupe de figures.0 si le groupe est vide.
+     * @return 
      */
     @Override
     public double minY() {
@@ -333,12 +332,12 @@ public class Treillis extends Forme{
         }
     }
     
-    /*@Override
+    @Override
     public void dessinProche(GraphicsContext context) {
         for (Forme f : this.contient) {
             f.dessinProche(context);
         }  
-    }*/
+    }
     
     
     @Override
@@ -348,28 +347,6 @@ public class Treillis extends Forme{
         }
     }
     
-    public static Treillis LastTreillis() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(100, 10);
-        Point p3 = new Point(100, 100);
-        Point p4 = new Point(10, 100);
-        Point p5 = new Point(50, 50);
-        Point p6 = new Point(500, 500);
-        Segment s1 = new Segment(p1, p2);
-        Segment s2 = new Segment(p2, p3);
-        Segment s3 = new Segment(p3, p1);
-        Segment s4 = new Segment(p1, p4);
-        Treillis triangle = new Treillis();
-        triangle.add(s1);
-        triangle.add(s2);
-        triangle.add(s3);
-        Treillis res = new Treillis();
-        res.add(p5);
-        res.add(p6);
-        res.add(s4);
-        res.add(triangle);
-        return res;
-    }
     
     @Override
     public ArrayList<String> getInfos() {

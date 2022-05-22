@@ -50,4 +50,11 @@ public class NoeudAppuiSimple extends NoeudAppui {
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
         super.dessineSelection(context);
     }
+    
+    @Override
+    public void dessinProche(GraphicsContext context) {
+        context.setFill(Color.GRAY);
+        context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
+        super.dessinProche(context);
+    }
 }

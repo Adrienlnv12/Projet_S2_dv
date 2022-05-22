@@ -44,6 +44,7 @@ public class NoeudSimple extends Noeud{
         this.px = px;
         this.py = py;
     }
+    
    
     
     public static boolean DistestCreable(Treillis treillis, double px, double py) {//si un point est trop proche alors ca dit pas bon
@@ -81,11 +82,11 @@ public class NoeudSimple extends Noeud{
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
     }
     
-    /*@Override
+    @Override
     public void dessinProche(GraphicsContext context) {
         context.setFill(Color.BLUE);
         context.fillOval(this.px-RAYON_IN_DRAW, this.py-RAYON_IN_DRAW, 2*RAYON_IN_DRAW, 2*RAYON_IN_DRAW);
-    }*/
+    }
 
     @Override
     public ArrayList<String> getInfos(){

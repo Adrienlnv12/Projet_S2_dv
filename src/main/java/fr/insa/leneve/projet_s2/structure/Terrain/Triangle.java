@@ -272,7 +272,7 @@ public class Triangle extends Forme {
 
     @Override
     public void dessineSelection(GraphicsContext context) {
-         double[] px = new double[3];
+        double[] px = new double[3];
         double[] py = new double[3];
         for (int i = 0; i < points.size(); i ++) {
             px[i] = points.get(i).getPx();
@@ -285,6 +285,10 @@ public class Triangle extends Forme {
 
         context.setStroke(Color.RED);
         context.strokePolygon(px, py, 3);
+    }
+
+    @Override
+    public void dessinProche(GraphicsContext context) {
     }
 
 }

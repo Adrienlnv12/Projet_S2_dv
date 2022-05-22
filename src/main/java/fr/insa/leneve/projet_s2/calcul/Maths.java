@@ -36,9 +36,9 @@ public class Maths {
         }
     }
 
-    //formule pour trouver un angle orienté entre un vectuer et le vecteur horizontal (résultat entre -pi et pi)
+    //formule pour trouver un angle orienté entre un vecteur et le vecteur horizontal (résultat entre -pi et pi)
     public static double angle(Point o, Point p){
-        double op = distancePoint(o, p);
+        double op = o.distancePoint(p);
 
         return Math.acos((p.getPx() - o.getPx()) / op) * (p.getPy() - o.getPy()) / Math.abs((p.getPy() - o.getPy()));
     }

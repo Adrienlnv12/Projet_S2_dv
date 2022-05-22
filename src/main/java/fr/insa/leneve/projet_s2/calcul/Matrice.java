@@ -69,13 +69,13 @@ public class Matrice {
     	return matTest;
 	}
 
-	public static int aleaUnOuDeux() {return Math.random() < 0.5 ? 1: 2;} pas compris A
+	public static int aleaUnOuDeux() {return Math.random() < 0.5 ? 1: 2;} 
 
 	public static Matrice matAleaZeroUnDeux(int nl, int nc, double pz){
     	Matrice mat = new Matrice(nl, nc);
     	for (int i = 0; i < nl; i++) {
         	for (int j = 0; j < nc; j++) {
-            	mat.coeffs[i][j] = Math.random() < pz ? 0: aleaUnOuDeux(); pq y a “?”  A
+            	mat.coeffs[i][j] = Math.random() < pz ? 0: aleaUnOuDeux(); 
         	}
     	}
     	return mat;
@@ -106,21 +106,23 @@ public class Matrice {
 	}
 
 	public Matrice concatLig(Matrice mat2) {
+        // prend deux matrices et concatène les matrices dans une matrice telle que nbrLigMatTot = NbrLig1 + NbrLig2
     	if (this.nbrCol != mat2.nbrCol) {
         	// gestion d'une erreur : cas ou nbrCol1 != nbrCol2
         	throw new Error("Le nombre de colonnes est différent : "+ this.nbrCol + " et " + mat2.nbrCol);
     	}
-    	Matrice mat = new Matrice(this.nbrLig + mat2.nbrLig, this.nbrCol); pk on additionne A
+    	Matrice mat = new Matrice(this.nbrLig + mat2.nbrLig, this.nbrCol);
     	for (int i = 0; i < mat.nbrLig; i++) {
         	for (int j = 0; j < mat.nbrCol; j++) {
             	mat.coeffs[i][j] = (i < this.nbrLig) ? this.coeffs[i][j] : mat2.coeffs[i - this.nbrLig][j];
-        	} pk y a “?” pas compris cette ligne A
+        	}
     	}
     	return mat;
 
 	}
-//////////////////////////////////////WTF////////////////////////////////////////////////  bizarre cette deuxième partie A
-	public static Matrice concatCol(Matrice mat1, Matrice mat2) {
+
+	public static Matrice concatCol(Matrice mat1, Matrice mat2) { 
+// prend deux matrices et concatène les matrices dans une matrice telle que nbrColMatTot = NbrCol1 + NbrCol2
     	if (mat1.nbrLig != mat2.nbrLig) {
         	throw new Error("Le nombre de lignes est différent : " + mat1.nbrLig + " et " + mat2.nbrLig);
     	} else {
@@ -134,7 +136,7 @@ public class Matrice {
         	return mat;
     	}
 	}
-////////////////////////////////////////WTF///////////////////////////////////////
+
     
 	public Matrice subLignes(int nMin, int nMax){
     	if(nMin < 0 || nMax >= nbrLig){
@@ -175,11 +177,11 @@ public class Matrice {
     	return mat;
 	}
 
-	public Matrice metAuCarre()  {  Pas compris ca A
+	public Matrice metAuCarre()  {
     	return concatCol(this.concatLig(identite(nbrCol)), identite(nbrLig).concatLig(this.transposee()));
 	}
 
-	public static int intAlea(int bmin, int bmax){ Sert a quoi ca A
+	public static int intAlea(int bmin, int bmax){
     	return (int)(bmin + Math.random()*(bmax-bmin));
 	}
 
@@ -216,7 +218,7 @@ public class Matrice {
 //              	M U L T I P L I C A T I O N
 	public Matrice mult(Matrice mat2){
     	if (this.nbrCol != mat2.nbrLig) throw new Error("erreur de dimension"); // erreur selon la formule, (et la mult ne commute pas)
-    	Matrice out = new Matrice(this.nbrLig, mat2.nbrCol);  Pas sur d’avoir compris A
+    	Matrice out = new Matrice(this.nbrLig, mat2.nbrCol);
     	for (int i = 0; i < out.nbrLig; i++) {      	// lignes par lignes de M1
         	for (int j = 0; j < out.nbrCol; j++) {  	// colonnes par colonnes de M2
             	double coeff = 0;                   	// initialisation de coeffs
@@ -327,7 +329,7 @@ public class Matrice {
     	return(determinant);
 	}
 
-	public Matrice pivotsaun (){ C quoi ca A
+	public Matrice pivotsdiag1 (){ // rend tous les coeffs diagonaux unitaires 
     	for(int i=0; i<this.nbrCol; i++){
         	for(int j=i; j<this.nbrLig;j++){
             	double pivot = this.coeffs[i][i];
@@ -349,7 +351,7 @@ public class Matrice {
 	public Matrice resolution() { // on résout avec la méthode de Gauss
     	ResGauss resGauss  = descenteGauss();
     	if(determinant(resGauss.signature) == 0) return null; // matrice non-inversible <=> det(Mat)=0 (donc aucune solution)
-    	pivotsaun();
+    	pivotsdiag1();
     	return remonteeGauss();
 	}
 
@@ -357,21 +359,21 @@ public class Matrice {
 
     	double[][] coeffs = {{0,1,2,1},{3,-4,5,2}, {6,7,-8,3}};
     	Matrice lamatrice = new Matrice(3,4, coeffs);
-
+        
     	// on affiche tout ce qui a été utilisé
-    	System.out.println(lamatrice.descenteGauss());
+    	/*System.out.println(lamatrice.descenteGauss());
 
     	System.out.println("matrice avec la descente");
     	System.out.println(lamatrice);
 
 
     	System.out.println("pivots a un :");
-    	System.out.println(lamatrice.pivotsaun());
-    	System.out.println(lamatrice);
+    	System.out.println(lamatrice.pivotsdiag1());
+    	//System.out.println(lamatrice);
 
     	System.out.println("matrice inversée :");
     	System.out.println(lamatrice.remonteeGauss());
-    	System.out.println(lamatrice);
-
+    	//System.out.println(lamatrice);
+*/
 	}
 }

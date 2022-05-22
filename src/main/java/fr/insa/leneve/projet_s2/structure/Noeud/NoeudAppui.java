@@ -108,6 +108,10 @@ public class NoeudAppui extends Noeud {
     public void dessineSelection(GraphicsContext context) {
     }
     
+    @Override
+    public void dessinProche(GraphicsContext context) {
+    }
+    
     
     
     

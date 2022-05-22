@@ -135,11 +135,9 @@ public final class BoutonGauche extends VBox {
             NoeudChoisi = 10 + Integer.parseInt(typeNoeud);
             if(NoeudChoisi==11){
                 controleur.NoeudBoutton(true);
-                System.out.println("nad :"+controleur.getNoeudBoutton());
                 }
                 if(NoeudChoisi==12){
                 controleur.NoeudBoutton(false);
-                System.out.println("nas :"+controleur.getNoeudBoutton());
                 }
             if(controleur.getboutonSelect() / 10 == 1)controleur.boutonSelect(NoeudChoisi);
             this.choixNoeud.setText(name);

@@ -46,6 +46,13 @@ public class DessinCanvas extends Pane {
             control.clicDansZoneDessin(t);
             this.redrawAll();
         });
+        //actions quand la couris est dÃ©placÃ© dans le canvas
+        this.realCanvas.setOnMouseMoved((t) -> {
+            Controleur control = this.main.getControleur();
+            control.MoveDansZoneDessin(t);
+            this.redrawAll();
+            
+        });
         
     }
     
@@ -92,21 +99,12 @@ public class DessinCanvas extends Pane {
             for (Forme f : select) {
                 f.dessineSelection(context);
             }
-        }  
-       /* //dessin des noeuds et barres selectionné + des infos associées
-        if(this.main.getControleur().isInMultSelect()){
-            ArrayList<Forme> multipleSelectec = this.main.getControleur().getMultipleSelect();
-            int nbNoeud = 0;
-            int nbAppuiSimple = 0;
-            int nbAppuiDouble = 0;
-            int nbBarre = 0;
-            for (Forme f: multipleSelectec) {
-                if(f instanceof NoeudSimple) nbNoeud ++;
-                else if(f instanceof Barre) nbBarre ++;
-                else if(f instanceof NoeudAppuiDouble) nbAppuiDouble ++;
-                else if(f instanceof NoeudAppuiSimple) nbAppuiSimple ++;
+        } 
+        Forme nearest = this.main.getControleur().getNearest();
+        //dessin des noeud et des barres
+        if (nearest!= null) {
+                nearest.dessinProche(context);
             }
-            this.main.getControleur().drawInfosMultiplePoint(nbNoeud, nbAppuiDouble, nbAppuiSimple, nbBarre);*/
-        }
+        } 
 
     }
