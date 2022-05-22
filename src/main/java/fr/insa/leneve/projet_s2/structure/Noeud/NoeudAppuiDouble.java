@@ -29,7 +29,7 @@ public class NoeudAppuiDouble extends NoeudAppui {
     @Override
     public ArrayList<String> getInfos(){
        ArrayList<String> output = super.getInfos();
-       output.add(0,"  Noeud Appui Double :  ");
+       output.add(0,"  Noeud Appui Double n°"+id);
        
        return output;
     }

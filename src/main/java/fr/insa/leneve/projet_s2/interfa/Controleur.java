@@ -239,9 +239,9 @@ public class Controleur {
             if(noeud instanceof NoeudAppuiSimple noeudAppuiSimple){
                 int col = formeToId.get(noeudAppuiSimple);
                 double angle=0;
-                if(noeudAppuiSimple.getSegmentTerrain().getDebut().getPy()!=noeudAppuiSimple.getSegmentTerrain().getFin().getPy()){
+                /*if(noeudAppuiSimple.getSegmentTerrain().getDebut().getPy()!=noeudAppuiSimple.getSegmentTerrain().getFin().getPy()){
                     angle = Maths.angle(noeudAppuiSimple.getSegmentTerrain().getDebut(), noeudAppuiSimple.getSegmentTerrain().getFin());
-                }
+                }*/
                 System.out.println("angle de la normale"+angle);
                 systeme.set(i, col, Math.cos((Math.PI /2) + angle));
                 systeme.set(i + 1, col, Math.sin(angle));

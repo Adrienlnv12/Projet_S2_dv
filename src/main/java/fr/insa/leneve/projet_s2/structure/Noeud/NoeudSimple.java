@@ -94,7 +94,7 @@ public class NoeudSimple extends Noeud{
                 "  posY : " + py+"  ",
         };
         ArrayList<String> output = new ArrayList<>(Arrays.asList(str));
-        output.add(0,"  Noeud Simple :  ");
+        output.add(0,"  Noeud Simple n°"+id);
         if(forceApplique != null){
             output.add("Forces :");
             output.addAll(forceApplique.getInfos());

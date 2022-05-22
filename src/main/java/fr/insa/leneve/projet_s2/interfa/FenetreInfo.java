@@ -1,9 +1,7 @@
 package fr.insa.leneve.projet_s2.interfa;
 
-import fr.insa.leneve.projet_s2.structure.Barre;
-import fr.insa.leneve.projet_s2.structure.Force;
-import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
-import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
+import fr.insa.leneve.projet_s2.structure.*;
+import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
@@ -67,17 +65,19 @@ public class FenetreInfo extends VBox {
 
         for(Forme f : formeId.keySet()){
             int id = formeId.get(f);
-            if(f instanceof Barre){
-                Label t = new Label("Traction de la barre : " + idValues.get(id)[0]);
+            if(f instanceof Barre b){
+                Label t = new Label("Traction de la barre n°"+b.getId()+" : " + idValues.get(id)[0]);
                 this.getChildren().add(t);
-            }else if(f instanceof NoeudAppuiSimple){
-                Label r = new Label("Reaction de l'appui : " + idValues.get(id)[0]);
+            }else if(f instanceof NoeudAppuiSimple ns){
+                Label r = new Label("Reaction de l'appui simple n°"+ns.getId()+" : " + idValues.get(id)[0]);
                 this.getChildren().add(r);
             }else{
-                Label rx = new Label("Reaction de l'appui en x : " + idValues.get(id)[0]);
-                this.getChildren().add(rx);
-                Label ry = new Label("Reaction de l'appui en y : " + idValues.get(id)[1]);
-                this.getChildren().add(ry);
+                if(f instanceof NoeudAppuiDouble nd){
+                    Label rx = new Label("Reaction de l'appui double n°"+nd.getId()+" en x : " + idValues.get(id)[0]);
+                    this.getChildren().add(rx);
+                    Label ry = new Label("Reaction de l'appui double n°"+nd.getId()+" en y : " + idValues.get(id)[1]);
+                    this.getChildren().add(ry);
+                }
             }
         }
     }

@@ -29,7 +29,7 @@ public class NoeudAppuiSimple extends NoeudAppui {
    @Override
     public ArrayList<String> getInfos(){
        ArrayList<String> output = super.getInfos();
-       output.add(0,"  Noeud Appui Simple :  ");
+       output.add(0,"  Noeud Appui Simple n°"+id);
        
        return output;
     }
