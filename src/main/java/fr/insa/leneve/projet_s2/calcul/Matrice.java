@@ -4,6 +4,8 @@
  */
 package fr.insa.leneve.projet_s2.calcul;
 
+import javafx.scene.control.Alert;
+
 /**
  *
  * @author adrie
@@ -262,8 +264,16 @@ public class Matrice {
 	}
 
 	public void transvection(int l1, int l2) {      	// opérations élementaires sur les lignes / colonnes a regarder trop fatigué A
-    	if (l1 > nbrCol) throw new Error("l1 > nbrCol");      	// impossible
-    	if (coeffs[l1][l1] == 0.0) throw new Error("Ml1 l1 = 0"); // si le coeff est nul.
+    	String textError;
+        if (l1 > nbrCol) throw new Error("l1 > nbrCol");      	// impossible
+    	if (coeffs[l1][l1] == 0.0){
+            textError ="La Transvection de la matrice n'est pas possible !";
+            Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
+            alerteHyperstatique.setTitle("Calcul de la matrice");
+            alerteHyperstatique.setContentText(textError);
+            alerteHyperstatique.showAndWait();
+            throw new Error("Ml1 l1 = 0");
+        } // si le coeff est nul.
 
     	double p = coeffs[l2][l1] / coeffs[l1][l1]; // opération
 

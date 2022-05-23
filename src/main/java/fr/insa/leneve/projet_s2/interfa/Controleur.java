@@ -49,7 +49,7 @@ public class Controleur {
     private int currentClick = 0;
     private Point firstSegmentPoint = null, secondSegmentPoint = null;
 
-    public boolean inMultSelect = false;
+    public boolean inMultSelect = false, isostatique=false;
 
     private FenetreInfo fenetreinfo;
 
@@ -136,10 +136,10 @@ public class Controleur {
         alert.setTitle("A propos");
         alert.setHeaderText(null);
         alert.setContentText("""
-                             NUL
-                             Vraiment
-                             NUL
-                             \u00e0 l'INSA de Strasbourg""");
+                             Merci d'utiliser notre programme
+                             Nous esperons que vous passez
+                             un bon moment avec le groupe B3
+                             à l'INSA de Strasbourg""");
 
         alert.showAndWait();
     }
@@ -171,27 +171,37 @@ public class Controleur {
         }
 
         System.out.println(2 * ns + " " + nb + nas + 2 * nad);
-        String textError = "";
-        if (2 * ns < nb + nas + 2 * nad) {
-                textError = "Le treillis n'est pas isostatique!";
+        String textError;
+        if (2 * ns != nb + nas + 2 * nad) {
+                textError = "Le Treillis n'est pas isostatique !";
             if (2 * ns < nb + nas + 2 * nad) {
                 if(textError.length() > 0) textError += " et ";
                 textError += "il est hyperstatique!";
             }
-            Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
-            alerteHyperstatique.setTitle("Erreur calcul");
+        Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
+        alerteHyperstatique.setTitle("Isostatisme du treillis");
+        alerteHyperstatique.setContentText(textError);
+        alerteHyperstatique.showAndWait();
+        }else{
+            textError ="Le Treillis est isostatique !";
+            Alert alerteHyperstatique = new Alert(AlertType.INFORMATION);
+            alerteHyperstatique.setTitle("Isostatisme du treillis");
             alerteHyperstatique.setContentText(textError);
             alerteHyperstatique.showAndWait();
         }
+       
         Matrice systeme = fillMatrice(formeId, id);
-        System.out.println("12a"+ systeme);
 
         Matrice res = systeme.resolution();
         if(res == null) {
+            textError ="La Matrice n'est pas inversible !";
+            Alert alerteHyperstatique = new Alert(Alert.AlertType.ERROR);
+            alerteHyperstatique.setTitle("Calcul de la matrice");
+            alerteHyperstatique.setContentText(textError);
+            alerteHyperstatique.showAndWait();
             throw new Error("Matrice non inversible");
         }
         res = res.subCol(systeme.getNbrCol() - 1, systeme.getNbrCol() - 1);
-        System.out.println(res);
 
         formesRes.clear();
         for (int value : formeId.values()) {
@@ -202,7 +212,6 @@ public class Controleur {
             }
         }
         writeCalculInfo(formeId, formesRes);
-        
     }
 
     public Matrice fillMatrice(HashMap<Forme, Integer> formeToId, int lastId){
@@ -214,7 +223,7 @@ public class Controleur {
         //rempli la matrice
         for (int i = 0; i < this.vue.getModel().getNoeuds().size() * 2; i += 2) {
             Noeud noeud = this.vue.getModel().getNoeuds().get(i/2);
-            System.out.println(noeud);
+            
             //ajout des valeurs liées aux barres
             for (Barre barre : noeud.getLinkedBarres()) {
                 int col = formeToId.get(barre);
@@ -229,7 +238,6 @@ public class Controleur {
                 }
                 systeme.set(i, col, Math.cos(angle));
                 systeme.set(i + 1, col, Math.sin(angle));
-                System.out.println("Noeud barre"+systeme);
             }
             //ajout des forces
             vecResult[i] = - noeud.getForceApplique().getfX();
@@ -239,25 +247,22 @@ public class Controleur {
             if(noeud instanceof NoeudAppuiSimple noeudAppuiSimple){
                 int col = formeToId.get(noeudAppuiSimple);
                 double angle=0;
-                /*if(noeudAppuiSimple.getSegmentTerrain().getDebut().getPy()!=noeudAppuiSimple.getSegmentTerrain().getFin().getPy()){
+                if(noeudAppuiSimple.getSegmentTerrain().getDebut().getPy()!= noeudAppuiSimple.getSegmentTerrain().getFin().getPy()){
                     angle = Maths.angle(noeudAppuiSimple.getSegmentTerrain().getDebut(), noeudAppuiSimple.getSegmentTerrain().getFin());
-                }*/
-                System.out.println("angle de la normale"+angle);
+                }
                 systeme.set(i, col, Math.cos((Math.PI /2) + angle));
                 systeme.set(i + 1, col, Math.sin(angle));
-                System.out.println("Noeud D'appui simple"+systeme);
 
             }else if(noeud instanceof NoeudAppuiDouble){
                 int col = formeToId.get(noeud);
                 systeme.set(i, col, 1);
                 systeme.set(i + 1, col + 1, 1);
-                System.out.println("Noeud D'appui double"+systeme);
+
             }
 
         }
-
-        System.out.println(formeToId);
         return Matrice.concatCol(systeme, Matrice.creeVecteur(vecResult));
+        
     }
     
     public void MoveDansZoneDessin(MouseEvent t) {
@@ -422,6 +427,10 @@ public class Controleur {
                     Forme proche = this.vue.getModel().plusProche(pclic, 4);
                     for (Noeud p : this.vue.getModel().getNoeuds()) {
                         if (Maths.distancePoint(p, pclic) < 4){
+                            if(p instanceof NoeudSimple n){
+                                System.out.println("ler");
+                                proche=n;
+                            }
                             if(p instanceof NoeudAppui np){
                                 proche=np;
                             }
@@ -550,9 +559,17 @@ public class Controleur {
         Forme proche = this.vue.getModel().plusProche(pclic, 4);
         //test si on clique a coté d'un point ou pas
         //Besoin d'ajouter la vérification que le point est créable, et quel type de point
-
-
-
+        for (Noeud pr : this.vue.getModel().getNoeuds()) {
+            if (Maths.distancePoint(pr, pclic) < 4){
+                if(pr instanceof NoeudSimple n){
+                    System.out.println("ler");
+                    proche=n;
+                }
+                if(pr instanceof NoeudAppui np){
+                    proche=np;
+                }
+            }   
+        }    
         if(proche != null && proche instanceof Noeud){
             boolean creable = true;
             if(currentClick > 1 && firstSegmentPoint != null) {

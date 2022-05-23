@@ -1,13 +1,16 @@
 package fr.insa.leneve.projet_s2.interfa;
 
-import fr.insa.leneve.projet_s2.structure.*;
-import fr.insa.leneve.projet_s2.structure.Noeud.*;
+import fr.insa.leneve.projet_s2.structure.Barre;
+import fr.insa.leneve.projet_s2.structure.Force;
+import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
+import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -15,7 +18,7 @@ import javafx.scene.paint.Color;
 
 //VBox avec les informations sur la selection en cours
 public class FenetreInfo extends VBox {
-
+      
     private MainPanel main;
     private final Controleur controleur;
 
@@ -68,16 +71,14 @@ public class FenetreInfo extends VBox {
             if(f instanceof Barre b){
                 Label t = new Label("Traction de la barre n°"+b.getId()+" : " + idValues.get(id)[0]);
                 this.getChildren().add(t);
-            }else if(f instanceof NoeudAppuiSimple ns){
-                Label r = new Label("Reaction de l'appui simple n°"+ns.getId()+" : " + idValues.get(id)[0]);
+            }else if(f instanceof NoeudAppuiSimple){
+                Label r = new Label("Reaction de l'appui simple : " + idValues.get(id)[0]);
                 this.getChildren().add(r);
             }else{
-                if(f instanceof NoeudAppuiDouble nd){
-                    Label rx = new Label("Reaction de l'appui double n°"+nd.getId()+" en x : " + idValues.get(id)[0]);
-                    this.getChildren().add(rx);
-                    Label ry = new Label("Reaction de l'appui double n°"+nd.getId()+" en y : " + idValues.get(id)[1]);
-                    this.getChildren().add(ry);
-                }
+                Label rx = new Label("Reaction de l'appui double en x : " + idValues.get(id)[0]);
+                this.getChildren().add(rx);
+                Label ry = new Label("Reaction de l'appui double en y : " + idValues.get(id)[1]);
+                this.getChildren().add(ry);
             }
         }
     }
