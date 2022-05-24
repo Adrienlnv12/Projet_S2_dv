@@ -19,8 +19,6 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.leneve.projet_s2.structure.forme;
 
 import fr.insa.leneve.projet_s2.calcul.Maths;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -28,6 +26,7 @@ import javafx.scene.paint.Color;
 /**
  *
  * @author francois
+ * Modifié par adrie
  */
 public class Segment extends Forme {
 

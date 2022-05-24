@@ -1,8 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package fr.insa.leneve.projet_s2.interfa;
 
 import fr.insa.leneve.projet_s2.structure.Barre;
-import fr.insa.leneve.projet_s2.structure.Force;
-import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
 import fr.insa.leneve.projet_s2.structure.Noeud.NoeudAppuiSimple;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import javafx.geometry.Pos;
@@ -10,12 +12,14 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 
+/**
+ *
+ * @author adrie
+ */
 //VBox avec les informations sur la selection en cours
 public class FenetreInfo extends VBox {
       

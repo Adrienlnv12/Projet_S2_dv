@@ -1,9 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package fr.insa.leneve.projet_s2.calcul;
-
 
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import javafx.scene.paint.Color;
 
+/**
+ *
+ * @author adrie
+ */
 public class Maths {
     
     

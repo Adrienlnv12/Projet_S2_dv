@@ -1,12 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.leneve.projet_s2.interfa;
 
 
-import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import java.io.File;
 import javafx.scene.layout.BorderPane;

@@ -3,13 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.leneve.projet_s2.structure.Noeud;
-//a finir
 
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Force;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 
 /**

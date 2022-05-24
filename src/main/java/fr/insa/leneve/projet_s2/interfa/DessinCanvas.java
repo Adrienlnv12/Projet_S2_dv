@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fr.insa.leneve.projet_s2.interfa;
 import fr.insa.leneve.projet_s2.structure.Barre;
@@ -15,12 +14,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Transform;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
-import fr.insa.leneve.projet_s2.structure.forme.Point;
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
+
 /**
  *
- * @author cheraita
+ * @author adrie
  */
 public class DessinCanvas extends Pane {
     

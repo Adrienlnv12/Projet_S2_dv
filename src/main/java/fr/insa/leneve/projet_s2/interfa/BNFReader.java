@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package fr.insa.leneve.projet_s2.interfa;
 
 
@@ -15,9 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//public class BNFReader extends BufferedReader {
+public class BNFReader extends BufferedReader {
 
-    /*private final HashMap<Integer, Noeud> noeuds = new HashMap<>();
+    private final HashMap<Integer, Noeud> noeuds = new HashMap<>();
     private final ArrayList<Barre> barres = new ArrayList<>();
     private Numerateur numerateur;
 
@@ -51,19 +55,10 @@ import java.util.HashMap;
         triangleId = Integer.parseInt(triangles[1]);
         PointTerrain pt1 = new PointTerrain(toPoint(triangles[2]));
         double x = (toDouble(triangles[3]));
-
-        for (PointTerrain p : terrain.getPoints()) {
-            if(p.isPoint(pt1)) pt1 = p;
-            if(p.isPoint(pt2)) pt2 = p;
-            if(p.isPoint(pt3)) pt3 = p;
-        }
-        terrain.addPoint(pt1);
-        terrain.addPoint(pt2);
-        terrain.addPoint(pt3);
-
+        
         Triangle triangle = new Triangle(pt1, x, triangleId);
-
-        terrain.addTriangle(triangle);
+      
+        //treillis.addTriangle(triangle);
     }
     
     private double toDouble(String point){
@@ -85,13 +80,13 @@ import java.util.HashMap;
         noeudId = Integer.parseInt(strNoeud[1]);
         switch (strNoeud[0]){
             case "AppuiDouble" -> {
-                Triangle triangle = Treillis.getTriangle(Integer.parseInt(strNoeud[2]));
-                if(triangle != null) noeud = new NoeudAppuiDouble(triangle, triangle.getSegments()[Integer.parseInt(strNoeud[3])], Double.parseDouble(strNoeud[4]), noeudId);
+                Triangle triangle = null;//treillis.getTriangles();
+                if(triangle != null) noeud = new NoeudAppuiDouble(triangle, triangle.getSegments().get(Integer.parseInt(strNoeud[3])), Double.parseDouble(strNoeud[4]), noeudId);
                 else noeud = null;
             }
             case "AppuiSimple" -> {
-                Triangle triangle = terrain.getTriangle(Integer.parseInt(strNoeud[2]));
-                if(triangle != null) noeud = new NoeudAppuiSimple(triangle, triangle.getSegments()[Integer.parseInt(strNoeud[3])], Double.parseDouble(strNoeud[4]), noeudId);
+                Triangle triangle = null;//treillis.getTriangles();
+                if(triangle != null) noeud = new NoeudAppuiSimple(triangle, triangle.getSegments().get(Integer.parseInt(strNoeud[3])), Double.parseDouble(strNoeud[4]), noeudId);
                 else noeud = null;
             }
             case "NoeudSimple" -> noeud = new NoeudSimple(toPoint(strNoeud[2]), noeudId);
@@ -113,4 +108,4 @@ import java.util.HashMap;
 
 
     }
-}*/
+}

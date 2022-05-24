@@ -9,7 +9,6 @@ import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.SegmentTerrain;
 
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
-import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import fr.insa.leneve.projet_s2.structure.forme.Treillis;
 import java.util.ArrayList;

@@ -4,24 +4,16 @@
  */
 package fr.insa.leneve.projet_s2.structure.Terrain;
 
-/**
- *
- * @author adrie
- */
-
-
-
 import fr.insa.leneve.projet_s2.calcul.Maths;
-import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 /**
- * 
+ *
+ * @author adrie
  */
 public class Triangle extends Forme {
 

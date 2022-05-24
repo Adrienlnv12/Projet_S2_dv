@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package fr.insa.leneve.projet_s2.structure.Terrain;
 
 
@@ -7,10 +11,13 @@ import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
 import fr.insa.leneve.projet_s2.structure.forme.Segment;
 import javafx.scene.canvas.GraphicsContext;
-
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
+/**
+ *
+ * @author adrie
+ */
 public class SegmentTerrain extends Segment {
 
     private final ArrayList<Forme> temps = new ArrayList<>();

@@ -1,9 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package fr.insa.leneve.projet_s2.structure.forme;
 
-
-
 import fr.insa.leneve.projet_s2.Numerateur;
-
 import fr.insa.leneve.projet_s2.structure.Barre;
 import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
@@ -12,7 +13,10 @@ import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 
-
+/**
+ *
+ * @author adrie
+ */
 public class Treillis extends Forme{
     private final ArrayList<Forme> temp;
     private final ArrayList<Forme> temp1;

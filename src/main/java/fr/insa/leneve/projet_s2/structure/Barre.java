@@ -6,8 +6,6 @@ package fr.insa.leneve.projet_s2.structure;
 //a finir
 import fr.insa.leneve.projet_s2.structure.forme.Segment;
 import fr.insa.leneve.projet_s2.structure.Noeud.Noeud;
-import fr.insa.leneve.projet_s2.structure.forme.Forme;
-import static fr.insa.leneve.projet_s2.structure.forme.Point.RAYON_IN_DRAW;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

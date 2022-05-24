@@ -20,16 +20,13 @@ package fr.insa.leneve.projet_s2.interfa;
 
 
 import fr.insa.leneve.projet_s2.structure.Noeud.NoeudSimple;
-import fr.insa.leneve.projet_s2.structure.forme.Point;
 import java.util.Optional;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 /**
@@ -39,6 +36,7 @@ import javafx.util.Callback;
  * https://examples.javacodegeeks.com/desktop-java/javafx/dialog-javafx/javafx-dialog-example/
  *
  * @author francois
+ * Modifié par adrie
  */
 // la classe Dialog est une classe générique : le paramètre de type (ici Point)
 // indique quel est le type de l'objet éventuellement créé/retourné par le Dialog

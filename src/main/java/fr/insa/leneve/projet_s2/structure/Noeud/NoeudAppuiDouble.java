@@ -9,9 +9,7 @@ import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Forme;
 import static fr.insa.leneve.projet_s2.structure.forme.Point.RAYON_IN_DRAW;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 
