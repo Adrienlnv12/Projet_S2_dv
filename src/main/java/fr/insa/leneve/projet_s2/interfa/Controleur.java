@@ -694,6 +694,7 @@ public class Controleur {
         this.boutonSelect=t ;
         if(this.boutonSelect!=0){
                 this.selection.clear();
+                this.vue.getInfo().removeInfos();
                 this.vue.redrawAll(); 
                 }
     }
