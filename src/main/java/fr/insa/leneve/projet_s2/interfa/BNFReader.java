@@ -11,14 +11,15 @@ import fr.insa.leneve.projet_s2.structure.Noeud.*;
 import fr.insa.leneve.projet_s2.structure.Terrain.PointTerrain;
 import fr.insa.leneve.projet_s2.structure.Terrain.Triangle;
 import fr.insa.leneve.projet_s2.structure.forme.Point;
-import fr.insa.leneve.projet_s2.structure.forme.Treillis;
-import javafx.scene.paint.Color;
-
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *
+ * @author adrie
+ */
 public class BNFReader extends BufferedReader {
 
     private final HashMap<Integer, Noeud> noeuds = new HashMap<>();

@@ -428,7 +428,6 @@ public class Controleur {
                     for (Noeud p : this.vue.getModel().getNoeuds()) {
                         if (Maths.distancePoint(p, pclic) < 4){
                             if(p instanceof NoeudSimple n){
-                                System.out.println("ler");
                                 proche=n;
                             }
                             if(p instanceof NoeudAppui np){
