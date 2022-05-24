@@ -84,7 +84,7 @@ public class NoeudAppui extends Noeud {
                 break;
             }
         }
-        return id + ";" + associatedTriangle.getId() + ";" + segmentNbr + ";" + posSegment;
+        return id + ";" + associatedTriangle.getId() + ";("  + segmentNbr + ");(" + posSegment+")";
     }
     
     @Override
